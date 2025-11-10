@@ -1,0 +1,1677 @@
+<!DOCTYPE html>
+<!-- (EFEKTIF) Menambahkan scroll-smooth ke <html> -->
+<html lang="id" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lazismu Mu'allimin Yogyakarta</title>
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Google Font: Lato -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700;900&display=swap" rel="stylesheet">
+
+    <!-- Font Awesome (untuk ikon) -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    
+    <!-- (DIHAPUS) <script> tailwind.config dihilangkan karena kita menggunakan kelas standar -->
+    
+    <!-- (EFISIEN) Blok <style> jauh lebih kecil, hanya menyisakan CSS yang tidak bisa diganti Tailwind -->
+    <style>
+        /* (EFEKTIF) Menerapkan font 'Lato' melalui kelas 'font-sans' di <body> */
+        /* Config Tailwind default akan mengambil 'Lato' dari <link> jika tersedia */
+        body {
+            font-family: 'Lato', sans-serif;
+        }
+
+        /* Navigasi SPA (Diperlukan untuk JS) */
+        .page-section {
+            display: none;
+            opacity: 0;
+            transform: translateY(20px);
+            transition: opacity 0.5s ease-out, transform 0.5s ease-out;
+        }
+        .page-section.active {
+            display: block;
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* Link Navigasi Aktif (Diperlukan untuk JS) */
+        .nav-link.active {
+            color: #f97316; /* orange-500 */
+            font-weight: 700;
+            border-bottom-width: 3px;
+            border-color: #f97316; /* orange-500 */
+        }
+
+        /* (DIHAPUS) .card-hover-effect, .group-hover-scale, .bank-card dipindahkan ke kelas hover: Tailwind */
+        /* (DIHAPUS) Hack menu mobile (#menu-links.hidden.md:flex) dihapus karena md:flex harusnya berfungsi */
+
+        /* ANIMASI ON-SCROLL (Diperlukan untuk JS) */
+        .fade-in-up-scroll {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+        }
+        .fade-in-up-scroll.is-visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        
+        /* Helper class untuk tombol salin (Diperlukan untuk JS) */
+        .copy-button {
+            transition: all 0.2s ease;
+        }
+        .copy-button:disabled {
+            cursor: default;
+            opacity: 0.8;
+        }
+        
+        /* --- DONATION WIZARD STYLES (Diperlukan untuk JS) --- */
+        .choice-button {
+            transition: all 0.2s ease-in-out;
+        }
+        .choice-button.selected {
+            background-color: #f97316; /* orange-500 */
+            color: white;
+            border-color: #f97316; /* orange-500 */
+            transform: scale(1.05);
+            box-shadow: 0 4px 10px rgba(249, 115, 22, 0.3); /* orange-500/30% */
+        }
+        /* Paksa ikon jadi putih saat selected */
+        .choice-button.selected i {
+            color: white;
+        }
+        
+        /* Tombol Pilihan Metode Bayar (CSS-Only, Sangat Efisien) */
+        .payment-choice input[type="radio"]:checked + label {
+            border-color: #f97316; /* orange-500 */
+            background-color: #fffbeb; /* amber-50 */
+            box-shadow: 0 4px 10px rgba(249, 115, 22, 0.2); /* orange-500/20% */
+        }
+        .payment-choice input[type="radio"] {
+            display: none; /* Sembunyikan radio button asli */
+        }
+        
+        /* Input Form (Required) Styling (CSS-Only, Efisien) */
+        input:required, textarea:required {
+            border-left-width: 4px;
+            border-left-color: #f97316; /* orange-500 */
+        }
+        /* Styling untuk validasi error */
+        input:invalid, textarea:invalid {
+            border-left-color: #ef4444; /* red-500 */
+        }
+    </style>
+</head>
+<!-- (EFEKTIF) Menambahkan 'font-sans' untuk menerapkan font Lato dari config -->
+<body class="bg-gray-50 text-gray-800 font-sans">
+
+    <!-- (PERBAIKAN WAJIB) MODAL ALERT KUSTOM (Pengganti alert()) -->
+    <div id="alert-modal" class="hidden fixed inset-0 bg-black bg-opacity-50 z-[100] flex items-center justify-center p-4">
+        <div class="bg-white rounded-2xl shadow-xl w-full max-w-sm p-6 text-center animate-fade-in-up">
+            <i class="fas fa-exclamation-triangle text-4xl text-yellow-400 mb-4"></i>
+            <h3 class="text-xl font-bold text-gray-800 mb-2">Perhatian</h3>
+            <p id="alert-modal-message" class="text-gray-600 mb-6">Pesan error di sini.</p>
+            <button id="alert-modal-close" class="bg-orange-500 text-white px-6 py-2 rounded-full font-semibold hover:bg-orange-600 transition-colors">
+                Mengerti
+            </button>
+        </div>
+    </div>
+
+    <!-- MODAL UNTUK "HUBUNGI KAMI" -->
+    <div id="hubungi-modal" class="hidden fixed inset-0 bg-black bg-opacity-50 z-[99] flex items-center justify-center p-4">
+        <!-- (REFACTOR) Mengganti 'fade-in-up-scroll' dengan 'animate-fade-in-up' agar tidak bergantung pada scroll -->
+        <div class="bg-white rounded-2xl shadow-xl w-full max-w-md p-6 relative" style="animation: fadeInUp 0.5s ease-out forwards;">
+            <!-- Tombol Tutup Modal -->
+            <button id="hubungi-modal-close" class="absolute top-4 right-4 text-gray-400 hover:text-gray-800 transition-colors">
+                <i class="fas fa-times text-2xl"></i>
+            </button>
+            
+            <h3 class="text-2xl font-bold text-gray-800 mb-5 text-center">Hubungi Kami</h3>
+            <p class="text-center text-gray-600 mb-6">Silakan pilih salah satu opsi di bawah ini:</p>
+            <div class="space-y-4">
+                <a href="https://wa.me/6281196961918?text=Assalamu'alaikum%2C%20saya%20ingin%20berkonsultasi%20ZIS%20dengan%20tim%20Lazismu%20Mu'allimin." target="_blank" class="w-full flex items-center justify-center space-x-3 bg-gradient-to-r from-green-500 to-green-600 text-white px-6 py-4 rounded-full font-semibold hover:shadow-lg transition duration-300 shadow-md text-lg">
+                    <i class="fab fa-whatsapp text-2xl"></i>
+                    <span>Konsultasi ZIS</span>
+                </a>
+                <a href="#donasi" id="hubungi-modal-konfirmasi" class="w-full flex items-center justify-center space-x-3 bg-gradient-to-r from-orange-500 to-orange-600 text-white px-6 py-4 rounded-full font-semibold hover:shadow-lg transition duration-300 shadow-md text-lg">
+                    <i class="fas fa-file-invoice-dollar text-xl"></i>
+                    <span>Konfirmasi ZIS</span>
+                </a>
+            </div>
+        </div>
+    </div>
+
+
+    <!-- HEADER / NAVIGASI -->
+    <header class="bg-gradient-to-r from-white to-gray-50 shadow-lg sticky top-0 z-50">
+        <nav class="container mx-auto px-4 md:px-6 py-4 flex justify-between items-center">
+            
+            <!-- (REFACTOR) Mengganti warna kustom dengan kelas Tailwind -->
+            <a href="#home" class="text-3xl font-extrabold text-gray-800 flex items-center space-x-2">
+                <i class="fas fa-hand-holding-heart text-orange-500"></i>
+                <span>Lazismu <span class="text-orange-500">Mu'allimin</span></span>
+            </a>
+            
+            <!-- Tombol Menu Mobile -->
+            <button id="menu-toggle" class="md:hidden text-gray-700 focus:outline-none p-2 rounded-md hover:bg-gray-100 transition-colors duration-200">
+                <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7"></path>
+                </svg>
+            </button>
+            
+            <!-- Link Navigasi (DENGAN HOVER SCALE) -->
+            <div id="menu-links" class="hidden md:flex md:items-center md:space-x-8 absolute md:relative top-full left-0 w-full md:w-auto bg-white md:bg-transparent shadow-md md:shadow-none p-4 md:p-0 flex-col md:flex-row space-y-4 md:space-y-0">
+                <a href="#home" class="nav-link block md:inline-block text-gray-700 hover:text-orange-500 font-medium px-1 py-2 transition-all duration-200 md:hover:scale-110">Beranda</a>
+                <a href="#tentang" class="nav-link block md:inline-block text-gray-700 hover:text-orange-500 font-medium px-1 py-2 transition-all duration-200 md:hover:scale-110">Tentang Kami</a>
+                <a href="#program" class="nav-link block md:inline-block text-gray-700 hover:text-orange-500 font-medium px-1 py-2 transition-all duration-200 md:hover:scale-110">Program</a>
+                <a href="#berita" class="nav-link block md:inline-block text-gray-700 hover:text-orange-500 font-medium px-1 py-2 transition-all duration-200 md:hover:scale-110">Berita</a>
+                <!-- Tombol Donasi dengan Gradien -->
+                <a href="#donasi" class="bg-gradient-to-r from-orange-500 to-orange-600 text-white px-6 py-2.5 rounded-full font-semibold shadow-md hover:shadow-lg transform hover:scale-105 transition duration-300 block md:inline-block text-center flex items-center space-x-2 justify-center">
+                    <i class="fas fa-donate"></i>
+                    <span>Donasi Sekarang</span>
+                </a>
+            </div>
+        </nav>
+    </header>
+
+    <!-- KONTEN UTAMA -->
+    <main>
+        
+        <!-- === HALAMAN BERANDA === -->
+        <section id="page-home" class="page-section">
+            
+            <!-- Bagian Hero -->
+            <div class="relative bg-white text-white overflow-hidden pt-28 pb-32">
+                <!-- (REFACTOR) Gradien dengan kelas Tailwind -->
+                <div class="absolute inset-0 bg-gradient-to-br from-orange-500 to-orange-600 opacity-90"></div>
+                <!-- LAYER 1: PATTERN TEXTURE -->
+                <div class="absolute inset-0 opacity-10 bg-[url('https://www.transparenttextures.com/patterns/clean-textile.png')] bg-repeat"></div>
+                <!-- LAYER 2: SVG Blob Kiri (Layering) -->
+                <svg class="absolute -left-48 top-1/2 transform -translate-y-1/2 opacity-10" width="800" height="800" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+                    <path fill="#FFFFFF" d="M48.8,-53.6C60.8,-38.7,66.4,-19.3,66.2,-0.2C66,18.9,60.1,37.8,47.4,51.8C34.7,65.7,15.2,74.7,-2.8,75.9C-20.8,77,-37.2,70.3,-50.7,57.5C-64.2,44.7,-74.8,26.8,-76.3,8.3C-77.8,-10.2,-70.2,-29.2,-56.9,-44.5C-43.7,-59.8,-24.8,-71.4,-4.7,-69.6C15.3,-67.7,30.7,-68.4,48.8,-53.6Z" transform="translate(100 100)" />
+                </svg>
+                <!-- LAYER 3: SVG Blob Kanan (Layering) -->
+                 <svg class="absolute -right-48 bottom-0 opacity-10" width="600" height="600" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+                    <path fill="#FFFFFF" d="M47,-45.7C59.9,-32.1,68.7,-16,68.8,0.3C68.9,16.7,60.3,33.3,47.8,47.8C35.3,62.2,18.8,74.4,-1,75.3C-20.8,76.2,-41.6,65.8,-55.8,50.1C-70,34.4,-77.6,13.4,-74.9,-6.2C-72.2,-25.7,-59.2,-43.8,-43.7,-56.3C-28.2,-68.8,-10.2,-75.7,7.1,-73.6C24.4,-71.5,47,-59.3,47,-45.7Z" transform="translate(100 100) scale(0.8)" />
+                </svg>
+
+                <div class="container mx-auto px-4 md:px-6 relative z-10 text-center">
+                    <!-- Konten Hero -->
+                    <h1 class="text-4xl md:text-6xl font-extrabold mb-5 leading-tight">
+                        Menempa Kader, <br class="md:hidden">Memberdaya Umat
+                    </h1>
+                    <p class="text-lg md:text-xl max-w-3xl mx-auto mb-10 opacity-90">
+                        Kantor Layanan LAZISMU Madrasah Mu'allimin Muhammadiyah Yogyakarta
+                        hadir sebagai jembatan kebaikan Anda.
+                    </p>
+                    
+                    <!-- 4 Tombol Hero -->
+                    <div class="grid grid-cols-2 md:grid-cols-4 gap-4 max-w-3xl mx-auto">
+                        <!-- 1. ZIS Ramadhan -->
+                        <a href="#donasi" class="inline-flex items-center justify-center space-x-2 bg-white text-orange-500 px-6 py-3 rounded-full font-bold text-base shadow-xl hover:bg-gray-100 hover:shadow-orange-500/20 hover:shadow-2xl transform hover:scale-105 transition duration-300">
+                            <i class="fas fa-moon"></i>
+                            <span>ZIS Ramadhan</span>
+                        </a>
+                        <!-- 2. Hubungi Kami (Modal Trigger) -->
+                        <a href="#" id="hubungi-btn" class="inline-flex items-center justify-center space-x-2 bg-transparent border-2 border-white text-white px-6 py-3 rounded-full font-bold text-base shadow-xl hover:bg-white/20 hover:shadow-2xl transform hover:scale-105 transition duration-300">
+                            <i class="fas fa-headset"></i>
+                            <span>Hubungi Kami</span>
+                        </a>
+                        <!-- 3. Tombol ke QRIS -->
+                        <a href="#donasi-qris" class="inline-flex items-center justify-center space-x-2 bg-white text-orange-500 px-6 py-3 rounded-full font-bold text-base shadow-xl hover:bg-gray-100 hover:shadow-orange-500/20 hover:shadow-2xl transform hover:scale-105 transition duration-300">
+                            <i class="fas fa-qrcode"></i>
+                            <span>Bayar via QRIS</span>
+                        </a>
+                        <!-- 4. Tombol ke Daftar Rekening -->
+                        <a href="#donasi-rekening" class="inline-flex items-center justify-center space-x-2 bg-transparent border-2 border-white text-white px-6 py-3 rounded-full font-bold text-base shadow-xl hover:bg-white/20 hover:shadow-2xl transform hover:scale-105 transition duration-300">
+                            <i class="fas fa-university"></i>
+                            <span>Daftar Rekening</span>
+                        </a>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Statistik (Desain Baru: Icon Kiri) -->
+            <section class="bg-gray-50 py-16 relative z-20">
+                <div class="container mx-auto px-4 md:px-6">
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                        <!-- Kartu Statistik 1 -->
+                        <div class="bg-white p-6 rounded-2xl shadow-lg flex items-center space-x-5 border-l-4 border-orange-500/30 hover:border-l-8 border-orange-500 transition-all duration-300 fade-in-up-scroll">
+                            <div class="bg-orange-500/10 rounded-full w-16 h-16 flex-shrink-0 flex items-center justify-center text-orange-500">
+                                <i class="fas fa-coins text-3xl"></i>
+                            </div>
+                            <div>
+                                <h3 class="text-3xl font-bold text-gray-800 mb-1">Rp 0</h3>
+                                <p class="text-gray-600 font-medium text-lg">Donasi Terkumpul</p>
+                            </div>
+                        </div>
+                        <!-- Kartu Statistik 2 -->
+                        <div class="bg-white p-6 rounded-2xl shadow-lg flex items-center space-x-5 border-l-4 border-orange-500/30 hover:border-l-8 border-orange-500 transition-all duration-300 fade-in-up-scroll" style="transition-delay: 150ms;">
+                            <div class="bg-orange-500/10 rounded-full w-16 h-16 flex-shrink-0 flex items-center justify-center text-orange-500">
+                                <i class="fas fa-users text-3xl"></i>
+                            </div>
+                            <div>
+                                <h3 class="text-3xl font-bold text-gray-800 mb-1">0</h3>
+                                <p class="text-gray-600 font-medium text-lg">Penerima Manfaat</p>
+                            </div>
+                        </div>
+                        <!-- Kartu Statistik 3 -->
+                        <div class="bg-white p-6 rounded-2xl shadow-lg flex items-center space-x-5 border-l-4 border-orange-500/30 hover:border-l-8 border-orange-500 transition-all duration-300 fade-in-up-scroll" style="transition-delay: 300ms;">
+                            <div class="bg-orange-500/10 rounded-full w-16 h-16 flex-shrink-0 flex items-center justify-center text-orange-500">
+                                <i class="fas fa-lightbulb text-3xl"></i>
+                            </div>
+                            <div>
+                                <h3 class="text-3xl font-bold text-gray-800 mb-1">0</h3>
+                                <p class="text-gray-600 font-medium text-lg">Program Unggulan</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+                
+            <!-- Program di Beranda (Interaksi Group Hover) -->
+            <section class="bg-white py-20"> 
+                <div class="container mx-auto px-4 md:px-6 text-center">
+                    <h2 class="text-4xl font-bold text-gray-800 mb-5 fade-in-up-scroll bg-clip-text text-transparent bg-gradient-to-r from-orange-600 to-orange-500">
+                        Program Kebaikan Lazismu Mu'allimin
+                    </h2>
+                    <p class="text-lg text-gray-600 mb-14 max-w-3xl mx-auto fade-in-up-scroll" style="transition-delay: 100ms;">
+                        Salurkan bantuan Anda melalui program-program kami yang berdampak langsung dan berkelanjutan bagi masyarakat.
+                    </p>
+                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+                        <!-- Kartu Program 1 (REFACTOR) Mengganti .group-hover-scale dengan kelas Tailwind -->
+                        <a href="#program" class="group bg-white rounded-xl shadow-lg overflow-hidden border border-gray-100 fade-in-up-scroll transition-all duration-300 hover:shadow-xl" style="transition-delay: 200ms;">
+                            <div class="overflow-hidden">
+                                <img src="https://placehold.co/600x400/f97316/ffffff?text=Pendidikan" alt="Pendidikan" class="w-full h-48 object-cover object-center transform transition-transform duration-300 group-hover:scale-110">
+                            </div>
+                            <div class="p-6 text-center">
+                                <h3 class="text-xl font-semibold mb-2 text-gray-800 flex items-center space-x-2 justify-center transition-colors group-hover:text-orange-500">
+                                    <i class="fas fa-graduation-cap text-orange-500"></i> <span>Pendidikan Cerdas</span>
+                                </h3>
+                                <p class="text-gray-600 text-sm mb-4">Beasiswa dan bantuan sarana pendidikan untuk siswa berprestasi dan dhuafa.</p>
+                                <span class="text-orange-500 font-semibold transition duration-200 inline-flex items-center space-x-1">
+                                    <span>Lihat Detail</span> <i class="fas fa-arrow-right text-sm"></i>
+                                </span>
+                            </div>
+                        </a>
+                        <!-- Kartu Program 2 -->
+                        <a href="#program" class="group bg-white rounded-xl shadow-lg overflow-hidden border border-gray-100 fade-in-up-scroll transition-all duration-300 hover:shadow-xl" style="transition-delay: 300ms;">
+                            <div class="overflow-hidden">
+                                <img src="https://placehold.co/600x400/1f2937/ffffff?text=Kesehatan" alt="Kesehatan" class="w-full h-48 object-cover object-center transform transition-transform duration-300 group-hover:scale-110">
+                            </div>
+                            <div class="p-6 text-center">
+                                <h3 class="text-xl font-semibold mb-2 text-gray-800 flex items-center space-x-2 justify-center transition-colors group-hover:text-orange-500">
+                                    <i class="fas fa-heartbeat text-orange-500"></i> <span>Mu'allimin Sehat</span>
+                                </h3>
+                                <p class="text-gray-600 text-sm mb-4">Layanan kesehatan gratis dan bantuan pengobatan untuk masyarakat sekitar.</p>
+                                <span class="text-orange-500 font-semibold transition duration-200 inline-flex items-center space-x-1">
+                                    <span>Lihat Detail</span> <i class="fas fa-arrow-right text-sm"></i>
+                                </span>
+                            </div>
+                        </a>
+                        <!-- Kartu Program 3 -->
+                        <a href="#program" class="group bg-white rounded-xl shadow-lg overflow-hidden border border-gray-100 fade-in-up-scroll transition-all duration-300 hover:shadow-xl" style="transition-delay: 400ms;">
+                            <div class="overflow-hidden">
+                                <img src="https://placehold.co/600x400/f97316/ffffff?text=Sosial" alt="Sosial" class="w-full h-48 object-cover object-center transform transition-transform duration-300 group-hover:scale-110">
+                            </div>
+                            <div class="p-6 text-center">
+                                <h3 class="text-xl font-semibold mb-2 text-gray-800 flex items-center space-x-2 justify-center transition-colors group-hover:text-orange-500">
+                                    <i class="fas fa-handshake text-orange-500"></i> <span>Bakti Sosial</span>
+                                </h3>
+                                <p class="text-gray-600 text-sm mb-4">Santunan yatim & dhuafa, bantuan bencana, dan paket sembako.</p>
+                                <span class="text-orange-500 font-semibold transition duration-200 inline-flex items-center space-x-1">
+                                    <span>Lihat Detail</span> <i class="fas fa-arrow-right text-sm"></i>
+                                </span>
+                            </div>
+                        </a>
+                        <!-- Kartu Program 4 -->
+                        <a href="#program" class="group bg-white rounded-xl shadow-lg overflow-hidden border border-gray-100 fade-in-up-scroll transition-all duration-300 hover:shadow-xl" style="transition-delay: 500ms;">
+                            <div class="overflow-hidden">
+                                <img src="https://placehold.co/600x400/1f2937/ffffff?text=Dakwah" alt="Dakwah" class="w-full h-48 object-cover object-center transform transition-transform duration-300 group-hover:scale-110">
+                            </div>
+                            <div class="p-6 text-center">
+                                <h3 class="text-xl font-semibold mb-2 text-gray-800 flex items-center space-x-2 justify-center transition-colors group-hover:text-orange-500">
+                                    <i class="fas fa-mosque text-orange-500"></i> <span>Dakwah & Kaderisasi</span>
+                                </h3>
+                                <p class="text-gray-600 text-sm mb-4">Pembinaan mualaf dan dukungan kegiatan dakwah kader Muhammadiyah.</p>
+                                <span class="text-orange-500 font-semibold transition duration-200 inline-flex items-center space-x-1">
+                                    <span>Lihat Detail</span> <i class="fas fa-arrow-right text-sm"></i>
+                                </span>
+                            </div>
+                        </a>
+                    </div>
+                </div>
+            </section>
+            
+            <!-- SECTION DAFTAR REKENING DI BERANDA -->
+            <section id="donasi-rekening" class="bg-amber-50 py-20">
+                <div class="container mx-auto px-4 md:px-6">
+                    <h2 class="text-4xl font-bold text-center mb-12 fade-in-up-scroll bg-clip-text text-transparent bg-gradient-to-r from-orange-600 to-orange-500">
+                        Rekening Donasi
+                    </h2>
+                    <div class="max-w-4xl mx-auto space-y-6 fade-in-up-scroll" style="transition-delay: 200ms;">
+                        <!-- (REFACTOR) Kartu BNI dengan kelas hover Tailwind -->
+                        <div class="relative bg-white border-b-4 border-orange-500 rounded-lg shadow-xl p-5 transition-all duration-300 ease-in-out hover:-translate-y-1 hover:shadow-lg hover:shadow-orange-500/40">
+                            <img src="https://placehold.co/100x30/f97316/ffffff?text=BNI" alt="Logo BNI" class="h-8 object-contain mb-3">
+                            <p class="text-sm text-gray-600">Nomor Rekening:</p>
+                            <div class="flex justify-between items-center mb-2">
+                                <span id="rek-bni-beranda" class="text-2xl font-extrabold text-gray-800">3440000348</span>
+                                <button data-copy="rek-bni-beranda" class="copy-button text-xs bg-gray-200 text-gray-700 px-3 py-1 rounded-full font-semibold hover:bg-gray-300">
+                                    <i class="fas fa-copy mr-1"></i> Salin
+                                </button>
+                            </div>
+                            <p class="text-sm text-gray-600">a.n. LAZISMU MADRASAH MU'ALLIMIN MUHAMMADIYAH</p>
+                        </div>
+                        <!-- (REFACTOR) Kartu BSI dengan kelas hover Tailwind -->
+                        <div class="relative bg-white border-b-4 border-teal-500 rounded-lg shadow-xl p-5 transition-all duration-300 ease-in-out hover:-translate-y-1 hover:shadow-lg hover:shadow-teal-500/40">
+                            <img src="https://placehold.co/100x30/14b8a6/ffffff?text=BSI" alt="Logo BSI" class="h-8 object-contain mb-3">
+                            <p class="text-sm text-gray-600">Nomor Rekening:</p>
+                            <div class="flex justify-between items-center mb-2">
+                                <span id="rek-bsi-beranda" class="text-2xl font-extrabold text-gray-800">7930030303</span>
+                                <button data-copy="rek-bsi-beranda" class="copy-button text-xs bg-gray-200 text-gray-700 px-3 py-1 rounded-full font-semibold hover:bg-gray-300">
+                                    <i class="fas fa-copy mr-1"></i> Salin
+                                </button>
+                            </div>
+                            <p class="text-sm text-gray-600">a.n. LAZISMU MUALLIMIN YOGYARAKARTA</p>
+                        </div>
+                        <!-- (REFACTOR) Kartu BPD dengan kelas hover Tailwind -->
+                        <div class="relative bg-white border-b-4 border-blue-600 rounded-lg shadow-xl p-5 transition-all duration-300 ease-in-out hover:-translate-y-1 hover:shadow-lg hover:shadow-blue-600/40">
+                            <img src="https://placehold.co/100x30/3b82f6/ffffff?text=BPD+DIY" alt="Logo BPD DIY Syariah" class="h-8 object-contain mb-3">
+                            <p class="text-sm text-gray-600">Nomor Rekening:</p>
+                            <div class="flex justify-between items-center mb-2">
+                                <span id="rek-bpd-beranda" class="text-2xl font-extrabold text-gray-800">801241004624</span>
+                                <button data-copy="rek-bpd-beranda" class="copy-button text-xs bg-gray-200 text-gray-700 px-3 py-1 rounded-full font-semibold hover:bg-gray-300">
+                                    <i class="fas fa-copy mr-1"></i> Salin
+                                </button>
+                            </div>
+                            <p class="text-sm text-gray-600">a.n. KL LAZISMU MADRASAH MUALLIMIN</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+            
+            <!-- SECTION QRIS DI BERANDA -->
+            <section id="donasi-qris" class="bg-white py-20">
+                <div class="container mx-auto px-4 md:px-6">
+                    <h2 class="text-4xl font-bold text-center mb-12 fade-in-up-scroll bg-clip-text text-transparent bg-gradient-to-r from-orange-600 to-orange-500">
+                        Bayar via QRIS
+                    </h2>
+                    <div class="max-w-4xl mx-auto bg-white p-8 rounded-2xl shadow-xl border border-gray-100 fade-in-up-scroll" style="transition-delay: 300ms;">
+                        <p class="text-gray-600 text-center mb-6">Scan atau download kode QRIS di bawah ini.</p>
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-8 w-full">
+                            <!-- QRIS BSI -->
+                            <div class="flex flex-col items-center">
+                                <h4 class="text-lg font-semibold text-gray-800 mb-3">QRIS Bank BSI</h4>
+                                <img src="https://drive.google.com/thumbnail?id=1xNHeckecd8Pn_7dSOQ0KfGcl0I_FCY9V" alt="QRIS BSI" class="w-full max-w-[250px] object-contain border-4 border-gray-200 rounded-xl shadow-md" onerror="this.alt='Gagal memuat QRIS BSI'; this.src='https://placehold.co/250x250/fef2f2/ef4444?text=Error:+Gagal+memuat+QRIS';">
+                                <a href="https://drive.google.com/uc?export=download&id=1xNHeckecd8Pn_7dSOQ0KfGcl0I_FCY9V" class="mt-4 inline-flex items-center space-x-2 bg-gray-600 text-white px-5 py-2 rounded-full font-semibold hover:bg-gray-700 transition duration-300 shadow-md">
+                                    <i class="fas fa-download"></i>
+                                    <span>Download QRIS</span>
+                                </a>
+                            </div>
+                            <!-- QRIS BPD -->
+                            <div class="flex flex-col items-center">
+                                <h4 class="text-lg font-semibold text-gray-800 mb-3">QRIS BPD DIY Syariah</h4>
+                                <img src="https://drive.google.com/thumbnail?id=1BHYcMAUp3OiVeRx2HwjPPEu2StcYiUpm" alt="QRIS BPD" class="w-full max-w-[250px] object-contain border-4 border-gray-200 rounded-xl shadow-md" onerror="this.alt='Gagal memuat QRIS BPD'; this.src='https://placehold.co/250x250/fef2f2/ef4444?text=Error:+Gagal+memuat+QRIS';">
+                                <a href="https://drive.google.com/uc?export=download&id=1BHYcMAUp3OiVeRx2HwjPPEu2StcYiUpm" class="mt-4 inline-flex items-center space-x-2 bg-gray-600 text-white px-5 py-2 rounded-full font-semibold hover:bg-gray-700 transition duration-300 shadow-md">
+                                    <i class="fas fa-download"></i>
+                                    <span>Download QRIS</span>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+        </section> <!-- Penutup untuk #page-home -->
+
+
+        <!-- === HALAMAN TENTANG KAMI (DENGAN VARIASI WARNA) === -->
+        <section id="page-tentang" class="page-section bg-white py-20"> <!-- Latar belakang putih bersih -->
+            <div class="container mx-auto px-4 md:px-6">
+                <h2 class="text-4xl font-bold text-center mb-16 fade-in-up-scroll bg-clip-text text-transparent bg-gradient-to-r from-orange-600 to-orange-500">
+                    Mengenal Lebih Dekat Lazismu Mu'allimin
+                </h2>
+                
+                <!-- Bagian Deskripsi Awal -->
+                <div class="bg-white p-8 md:p-12 rounded-2xl shadow-xl border border-gray-100">
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
+                        <div class="order-2 md:order-1 fade-in-up-scroll" style="transition-delay: 200ms;">
+                            <div class="overflow-hidden rounded-xl shadow-md border border-gray-100">
+                                <img src="https://placehold.co/600x400/f97316/ffffff?text=Tentang+Kami" alt="Tentang Kami" class="w-full h-full object-cover transform transition-transform duration-300 hover:scale-110">
+                            </div>
+                        </div>
+                        <div class="text-gray-700 leading-relaxed order-1 md:order-2 fade-in-up-scroll" style="transition-delay: 100ms;">
+                            <p class="mb-5 text-lg">
+                                <strong>Kantor Layanan LAZISMU Madrasah Mu'allimin Muhammadiyah Yogyakarta</strong> adalah lembaga amil zakat yang profesional dan amanah, beroperasi di bawah naungan Madrasah Mu'allimin Muhammadiyah Yogyakarta. Kami berkomitmen untuk menyalurkan Zakat, Infaq, dan Sedekah (ZIS) secara transparan dan tepat sasaran.
+                            </p>
+                            <p class="mb-8">
+                                Kami hadir untuk menjadi jembatan kebaikan Anda, menghubungkan para muzaki dengan mustahik yang membutuhkan, serta mendukung program-program pemberdayaan umat, khususnya di lingkungan pendidikan Mu'allimin dan masyarakat sekitar.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Bagian Visi & Misi (DENGAN VARIASI WARNA) -->
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mt-12">
+                    <!-- (REFACTOR) Kartu Visi dengan kelas hover Tailwind, mengganti .card-hover-effect -->
+                    <div class="bg-white p-8 rounded-2xl shadow-xl border border-gray-100 fade-in-up-scroll transition-all duration-300 ease-in-out hover:-translate-y-2 hover:shadow-xl hover:shadow-orange-500/30" style="transition-delay: 300ms;">
+                        <div class="flex items-center space-x-4 mb-4">
+                            <span class="flex-shrink-0 w-16 h-16 rounded-full bg-orange-500/10 text-orange-500 flex items-center justify-center">
+                                <i class="fas fa-eye text-3xl"></i>
+                            </span>
+                            <h3 class="text-3xl font-bold text-gray-800">Visi Kami</h3>
+                        </div>
+                        <p class="font-medium text-lg text-gray-700">"Menjadi Lembaga Amil Zakat yang Unggul dan Tepercaya dalam Pemberdayaan Umat."</p>
+                    </div>
+                    <!-- (REFACTOR) Kartu Misi dengan kelas hover Tailwind, mengganti .card-hover-effect -->
+                    <div class="bg-amber-50 p-8 rounded-2xl shadow-xl border border-gray-100 fade-in-up-scroll transition-all duration-300 ease-in-out hover:-translate-y-2 hover:shadow-xl hover:shadow-orange-500/30" style="transition-delay: 400ms;">
+                         <div class="flex items-center space-x-4 mb-4">
+                            <span class="flex-shrink-0 w-16 h-16 rounded-full bg-orange-500/10 text-orange-500 flex items-center justify-center">
+                                <i class="fas fa-rocket text-3xl"></i>
+                            </span>
+                            <h3 class="text-3xl font-bold text-gray-800">Misi Kami</h3>
+                        </div>
+                        <ul class="list-none space-y-3 pl-0 text-gray-700">
+                           <li class="flex items-start">
+                                <i class="fas fa-check-circle text-orange-500 mt-1 mr-3 flex-shrink-0"></i>
+                                <span>Optimalisasi penghimpunan ZIS yang berbasis teknologi dan kemudahan.</span>
+                            </li>
+                            <li class="flex items-start">
+                                <i class="fas fa-check-circle text-orange-500 mt-1 mr-3 flex-shrink-0"></i>
+                                <span>Pendayagunaan ZIS yang kreatif, inovatif, dan produktif.</span>
+                            </li>
+                            <li class="flex items-start">
+                                <i class="fas fa-check-circle text-orange-500 mt-1 mr-3 flex-shrink-0"></i>
+                                <span>Penguatan pilar pendidikan, kesehatan, sosial, dan dakwah.</span>
+                            </li>
+                            <li class="flex items-start">
+                                <i class="fas fa-check-circle text-orange-500 mt-1 mr-3 flex-shrink-0"></i>
+                                <span>Menjalankan organisasi secara profesional dan akuntabel.</span>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Bagian Tim Kami (Desain Ikon) -->
+                <div class="mt-16">
+                    <h2 class="text-4xl font-bold text-center mb-12 fade-in-up-scroll bg-clip-text text-transparent bg-gradient-to-r from-orange-600 to-orange-500" style="transition-delay: 500ms;">
+                        Tim Profesional Kami
+                    </h2>
+                    <div class="bg-white p-8 md:p-12 rounded-2xl shadow-xl border border-gray-100 fade-in-up-scroll" style="transition-delay: 600ms;">
+                        <ul class="space-y-6">
+                            <!-- Tim 1 -->
+                            <li class="flex items-center space-x-5">
+                                <div class="flex-shrink-0 w-16 h-16 rounded-full bg-orange-500/10 text-orange-500 flex items-center justify-center">
+                                    <i class="fas fa-user-tie text-3xl"></i>
+                                </div>
+                                <div>
+                                    <h4 class="text-xl font-bold text-gray-800">Tafak Kuruddin, S.E.I.</h4>
+                                    <p class="text-orange-500 font-semibold text-lg">Kepala Kantor</p>
+                                </div>
+                            </li>
+                            <!-- Garis Pemisah -->
+                            <li class="border-t border-gray-100"></li>
+                            <!-- Tim 2 -->
+                            <li class="flex items-center space-x-5">
+                                <div class="flex-shrink-0 w-16 h-16 rounded-full bg-orange-500/10 text-orange-500 flex items-center justify-center">
+                                    <i class="fas fa-cash-register text-3xl"></i>
+                                </div>
+                                <div>
+                                    <h4 class="text-xl font-bold text-gray-800">Andi Aqillah Fadia Haswat, S.A.P.</h4>
+                                    <p class="text-orange-500 font-semibold text-lg">Staf Administrasi & Keuangan</p>
+                                </div>
+                            </li>
+                            <!-- Garis Pemisah -->
+                            <li class="border-t border-gray-100"></li>
+                            <!-- Tim 3 -->
+                            <li class="flex items-center space-x-5">
+                                <div class="flex-shrink-0 w-16 h-16 rounded-full bg-orange-500/10 text-orange-500 flex items-center justify-center">
+                                    <i class="fas fa-hands-helping text-3xl"></i>
+                                </div>
+                                <div>
+                                    <h4 class="text-xl font-bold text-gray-800">Ahmad Faroch Alfarizi, M.Pd.</h4>
+                                    <p class="text-orange-500 font-semibold text-lg">Staf Penghimpunan & Penyaluran</p>
+                                </div>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+
+            </div>
+        </section>
+
+        <!-- === HALAMAN PROGRAM (Layout "Kaya" + Ikon) === -->
+        <section id="page-program" class="page-section bg-gray-50 py-20"> 
+            <div class="container mx-auto px-4 md:px-6">
+                <h2 class="text-4xl font-bold text-center mb-16 fade-in-up-scroll bg-clip-text text-transparent bg-gradient-to-r from-orange-600 to-orange-500">
+                    Program Unggulan Kami
+                </h2>
+                
+                <!-- (REFACTOR) Program 1: Pendidikan (mengganti .group-hover-scale) -->
+                <div class="bg-white rounded-2xl shadow-xl mb-12 flex flex-col md:flex-row gap-8 items-center border border-gray-100 overflow-hidden group fade-in-up-scroll">
+                    <div class="md:w-2/5 overflow-hidden">
+                        <img src="https://placehold.co/600x400/f97316/ffffff?text=Pendidikan+Cerdas" alt="Pendidikan" class="w-full h-64 md:h-full object-cover shadow-md transform transition-transform duration-300 group-hover:scale-110">
+                    </div>
+                    <div class="md:w-3/5 p-8">
+                        <h3 class="text-3xl font-bold text-gray-800 mb-4 flex items-center space-x-3">
+                            <span class="flex-shrink-0 w-12 h-12 rounded-full bg-orange-500/10 text-orange-500 flex items-center justify-center">
+                                <i class="fas fa-graduation-cap text-2xl"></i>
+                            </span>
+                            <span>Program Pendidikan Cerdas</span>
+                        </h3>
+                        <p class="text-gray-700 text-lg mb-6">
+                            Pendidikan adalah kunci kemajuan bangsa. Melalui program ini, kami berkomitmen untuk mendukung akses pendidikan berkualitas bagi anak-anak kurang mampu. Kami menyediakan beasiswa penuh, bantuan perlengkapan sekolah, serta pengembangan fasilitas belajar mengajar yang inovatif.
+                        </p>
+                        <a href="#donasi" class="inline-flex items-center space-x-2 bg-gradient-to-r from-orange-500 to-orange-600 text-white px-8 py-3 rounded-full font-semibold hover:shadow-lg transition duration-300 shadow-md transform hover:scale-105">
+                            <i class="fas fa-donate"></i>
+                            <span>Donasi untuk Pendidikan</span>
+                        </a>
+                    </div>
+                </div>
+
+                <!-- (REFACTOR) Program 2: Kesehatan (latar bg-amber-50) -->
+                <div class="bg-amber-50 rounded-2xl shadow-xl mb-12 flex flex-col md:flex-row-reverse gap-8 items-center border border-gray-100 overflow-hidden group fade-in-up-scroll">
+                    <div class="md:w-2/5 overflow-hidden">
+                        <img src="https://placehold.co/600x400/1f2937/ffffff?text=Mu'allimin+Sehat" alt="Kesehatan" class="w-full h-64 md:h-full object-cover shadow-md transform transition-transform duration-300 group-hover:scale-110">
+                    </div>
+                    <div class="md:w-3/5 p-8">
+                         <h3 class="text-3xl font-bold text-gray-800 mb-4 flex items-center space-x-3">
+                            <span class="flex-shrink-0 w-12 h-12 rounded-full bg-orange-500/10 text-orange-500 flex items-center justify-center">
+                                <i class="fas fa-heartbeat text-2xl"></i>
+                            </span>
+                            <span>Program Mu'allimin Sehat</span>
+                        </h3>
+                        <p class="text-gray-700 text-lg mb-6">
+                            Kesehatan adalah modal utama dalam beribadah dan berkarya. Program Mu'allimin Sehat menyediakan layanan kesehatan gratis bagi dhuafa, bantuan biaya pengobatan, serta inisiatif promotif dan preventif seperti penyuluhan kesehatan dan khitanan massal.
+                        </p>
+                        <a href="#donasi" class="inline-flex items-center space-x-2 bg-gradient-to-r from-orange-500 to-orange-600 text-white px-8 py-3 rounded-full font-semibold hover:shadow-lg transition duration-300 shadow-md transform hover:scale-105">
+                            <i class="fas fa-donate"></i>
+                            <span>Donasi untuk Kesehatan</span>
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Program 3: Sosial -->
+                <div class="bg-white rounded-2xl shadow-xl mb-12 flex flex-col md:flex-row gap-8 items-center border border-gray-100 overflow-hidden group fade-in-up-scroll">
+                    <div class="md:w-2/5 overflow-hidden">
+                        <img src="https://placehold.co/600x400/f97316/ffffff?text=Bakti+Sosial" alt="Sosial" class="w-full h-64 md:h-full object-cover shadow-md transform transition-transform duration-300 group-hover:scale-110">
+                    </div>
+                    <div class="md:w-3/5 p-8">
+                         <h3 class="text-3xl font-bold text-gray-800 mb-4 flex items-center space-x-3">
+                            <span class="flex-shrink-0 w-12 h-12 rounded-full bg-orange-500/10 text-orange-500 flex items-center justify-center">
+                                <i class="fas fa-handshake text-2xl"></i>
+                            </span>
+                            <span>Bakti Sosial & Kemanusiaan</span>
+                        </h3>
+                        <p class="text-gray-700 text-lg mb-6">
+                            Ketika musibah datang atau kebutuhan mendesak, Lazismu Mu'allimin siap bergerak cepat. Program ini meliputi penyaluran paket sembako, santunan rutin untuk yatim dan dhuafa, serta respons tanggap darurat bencana.
+                        </p>
+                        <a href="#donasi" class="inline-flex items-center space-x-2 bg-gradient-to-r from-orange-500 to-orange-600 text-white px-8 py-3 rounded-full font-semibold hover:shadow-lg transition duration-300 shadow-md transform hover:scale-105">
+                            <i class="fas fa-donate"></i>
+                            <span>Donasi untuk Sosial</span>
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Program 4: Dakwah (latar bg-amber-50) -->
+                <div class="bg-amber-50 rounded-2xl shadow-xl flex flex-col md:flex-row-reverse gap-8 items-center border border-gray-100 overflow-hidden group fade-in-up-scroll">
+                    <div class="md:w-2/5 overflow-hidden">
+                        <img src="https://placehold.co/600x400/1f2937/ffffff?text=Dakwah+Kaderisasi" alt="Dakwah" class="w-full h-64 md:h-full object-cover shadow-md transform transition-transform duration-300 group-hover:scale-110">
+                    </div>
+                    <div class="md:w-3/5 p-8">
+                         <h3 class="text-3xl font-bold text-gray-800 mb-4 flex items-center space-x-3">
+                            <span class="flex-shrink-0 w-12 h-12 rounded-full bg-orange-500/10 text-orange-500 flex items-center justify-center">
+                                <i class="fas fa-mosque text-2xl"></i>
+                            </span>
+                            <span>Dakwah & Kaderisasi</span>
+                        </h3>
+                        <p class="text-gray-700 text-lg mb-6">
+                            Mencetak generasi penerus yang berintegritas dan bertaqwa adalah misi utama. Program ini mendukung kegiatan dakwah, pembinaan kader Muhammadiyah, pengembangan potensi dai muda, dan penyediaan literatur keagamaan.
+                        </p>
+                        <a href="#donasi" class="inline-flex items-center space-x-2 bg-gradient-to-r from-orange-500 to-orange-600 text-white px-8 py-3 rounded-full font-semibold hover:shadow-lg transition duration-300 shadow-md transform hover:scale-105">
+                            <i class="fas fa-donate"></i>
+                            <span>Donasi untuk Dakwah</span>
+                        </a>
+                    </div>
+                </div>
+
+            </div>
+        </section>
+
+        <!-- === HALAMAN BERITA (Layout "Kaya" + Featured) === -->
+        <section id="page-berita" class="page-section bg-gray-50 py-20">
+            <div class="container mx-auto px-4 md:px-6">
+                <h2 class="text-4xl font-bold text-center mb-16 fade-in-up-scroll bg-clip-text text-transparent bg-gradient-to-r from-orange-600 to-orange-500">
+                    Kabar Kebaikan dari Lazismu
+                </h2>
+                
+                <!-- (REFACTOR) Berita 1 (FEATURED) (mengganti .group-hover-scale) -->
+                <a href="#" class="group bg-white rounded-2xl shadow-xl overflow-hidden mb-16 flex flex-col md:flex-row gap-0 md:gap-8 items-center border border-gray-100 fade-in-up-scroll transition-all duration-300 hover:shadow-2xl" style="transition-delay: 100ms;">
+                    <div class="md:w-1/2 overflow-hidden">
+                        <img src="https://placehold.co/600x400/f97316/ffffff?text=Berita+1" alt="Berita 1" class="w-full h-64 md:h-96 object-cover transform transition-transform duration-300 group-hover:scale-110">
+                    </div>
+                    <div class="p-8 md:w-1/2">
+                        <span class="text-xs text-gray-500 block mb-2"><i class="fas fa-calendar-alt mr-1"></i> 10 November 2025 • <span class="text-orange-500 font-semibold">BERITA UTAMA</span></span>
+                        <h3 class="text-3xl font-bold text-gray-800 my-3 leading-tight transition-colors group-hover:text-orange-500">Penyaluran Beasiswa Cerdas Mu'allimin Tahap II</h3>
+                        <p class="text-gray-600 text-lg mb-6">
+                            Lazismu Mu'allimin kembali menyalurkan beasiswa pendidikan untuk 50 siswa berprestasi dhuafa di lingkungan madrasah. Program ini diharapkan dapat memotivasi siswa untuk terus berprestasi...
+                        </p>
+                        <span class="text-orange-500 font-semibold transition duration-200 inline-flex items-center space-x-1">
+                            <span>Baca Selengkapnya</span> <i class="fas fa-long-arrow-alt-right text-sm"></i>
+                        </span>
+                    </div>
+                </a>
+
+                <h3 class="text-3xl font-bold text-gray-800 mb-8 mt-16 fade-in-up-scroll" style="transition-delay: 200ms;">
+                    Berita Lainnya
+                </h3>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                    <!-- Berita 2 -->
+                    <a href="#" class="group bg-white rounded-xl shadow-lg overflow-hidden border border-gray-100 fade-in-up-scroll transition-all duration-300 hover:shadow-2xl" style="transition-delay: 300ms;">
+                        <div class="overflow-hidden">
+                            <img src="https://placehold.co/600x400/1f2937/ffffff?text=Berita+2" alt="Berita 2" class="w-full h-48 object-cover transform transition-transform duration-300 group-hover:scale-110">
+                        </div>
+                        <div class="p-6">
+                            <span class="text-xs text-gray-500 block mb-2"><i class="fas fa-calendar-alt mr-1"></i> 5 November 2025</span>
+                            <h3 class="text-xl font-semibold text-gray-800 my-2 leading-tight transition-colors group-hover:text-orange-500">Bantuan Sembako untuk Warga Terdampak Banjir</h3>
+                            <p class="text-gray-600 text-sm mb-4">Tim Lazismu Mu'allimin bergerak cepat memberikan bantuan paket sembako kepada warga...</p>
+                            <span class="text-orange-500 font-medium transition duration-200 inline-flex items-center space-x-1">
+                                <span>Baca Selengkapnya</span> <i class="fas fa-long-arrow-alt-right text-sm"></i>
+                            </span>
+                        </div>
+                    </a>
+                    <!-- Berita 3 -->
+                    <a href="#" class="group bg-white rounded-xl shadow-lg overflow-hidden border border-gray-100 fade-in-up-scroll transition-all duration-300 hover:shadow-2xl" style="transition-delay: 400ms;">
+                        <div class="overflow-hidden">
+                            <img src="https://placehold.co/600x400/f97316/ffffff?text=Berita+3" alt="Berita 3" class="w-full h-48 object-cover transform transition-transform duration-300 group-hover:scale-110">
+                        </div>
+                        <div class="p-6">
+                            <span class="text-xs text-gray-500 block mb-2"><i class="fas fa-calendar-alt mr-1"></i> 1 November 2025</span>
+                            <h3 class="text-xl font-semibold text-gray-800 my-2 leading-tight transition-colors group-hover:text-orange-500">Program Khitanan Massal Ceria Diikuti 100 Anak</h3>
+                            <p class="text-gray-600 text-sm mb-4">Bekerja sama dengan RS PKU Muhammadiyah, Lazismu Mu'allimin sukses menggelar...</p>
+                            <span class="text-orange-500 font-medium transition duration-200 inline-flex items-center space-x-1">
+                                <span>Baca Selengkapnya</span> <i class="fas fa-long-arrow-alt-right text-sm"></i>
+                            </span>
+                        </div>
+                    </a>
+                </div>
+            </div>
+        </section>
+
+        <!-- === HALAMAN DONASI (WIZARD BARU) === -->
+        <section id="page-donasi" class="page-section bg-gray-50 py-20"> 
+            <div class="container mx-auto px-4 md:px-6">
+                
+                <h2 class="text-4xl font-bold text-center mb-6 fade-in-up-scroll bg-clip-text text-transparent bg-gradient-to-r from-orange-600 to-orange-500">
+                    Tunaikan Donasi Anda
+                </h2>
+                <p class="text-lg text-gray-600 mb-10 text-center max-w-3xl mx-auto fade-in-up-scroll" style="transition-delay: 100ms;">
+                    Ikuti langkah-langkah mudah di bawah ini untuk menyalurkan donasi Anda.
+                </p>
+
+                <!-- Wrapper untuk Wizard Donasi -->
+                <div id="donasi-wizard" class="max-w-4xl mx-auto bg-white rounded-2xl shadow-xl border border-gray-100 overflow-hidden">
+                    
+                    <!-- PROGRESS BAR WIZARD -->
+                    <div class="p-6 border-b border-gray-100">
+                        <div class="flex items-center justify-between">
+                            <h3 class="text-xl font-bold text-gray-800">Formulir Donasi</h3>
+                            <span id="wizard-progress" class="text-sm font-semibold text-orange-500">Langkah 1 dari 5</span>
+                        </div>
+                        <div class="w-full bg-gray-200 rounded-full h-2.5 mt-4">
+                            <div id="wizard-progress-bar" class="bg-orange-500 h-2.5 rounded-full transition-all duration-500" style="width: 20%"></div>
+                        </div>
+                    </div>
+
+                    <!-- STEP 1: PILIH TIPE DONASI -->
+                    <div id="donasi-step-1" class="donasi-step-container p-6 md:p-10 fade-in-up-scroll">
+                        <h3 class="text-2xl font-bold text-gray-800 mb-6">Langkah 1: Pilih Jenis Donasi</h3>
+                        <div class="max-w-md mx-auto grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <button data-type="Zakat" class="choice-button donasi-type-btn text-lg font-semibold border-2 border-gray-200 rounded-lg p-6 text-center hover:border-orange-500">
+                                <i class="fas fa-balance-scale text-3xl mb-3 text-orange-500"></i><br>Zakat
+                            </button>
+                            <button data-type="Infaq" class="choice-button donasi-type-btn text-lg font-semibold border-2 border-gray-200 rounded-lg p-6 text-center hover:border-orange-500">
+                                <i class="fas fa-hand-holding-dollar text-3xl mb-3 text-orange-500"></i><br>Infaq Umum
+                            </button>
+                        </div>
+                        
+                        <!-- Kalkulator Zakat (Muncul saat 'Zakat' dipilih) -->
+                        <div id="zakat-checker" class="hidden mt-6 bg-amber-50 p-6 rounded-lg">
+                            <h4 class="text-xl font-bold text-gray-800 mb-4">Kalkulator Zakat Penghasilan</h4>
+                            <p class="text-gray-600 mb-4">Mari kita hitung apakah Anda sudah wajib zakat. Masukkan penghasilan bulanan Anda.</p>
+                            <div>
+                                <label for="harga-emas" class="block text-sm font-medium text-gray-700 mb-1">Asumsi Harga Emas (per gram)</label>
+                                <input type="number" id="harga-emas" value="1000000" class="w-full border border-gray-300 rounded-lg p-3 shadow-sm focus:ring-orange-500 focus:border-orange-500 text-lg">
+                            </div>
+                            <div class="mt-4">
+                                <label for="penghasilan-bulanan" class="block text-sm font-medium text-gray-700 mb-1">Penghasilan Bulanan Anda (Rp)</label>
+                                <input type="number" id="penghasilan-bulanan" placeholder="Contoh: 8500000" class="w-full border border-gray-300 rounded-lg p-3 shadow-sm focus:ring-orange-500 focus:border-orange-500 text-lg">
+                            </div>
+                            <button id="zakat-check-button" class="mt-4 w-full bg-gradient-to-r from-orange-500 to-orange-600 text-white px-6 py-3 rounded-full font-semibold hover:shadow-lg transition duration-300 shadow-md">
+                                Cek Zakat Saya
+                            </button>
+                            
+                            <!-- Hasil Cek Zakat -->
+                            <div id="zakat-result" class="hidden mt-4 text-center">
+                                <p id="zakat-result-message" class="text-lg font-semibold"></p>
+                                <button id="zakat-lanjutkan-infaq" class="hidden mt-2 text-orange-500 font-bold hover:underline">Lanjutkan sebagai Infaq</button>
+                            </div>
+                        </div>
+
+                        <!-- Tombol Navigasi Step 1 (Muncul setelah dipilih) -->
+                        <div id="step-1-nav" class="hidden text-right mt-8">
+                            <button data-next-step="2" class="wizard-next-btn bg-gradient-to-r from-orange-500 to-orange-600 text-white px-8 py-3 rounded-full font-semibold hover:shadow-lg transition duration-300 shadow-md">
+                                Lanjut <i class="fas fa-arrow-right ml-2"></i>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- STEP 2: PILIH NOMINAL -->
+                    <div id="donasi-step-2" class="donasi-step-container hidden p-6 md:p-10 fade-in-up-scroll">
+                        <h3 class="text-2xl font-bold text-gray-800 mb-6">Langkah 2: Masukkan Nominal <span id="nominal-title-type" class="text-orange-500"></span></h3>
+                        <div class="grid grid-cols-2 md:grid-cols-3 gap-4">
+                            <button class="choice-button nominal-btn border-2 border-gray-200 rounded-lg p-4 text-center font-bold text-lg hover:border-orange-500" data-nominal="100000">Rp 100.000</button>
+                            <button class="choice-button nominal-btn border-2 border-gray-200 rounded-lg p-4 text-center font-bold text-lg hover:border-orange-500" data-nominal="500000">Rp 500.000</button>
+                            <button class="choice-button nominal-btn border-2 border-gray-200 rounded-lg p-4 text-center font-bold text-lg hover:border-orange-500" data-nominal="1000000">Rp 1.000.000</button>
+                            <button class="choice-button nominal-btn border-2 border-gray-200 rounded-lg p-4 text-center font-bold text-lg hover:border-orange-500" data-nominal="5000000">Rp 5.000.000</button>
+                            <button class="choice-button nominal-btn border-2 border-gray-200 rounded-lg p-4 text-center font-bold text-lg hover:border-orange-500" data-nominal="10000000">Rp 10.000.000</button>
+                            <button class="choice-button nominal-btn border-2 border-gray-200 rounded-lg p-4 text-center font-bold text-lg hover:border-orange-500" data-nominal="50000000">Rp 50.000.000</button>
+                        </div>
+                        <div class="mt-6">
+                            <label for="nominal-custom" class="block text-sm font-medium text-gray-700 mb-1">Atau masukkan nominal lain (Rp)</label>
+                            <input type="number" id="nominal-custom" placeholder="0" class="w-full border border-gray-300 rounded-lg p-3 shadow-sm focus:ring-orange-500 focus:border-orange-500 text-2xl font-bold">
+                        </div>
+
+                        <!-- Tombol Navigasi Step 2 -->
+                        <div class="flex justify-between mt-8">
+                            <button data-prev-step="1" class="wizard-prev-btn text-gray-600 px-6 py-3 rounded-full font-semibold hover:bg-gray-100 transition duration-300">
+                                <i class="fas fa-arrow-left mr-2"></i> Kembali
+                            </button>
+                            <button data-next-step="3" id="btn-to-step-3" class="wizard-next-btn bg-gradient-to-r from-orange-500 to-orange-600 text-white px-8 py-3 rounded-full font-semibold hover:shadow-lg transition duration-300 shadow-md">
+                                Lanjut <i class="fas fa-arrow-right ml-2"></i>
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <!-- STEP 3: ISI IDENTITAS (Layout Grid 2 Kolom) -->
+                    <div id="donasi-step-3" class="donasi-step-container hidden p-6 md:p-10 fade-in-up-scroll">
+                        <h3 class="text-2xl font-bold text-gray-800 mb-6">Langkah 3: Lengkapi Data Diri</h3>
+                        <form id="donasi-form-identitas" class="space-y-4">
+                            
+                            <!-- Toggle Santri -->
+                            <div class="flex items-center space-x-3 bg-amber-50 p-4 rounded-lg">
+                                <input type="checkbox" id="is-santri" class="h-5 w-5 text-orange-500 focus:ring-orange-500 border-gray-300 rounded">
+                                <label for="is-santri" class="font-semibold text-gray-700">Donasi melalui Santri Mu'allimin?</label>
+                            </div>
+                            <!-- Detail Santri (Hidden) -->
+                            <div id="santri-details" class="hidden space-y-4 p-4 border border-orange-500 rounded-lg">
+                                <div>
+                                    <label for="santri-kelas" class="block text-sm font-medium text-gray-700 mb-1">Kelas</label>
+                                    <select id="santri-kelas" class="w-full border border-gray-300 rounded-lg p-3 shadow-sm focus:ring-orange-500 focus:border-orange-500">
+                                        <option value="">Pilih Kelas</option>
+                                        <option value="1">Kelas 1</option>
+                                        <option value="2">Kelas 2</option>
+                                        <option value="3">Kelas 3</option>
+                                        <option value="4">Kelas 4</option>
+                                        <option value="5">Kelas 5</option>
+                                        <option value="6">Kelas 6</option>
+                                    </select>
+                                </div>
+                                <div>
+                                    <label for="santri-nama" class="block text-sm font-medium text-gray-700 mb-1">Nama Santri / Rombel</label>
+                                    <input type="text" id="santri-nama" placeholder="Contoh: Fulan / 2A" class="w-full border border-gray-300 rounded-lg p-3 shadow-sm focus:ring-orange-500 focus:border-orange-500">
+                                </div>
+                            </div>
+                            
+                            <!-- Pilihan Nama Donatur -->
+                            <div class="bg-gray-50 p-4 rounded-lg border border-gray-200">
+                                <label id="label-nama-donatur" class="block text-sm font-medium text-gray-700 mb-2">Muzakki (Wajib)</label>
+                                <div class="space-y-3">
+                                    <div class="flex items-center">
+                                        <input type="radio" id="nama-sendiri-radio" name="nama-choice" value="sendiri" class="h-4 w-4 text-orange-500 focus:ring-orange-500" checked>
+                                        <label for="nama-sendiri-radio" class="ml-3 block text-sm font-medium text-gray-700">Tulis Nama Sendiri</label>
+                                    </div>
+                                    <input type="text" id="nama-muzakki-input" placeholder="Nama Anda" required class="w-full border border-gray-300 rounded-lg p-3 shadow-sm focus:ring-orange-500 focus:border-orange-500">
+                                    
+                                    <div class="flex items-center">
+                                        <input type="radio" id="nama-santri-radio" name="nama-choice" value="santri" class="h-4 w-4 text-orange-500 focus:ring-orange-500">
+                                        <label for="nama-santri-radio" class="ml-3 block text-sm font-medium text-gray-700">Atas Nama Santri (dari form di atas)</label>
+                                    </div>
+
+                                    <div class="flex items-center">
+                                        <input type="radio" id="nama-hamba-radio" name="nama-choice" value="hamba" class="h-4 w-4 text-orange-500 focus:ring-orange-500">
+                                        <label for="nama-hamba-radio" class="ml-3 block text-sm font-medium text-gray-700">Hamba Allah</label>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <!-- Grid 2 Kolom -->
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-4 pt-4">
+                                <div>
+                                    <label for="no-hp" class="block text-sm font-medium text-gray-700 mb-1">No. WhatsApp (Wajib)</label>
+                                    <input type="tel" id="no-hp" placeholder="08123456789" required class="w-full border border-gray-300 rounded-lg p-3 shadow-sm focus:ring-orange-500 focus:border-orange-500">
+                                </div>
+                                <div>
+                                    <label for="email" class="block text-sm font-medium text-gray-700 mb-1">Email (Opsional)</label>
+                                    <input type="email" id="email" placeholder="email@anda.com" class="w-full border border-gray-300 rounded-lg p-3 shadow-sm focus:ring-orange-500 focus:border-orange-500">
+                                </div>
+                                <div class="md:col-span-2">
+                                    <label for="alamat" class="block text-sm font-medium text-gray-700 mb-1">Alamat (Wajib)</label>
+                                    <textarea id="alamat" rows="3" placeholder="Alamat lengkap Anda" required class="w-full border border-gray-300 rounded-lg p-3 shadow-sm focus:ring-orange-500 focus:border-orange-500"></textarea>
+                                </div>
+                                 <div class="md:col-span-2">
+                                    <label for="no-ktp" class="block text-sm font-medium text-gray-700 mb-1">No. KTP (Opsional)</label>
+                                    <input type="number" id="no-ktp" class="w-full border border-gray-300 rounded-lg p-3 shadow-sm focus:ring-orange-500 focus:border-orange-500">
+                                </div>
+                                <div class="md:col-span-2">
+                                    <label for="pesan-doa" class="block text-sm font-medium text-gray-700 mb-1">Pesan / Doa (Opsional)</label>
+                                    <textarea id="pesan-doa" rows="3" placeholder="Tuliskan pesan atau doa Anda di sini" class="w-full border border-gray-300 rounded-lg p-3 shadow-sm focus:ring-orange-500 focus:border-orange-500"></textarea>
+                                </div>
+                            </div>
+                        </form>
+                        <!-- Tombol Navigasi Step 3 -->
+                        <div class="flex justify-between mt-8">
+                            <button data-prev-step="2" class="wizard-prev-btn text-gray-600 px-6 py-3 rounded-full font-semibold hover:bg-gray-100 transition duration-300">
+                                <i class="fas fa-arrow-left mr-2"></i> Kembali
+                            </button>
+                            <button data-next-step="4" id="btn-to-step-4" class="wizard-next-btn bg-gradient-to-r from-orange-500 to-orange-600 text-white px-8 py-3 rounded-full font-semibold hover:shadow-lg transition duration-300 shadow-md">
+                                Lanjut <i class="fas fa-arrow-right ml-2"></i>
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <!-- STEP 4: PILIH METODE PEMBAYARAN (CSS-Only) -->
+                    <div id="donasi-step-4" class="donasi-step-container hidden p-6 md:p-10 fade-in-up-scroll">
+                        <h3 class="text-2xl font-bold text-gray-800 mb-6">Langkah 4: Pilih Metode Pembayaran</h3>
+                        <div class="space-y-4 payment-choice">
+                            <!-- Pilihan Transfer -->
+                            <input type="radio" name="payment-method" id="payment-transfer" value="Transfer" class="payment-method-radio">
+                            <label for="payment-transfer" class="block border-2 border-gray-200 rounded-lg p-5 cursor-pointer hover:border-orange-500">
+                                <div class="flex items-center">
+                                    <i class="fas fa-university text-orange-500 text-3xl w-12 text-center"></i>
+                                    <div class="ml-4">
+                                        <h4 class="text-lg font-bold text-gray-800">Transfer Bank</h4>
+                                        <p class="text-gray-600">Transfer manual ke rekening BNI, BSI, atau BPD DIY.</p>
+                                    </div>
+                                </div>
+                            </label>
+                            
+                            <!-- Pilihan QRIS -->
+                            <input type="radio" name="payment-method" id="payment-qris" value="QRIS" class="payment-method-radio">
+                            <label for="payment-qris" class="block border-2 border-gray-200 rounded-lg p-5 cursor-pointer hover:border-orange-500">
+                                <div class="flex items-center">
+                                    <i class="fas fa-qrcode text-orange-500 text-3xl w-12 text-center"></i>
+                                    <div class="ml-4">
+                                        <h4 class="text-lg font-bold text-gray-800">QRIS</h4>
+                                        <p class="text-gray-600">Scan menggunakan e-wallet (OVO, GoPay, dll) atau M-Banking.</p>
+                                    </div>
+                                </div>
+                            </label>
+                        </div>
+                        
+                        <!-- Tombol Navigasi Step 4 -->
+                        <div class="flex justify-between mt-8">
+                            <button data-prev-step="3" class="wizard-prev-btn text-gray-600 px-6 py-3 rounded-full font-semibold hover:bg-gray-100 transition duration-300">
+                                <i class="fas fa-arrow-left mr-2"></i> Kembali
+                            </button>
+                            <button data-next-step="5" id="btn-to-step-5" class="wizard-next-btn bg-gradient-to-r from-orange-500 to-orange-600 text-white px-8 py-3 rounded-full font-semibold hover:shadow-lg transition duration-300 shadow-md">
+                                Lanjut <i class="fas fa-arrow-right ml-2"></i>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- STEP 5: RINGKASAN DONASI -->
+                    <div id="donasi-step-5" class="donasi-step-container hidden p-6 md:p-10 fade-in-up-scroll">
+                        <h3 class="text-2xl font-bold text-gray-800 mb-6">Langkah 5: Ringkasan Donasi</h3>
+                        <p class="text-gray-600 mb-6">Mohon periksa kembali data donasi Anda. Jika sudah benar, silakan lanjutkan.</p>
+                        
+                        <div id="ringkasan-donasi" class="bg-amber-50 p-6 rounded-lg space-y-3 text-gray-700">
+                            <!-- Konten ringkasan akan diisi oleh JavaScript -->
+                        </div>
+                        
+                        <!-- Tombol Navigasi Step 5 -->
+                        <div class="flex justify-between mt-8">
+                            <button data-prev-step="4" class="wizard-prev-btn text-gray-600 px-6 py-3 rounded-full font-semibold hover:bg-gray-100 transition duration-300">
+                                <i class="fas fa-arrow-left mr-2"></i> Kembali
+                            </button>
+                            <button id="final-confirm-btn" class="bg-gradient-to-r from-green-500 to-green-600 text-white px-8 py-3 rounded-full font-semibold hover:shadow-lg transition duration-300 shadow-md">
+                                <i class="fas fa-check mr-2"></i> Konfirmasi & Bayar
+                            </button>
+                        </div>
+                    </div>
+
+                </div> <!-- Penutup #donasi-wizard -->
+
+                <!-- STEP 6: HALAMAN INSTRUKSI PEMBAYARAN (Hidden) -->
+                <div id="donasi-payment-instructions" class="hidden max-w-4xl mx-auto space-y-12 fade-in-up-scroll">
+                    
+                    <h2 id="instruksi-title" class="text-4xl font-bold text-center mb-6 bg-clip-text text-transparent bg-gradient-to-r from-green-500 to-green-600">
+                        <!-- Judul diisi JS -->
+                    </h2>
+                    
+                    <!-- Bagian Transfer (Disembunyikan) -->
+                    <div id="payment-transfer-details" class="hidden space-y-6">
+                        <h3 class="text-3xl font-bold text-gray-800 flex items-center space-x-3">
+                            <i class="fas fa-university text-orange-500"></i> <span>1. Transfer Donasi</span>
+                        </h3>
+                        <!-- (REFACTOR) Kartu BNI dengan kelas hover Tailwind -->
+                        <div class="relative bg-white border-b-4 border-orange-500 rounded-lg shadow-xl p-5 transition-all duration-300 ease-in-out hover:-translate-y-1 hover:shadow-lg hover:shadow-orange-500/40">
+                            <img src="https://placehold.co/100x30/f97316/ffffff?text=BNI" alt="Logo BNI" class="h-8 object-contain mb-3">
+                            <p class="text-sm text-gray-600">Nomor Rekening:</p>
+                            <div class="flex justify-between items-center mb-2">
+                                <span id="rek-bni-final" class="text-2xl font-extrabold text-gray-800">3440000348</span>
+                                <button data-copy="rek-bni-final" class="copy-button text-xs bg-gray-200 text-gray-700 px-3 py-1 rounded-full font-semibold hover:bg-gray-300">
+                                    <i class="fas fa-copy mr-1"></i> Salin
+                                </button>
+                            </div>
+                            <p class="text-sm text-gray-600">a.n. LAZISMU MADRASAH MU'ALLIMIN MUHAMMADIYAH</p>
+                        </div>
+                        <!-- (REFACTOR) Kartu BSI dengan kelas hover Tailwind -->
+                        <div class="relative bg-white border-b-4 border-teal-500 rounded-lg shadow-xl p-5 transition-all duration-300 ease-in-out hover:-translate-y-1 hover:shadow-lg hover:shadow-teal-500/40">
+                            <img src="https://placehold.co/100x30/14b8a6/ffffff?text=BSI" alt="Logo BSI" class="h-8 object-contain mb-3">
+                            <p class="text-sm text-gray-600">Nomor Rekening:</p>
+                            <div class="flex justify-between items-center mb-2">
+                                <span id="rek-bsi-final" class="text-2xl font-extrabold text-gray-800">7930030303</span>
+                                <button data-copy="rek-bsi-final" class="copy-button text-xs bg-gray-200 text-gray-700 px-3 py-1 rounded-full font-semibold hover:bg-gray-300">
+                                    <i class="fas fa-copy mr-1"></i> Salin
+                                </button>
+                            </div>
+                            <p class="text-sm text-gray-600">a.n. LAZISMU MUALLIMIN YOGYARAKARTA</p>
+                        </div>
+                        <!-- (REFACTOR) Kartu BPD dengan kelas hover Tailwind -->
+                        <div class="relative bg-white border-b-4 border-blue-600 rounded-lg shadow-xl p-5 transition-all duration-300 ease-in-out hover:-translate-y-1 hover:shadow-lg hover:shadow-blue-600/40">
+                            <img src="https://placehold.co/100x30/3b82f6/ffffff?text=BPD+DIY" alt="Logo BPD DIY Syariah" class="h-8 object-contain mb-3">
+                            <p class="text-sm text-gray-600">Nomor Rekening:</p>
+                            <div class="flex justify-between items-center mb-2">
+                                <span id="rek-bpd-final" class="text-2xl font-extrabold text-gray-800">801241004624</span>
+                                <button data-copy="rek-bpd-final" class="copy-button text-xs bg-gray-200 text-gray-700 px-3 py-1 rounded-full font-semibold hover:bg-gray-300">
+                                    <i class="fas fa-copy mr-1"></i> Salin
+                                </button>
+                            </div>
+                            <p class="text-sm text-gray-600">a.n. KL LAZISMU MADRASAH MUALLIMIN</p>
+                        </div>
+                    </div>
+                    
+                    <!-- Bagian QRIS (Disembunyikan) -->
+                    <div id="payment-qris-details" class="hidden bg-white p-8 rounded-2xl shadow-xl border border-gray-100">
+                        <h3 class="text-3xl font-bold text-gray-800 mb-4 flex items-center space-x-3">
+                            <i class="fas fa-qrcode text-orange-500"></i> <span>1. Bayar via QRIS</span>
+                        </h3>
+                        <p class="text-gray-600 text-center mb-6">Scan atau download kode QRIS di bawah ini.</p>
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-8 w-full">
+                            <!-- QRIS BSI -->
+                            <div class="flex flex-col items-center">
+                                <h4 class="text-lg font-semibold text-gray-800 mb-3">QRIS Bank BSI</h4>
+                                <img src="https://drive.google.com/thumbnail?id=1xNHeckecd8Pn_7dSOQ0KfGcl0I_FCY9V" alt="QRIS BSI" class="w-full max-w-[250px] object-contain border-4 border-gray-200 rounded-xl shadow-md" onerror="this.alt='Gagal memuat QRIS BSI'; this.src='https://placehold.co/250x250/fef2f2/ef4444?text=Error:+Gagal+memuat+QRIS';">
+                                <a href="https://drive.google.com/uc?export=download&id=1xNHeckecd8Pn_7dSOQ0KfGcl0I_FCY9V" class="mt-4 inline-flex items-center space-x-2 bg-gray-600 text-white px-5 py-2 rounded-full font-semibold hover:bg-gray-700 transition duration-300 shadow-md">
+                                    <i class="fas fa-download"></i>
+                                    <span>Download QRIS</span>
+                                </a>
+                            </div>
+                            <!-- QRIS BPD -->
+                            <div class="flex flex-col items-center">
+                                <h4 class="text-lg font-semibold text-gray-800 mb-3">QRIS BPD DIY Syariah</h4>
+                                <img src="https://drive.google.com/thumbnail?id=1BHYcMAUp3OiVeRx2HwjPPEu2StcYiUpm" alt="QRIS BPD" class="w-full max-w-[250px] object-contain border-4 border-gray-200 rounded-xl shadow-md" onerror="this.alt='Gagal memuat QRIS BPD'; this.src='https://placehold.co/250x250/fef2f2/ef4444?text=Error:+Gagal+memuat+QRIS';">
+                                <a href="https://drive.google.com/uc?export=download&id=1BHYcMAUp3OiVeRx2HwjPPEu2StcYiUpm" class="mt-4 inline-flex items-center space-x-2 bg-gray-600 text-white px-5 py-2 rounded-full font-semibold hover:bg-gray-700 transition duration-300 shadow-md">
+                                    <i class="fas fa-download"></i>
+                                    <span>Download QRIS</span>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Bagian Konfirmasi -->
+                    <div class="bg-white p-8 rounded-2xl shadow-xl border border-gray-100">
+                        <h3 class="text-3xl font-bold text-gray-800 mb-6 flex items-center space-x-3">
+                            <i class="fab fa-whatsapp text-green-500"></i> <span>2. Konfirmasi Donasi</span>
+                        </h3>
+                        <p class="text-gray-600 mb-8">Ikuti 3 langkah mudah ini untuk konfirmasi donasi Anda:</p>
+                        <div class="space-y-6">
+                            <!-- Step 1 -->
+                            <div class="flex items-start space-x-4">
+                                <span class="flex-shrink-0 w-10 h-10 rounded-full bg-orange-500 text-white flex items-center justify-center font-bold text-xl">1</span>
+                                <div>
+                                    <h4 class="text-xl font-bold text-gray-800">Selesaikan Pembayaran</h4>
+                                    <p class="text-gray-600">Pastikan Anda sudah transfer atau scan QRIS.</p>
+                                </div>
+                            </div>
+                            <!-- Step 2 -->
+                            <div class="flex items-start space-x-4">
+                                <span class="flex-shrink-0 w-10 h-10 rounded-full bg-orange-500 text-white flex items-center justify-center font-bold text-xl">2</span>
+                                <div>
+                                    <h4 class="text-xl font-bold text-gray-800">Siapkan Bukti</h4>
+                                    <p class="text-gray-600">Ambil screenshot atau foto bukti pembayaran Anda.</p>
+                                </div>
+                            </div>
+                            <!-- Step 3 -->
+                            <div class="flex items-start space-x-4">
+                                <span class="flex-shrink-0 w-10 h-10 rounded-full bg-orange-500 text-white flex items-center justify-center font-bold text-xl">3</span>
+                                <div>
+                                    <h4 class="text-xl font-bold text-gray-800">Klik Tombol Konfirmasi</h4>
+                                    <p class="text-gray-600">Kirim bukti pembayaran Anda melalui WhatsApp.</p>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- Tombol WA (href akan diisi JS) -->
+                        <a id="final-wa-button" href="#" target="_blank" class="w-full text-center bg-gradient-to-r from-green-500 to-green-600 text-white px-8 py-4 rounded-full font-bold text-lg hover:shadow-lg transition duration-300 shadow-md flex items-center justify-center space-x-3 mt-8">
+                            <i class="fab fa-whatsapp-square text-2xl text-white"></i>
+                            <span>Konfirmasi via WhatsApp</span>
+                        </a>
+                    </div>
+                </div> <!-- Penutup #donasi-payment-instructions -->
+
+            </div>
+        </section>
+
+    </main>
+
+    <!-- FOOTER (INTERAKTIF) -->
+    <footer class="bg-gray-800 text-gray-300 relative overflow-hidden border-t-4 border-orange-500">
+        <div class="absolute inset-0 opacity-[3%]" style="background-image: url('https://www.transparenttextures.com/patterns/clean-textile.png'); filter: invert(1);"></div>
+
+        <div class="container mx-auto px-4 md:px-6 py-16 relative z-10">
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-10">
+                
+                <!-- Footer Kiri: Logo & Deskripsi -->
+                <div>
+                    <h4 class="text-2xl font-bold text-white mb-5 flex items-center space-x-2">
+                        <i class="fas fa-hand-holding-heart text-orange-500"></i>
+                        <span>Lazismu Mu'allimin</span>
+                    </h4>
+                    <p class="text-sm leading-relaxed mb-4 text-gray-400">
+                        Kantor Layanan Lazismu Madrasah Mu'allimin Muhammadiyah Yogyakarta.<br>
+                        Amanah, Profesional, Transparan dalam mengelola ZIS.
+                    </p>
+                    <p class="text-sm text-gray-400">Didukung oleh Persyarikatan Muhammadiyah.</p>
+                </div>
+                
+                <!-- Footer Tengah: Hubungi Kami (INTERAKTIF) -->
+                <div>
+                    <h4 class="text-2xl font-bold text-white mb-5 flex items-center space-x-2">
+                        <i class="fas fa-address-card text-orange-500"></i>
+                        <span>Hubungi Kami</span>
+                    </h4>
+                    <ul class="space-y-4 text-sm text-gray-300">
+                        <li class="flex items-start">
+                            <i class="fas fa-map-marker-alt text-orange-500 mt-1 mr-3 flex-shrink-0 w-4"></i>
+                            <a href="https://maps.app.goo.gl/9qYv4g9wXQJ5A9Z9A" target="_blank" class="hover:text-orange-500 transition-colors">
+                                Jl. S. Parman No. 68, Patangpuluhan, Wirobrajan, Kota Yogyakarta, DIY 55251
+                            </a>
+                        </li>
+                        <li class="flex items-center">
+                            <i class="fas fa-phone-alt text-orange-500 mr-3 w-4"></i>
+                            <a href="tel:081196961918" class="hover:text-orange-500 transition-colors">0811-9696-1918</a>
+                        </li>
+                        <li class="flex items-center">
+                            <i class="fab fa-whatsapp text-orange-500 mr-3 w-4"></i>
+                            <a href="https://wa.me/6281196961918" target="_blank" class="hover:text-orange-500 transition-colors">Chat via WhatsApp</a>
+                        </li>
+                        <li class="flex items-center">
+                            <i class="fas fa-envelope text-orange-500 mr-3 w-4"></i>
+                            <a href="mailto:lazismumuallimin@gmail.com" class="hover:text-orange-500 transition-colors">lazismumuallimin@gmail.com</a>
+                        </li>
+                    </ul>
+                </div>
+                
+                <!-- Footer Kanan: Ikuti Kami -->
+                <div>
+                    <h4 class="text-2xl font-bold text-white mb-5 flex items-center space-x-2">
+                        <i class="fas fa-share-alt text-orange-500"></i>
+                        <span>Ikuti Kami</span>
+                    </h4>
+                    <p class="text-sm text-gray-400 mb-5">Dapatkan kabar kebaikan terbaru dari kami.</p>
+                    <div class="flex space-x-6">
+                        <a href="https://www.facebook.com/kl.lazismuallimin" target="_blank" class="text-gray-400 hover:text-orange-500 transform hover:scale-110 transition duration-300">
+                            <i class="fab fa-facebook-f text-3xl"></i>
+                        </a>
+                        <a href="https://instagram.com/lazismu_muallimin" target="_blank" class="text-gray-400 hover:text-orange-500 transform hover:scale-110 transition duration-300">
+                            <i class="fab fa-instagram text-3xl"></i>
+                        </a>
+                        <a href="https://youtube.com/@lazismumuallimin" target="_blank" class="text-gray-400 hover:text-orange-500 transform hover:scale-110 transition duration-300">
+                            <i class="fab fa-youtube text-3xl"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- Bagian Copyright (Sub-Footer) -->
+        <div class="bg-black bg-opacity-20 py-6 relative z-10">
+            <div class="container mx-auto px-4 md:px-6 text-center text-sm text-gray-400">
+                <p>&copy; 2025 Kantor Layanan LAZISMU Madrasah Mu'allimin Muhammadiyah Yogyakarta. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- (EFEKTIF) SCRIPT JAVASCRIPT (TERMASUK PENGGANTIAN alert() DENGAN MODAL KUSTOM) -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // === BAGIAN 1: LOGIKA NAVIGASI SPA & MODAL ===
+            
+            const pages = document.querySelectorAll('.page-section');
+            const navLinks = document.querySelectorAll('.nav-link');
+            const menuToggle = document.getElementById('menu-toggle');
+            const menuLinks = document.getElementById('menu-links');
+            const allLinks = document.querySelectorAll('a[href^="#"]');
+            
+            // Modal Elements
+            const hubungiModal = document.getElementById('hubungi-modal');
+            const hubungiBtn = document.getElementById('hubungi-btn');
+            const hubungiModalClose = document.getElementById('hubungi-modal-close');
+            const hubungiModalKonfirmasi = document.getElementById('hubungi-modal-konfirmasi');
+
+            // (PERBAIKAN WAJIB) Logika Alert Modal Kustom (Pengganti alert())
+            const alertModal = document.getElementById('alert-modal');
+            const alertModalMessage = document.getElementById('alert-modal-message');
+            const alertModalClose = document.getElementById('alert-modal-close');
+
+            function showAppAlert(message) {
+                alertModalMessage.textContent = message;
+                alertModal.classList.remove('hidden');
+            }
+
+            alertModalClose.addEventListener('click', () => alertModal.classList.add('hidden'));
+            alertModal.addEventListener('click', (e) => {
+                if (e.target.id === 'alert-modal') {
+                    alertModal.classList.add('hidden');
+                }
+            });
+            // --- Akhir Logika Alert Modal ---
+
+
+            function showPage(pageId, scrollUp = true) {
+                pages.forEach(page => page.classList.remove('active'));
+                const newPage = document.getElementById(`page-${pageId}`);
+                if (newPage) {
+                    newPage.classList.add('active');
+                } else {
+                    document.getElementById('page-home').classList.add('active');
+                    pageId = 'home';
+                }
+                navLinks.forEach(link => {
+                    link.classList.remove('active');
+                    if (link.getAttribute('href') === `#${pageId}`) {
+                        link.classList.add('active');
+                    }
+                });
+                history.replaceState(null, '', `#${pageId}`);
+                if (scrollUp) {
+                    window.scrollTo(0, 0);
+                }
+                if (window.innerWidth < 768 && !menuLinks.classList.contains('hidden')) {
+                    menuLinks.classList.add('hidden');
+                }
+                if(pageId === 'donasi') {
+                    resetDonationWizard();
+                }
+            }
+            
+            function getCurrentPageId() {
+                const activePage = document.querySelector('.page-section.active');
+                return activePage ? activePage.id.replace('page-', '') : 'home';
+            }
+
+            // Logika Navigasi: Membedakan 'page' vs 'anchor' vs 'modal'
+            document.body.addEventListener('click', function(e) {
+                const link = e.target.closest('a[href^="#"]');
+                if (!link) return;
+                
+                // Cek jika tombol modal
+                if (link.id === 'hubungi-btn') {
+                    e.preventDefault();
+                    hubungiModal.classList.remove('hidden');
+                    return;
+                }
+                
+                // Cek jika link eksternal (WA, Maps, mailto, tel)
+                if (link.target === '_blank' || link.href.startsWith('mailto:') || link.href.startsWith('tel:')) {
+                    return; // Biarkan default
+                }
+                
+                // Cek jika tombol download QRIS
+                if(link.hasAttribute('href') && (link.href.includes('uc?export=download'))) {
+                    return; // Biarkan default
+                }
+                
+                e.preventDefault();
+                
+                // Tutup modal jika link konfirmasi di modal diklik
+                if (link.id === 'hubungi-modal-konfirmasi') {
+                    hubungiModal.classList.add('hidden');
+                }
+                
+                const href = link.getAttribute('href');
+                const hash = href.substring(1); 
+
+                const isPage = document.getElementById(`page-${hash}`);
+                const isAnchor = document.getElementById(hash) && !isPage;
+
+                if (isPage || hash === 'home' || (hash === 'donasi' && !isAnchor) ) {
+                    showPage(hash || 'home');
+                } else if (isAnchor) {
+                    // Logika anchor yang robust
+                    const anchorElement = document.getElementById(hash);
+                    const targetPage = anchorElement.closest('.page-section');
+                    const targetPageId = targetPage ? targetPage.id.replace('page-', '') : 'home';
+                    const currentPageId = getCurrentPageId();
+
+                    if (currentPageId === targetPageId) {
+                        anchorElement.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                    } else {
+                        showPage(targetPageId, false); 
+                        history.replaceState(null, '', href);
+                        setTimeout(() => {
+                            anchorElement.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                        }, 100); 
+                    }
+                }
+                
+                if (window.innerWidth < 768 && !menuLinks.classList.contains('hidden')) {
+                    menuLinks.classList.add('hidden');
+                }
+            });
+            
+            // Logika Tutup Modal
+            hubungiModalClose.addEventListener('click', () => hubungiModal.classList.add('hidden'));
+            hubungiModal.addEventListener('click', (e) => {
+                if (e.target.id === 'hubungi-modal') {
+                    hubungiModal.classList.add('hidden');
+                }
+            });
+
+
+            function handleInitialLoad() {
+                let initialHash = window.location.hash.substring(1);
+                const initialAnchor = document.getElementById(initialHash);
+                const initialPage = document.getElementById(`page-${initialHash}`);
+
+                if (initialAnchor && !initialPage) {
+                    const targetPage = initialAnchor.closest('.page-section');
+                    const targetPageId = targetPage ? targetPage.id.replace('page-', '') : 'home';
+                    showPage(targetPageId, false); 
+                    setTimeout(() => {
+                        initialAnchor.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                    }, 100);
+                } else if (initialPage) {
+                    showPage(initialHash);
+                } else {
+                    showPage('home');
+                }
+            }
+            handleInitialLoad();
+
+            menuToggle.addEventListener('click', function() {
+                menuLinks.classList.toggle('hidden');
+            });
+            
+            // === BAGIAN 2: LOGIKA ANIMASI ON-SCROLL ===
+            const animatedElements = document.querySelectorAll('.fade-in-up-scroll');
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('is-visible');
+                        observer.unobserve(entry.target);
+                    }
+                });
+            }, { threshold: 0.1 });
+            animatedElements.forEach(el => { observer.observe(el); });
+            
+            // === BAGIAN 3: LOGIKA TOMBOL SALIN (Gunakan execCommand) ===
+            function copyToClipboard(elementId, button) {
+                const el = document.getElementById(elementId);
+                const text = el.innerText.replace(/[^0-9]/g, ''); // Ambil angkanya saja
+                const textarea = document.createElement('textarea');
+                textarea.value = text;
+                textarea.style.position = 'fixed'; 
+                textarea.style.opacity = '0';
+                document.body.appendChild(textarea);
+                textarea.select();
+                textarea.setSelectionRange(0, 99999); 
+                try {
+                    document.execCommand('copy');
+                    const originalText = button.innerHTML;
+                    button.innerHTML = '<i class="fas fa-check"></i> Tersalin!';
+                    button.disabled = true;
+                    setTimeout(() => {
+                        button.innerHTML = originalText;
+                        button.disabled = false;
+                    }, 2000); 
+                } catch (err) {
+                    console.error('Gagal menyalin: ', err);
+                }
+                document.body.removeChild(textarea);
+            }
+            document.querySelectorAll('.copy-button').forEach(button => {
+                button.addEventListener('click', function() {
+                    const targetId = this.getAttribute('data-copy');
+                    copyToClipboard(targetId, this);
+                });
+            });
+
+            // === BAGIAN 4: LOGIKA WIZARD DONASI ===
+            const formatter = new Intl.NumberFormat('id-ID', {
+                style: 'currency',
+                currency: 'IDR',
+                minimumFractionDigits: 0,
+            });
+
+            let donasiData = {};
+            const wizard = document.getElementById('donasi-wizard');
+            const instructions = document.getElementById('donasi-payment-instructions');
+            const allSteps = document.querySelectorAll('.donasi-step-container');
+
+            function goToStep(stepNumber) {
+                allSteps.forEach(step => step.classList.add('hidden'));
+                const nextStep = document.getElementById(`donasi-step-${stepNumber}`);
+                if (nextStep) {
+                    nextStep.classList.remove('hidden');
+                    // Update Progress Bar
+                    const progressEl = document.getElementById('wizard-progress');
+                    const progressBarEl = document.getElementById('wizard-progress-bar');
+                    if (progressEl) {
+                        progressEl.textContent = `Langkah ${stepNumber} dari 5`;
+                        progressBarEl.style.width = `${stepNumber * 20}%`;
+                    }
+                    document.getElementById('page-donasi').scrollIntoView({ behavior: 'smooth', block: 'start' });
+                }
+            }
+
+            function resetDonationWizard() {
+                donasiData = {
+                    type: null,
+                    nominal: 0,
+                    nama: '',
+                    alamat: '',
+                    hp: '',
+                    ktp: '',
+                    email: '',
+                    doa: '',
+                    isSantri: false,
+                    santriDetail: '',
+                    metode: null
+                };
+                // Reset tampilan
+                wizard.classList.remove('hidden');
+                instructions.classList.add('hidden');
+                document.getElementById('zakat-checker').classList.add('hidden');
+                document.getElementById('step-1-nav').classList.add('hidden');
+                document.getElementById('zakat-result').classList.add('hidden');
+                document.getElementById('nominal-custom').value = '';
+                document.getElementById('donasi-form-identitas').reset();
+                document.getElementById('santri-details').classList.add('hidden');
+                document.querySelectorAll('.choice-button').forEach(btn => btn.classList.remove('selected'));
+                document.querySelectorAll('.payment-method-radio').forEach(radio => radio.checked = false);
+                document.getElementById('nama-muzakki-input').disabled = false;
+                document.getElementById('nama-muzakki-input').required = true;
+                goToStep(1);
+            }
+
+            // --- Logika Step 1: Tipe Donasi & Zakat Check ---
+            const donasiTypeButtons = document.querySelectorAll('.donasi-type-btn');
+            const zakatChecker = document.getElementById('zakat-checker');
+            const zakatCheckBtn = document.getElementById('zakat-check-button');
+            const zakatResult = document.getElementById('zakat-result');
+            const zakatResultMsg = document.getElementById('zakat-result-message');
+            const zakatLanjutkanInfaq = document.getElementById('zakat-lanjutkan-infaq');
+            const step1Nav = document.getElementById('step-1-nav');
+
+            donasiTypeButtons.forEach(btn => {
+                btn.addEventListener('click', () => {
+                    donasiTypeButtons.forEach(b => b.classList.remove('selected'));
+                    btn.classList.add('selected');
+                    donasiData.type = btn.getAttribute('data-type');
+                    
+                    const labelNama = document.getElementById('label-nama-donatur');
+                    if (donasiData.type === 'Zakat') {
+                        labelNama.textContent = 'Nama Muzakki (Wajib)';
+                        zakatChecker.classList.remove('hidden');
+                        step1Nav.classList.add('hidden'); 
+                    } else { // Infaq
+                        labelNama.textContent = 'Nama Munfiq (Wajib)';
+                        zakatChecker.classList.add('hidden');
+                        step1Nav.classList.remove('hidden'); 
+                    }
+                });
+            });
+
+            zakatCheckBtn.addEventListener('click', () => {
+                const hargaEmas = parseFloat(document.getElementById('harga-emas').value) || 0;
+                const penghasilan = parseFloat(document.getElementById('penghasilan-bulanan').value) || 0;
+                const nisabBulanan = (hargaEmas * 85) / 12;
+
+                zakatResult.classList.remove('hidden');
+                if (penghasilan >= nisabBulanan) {
+                    zakatResultMsg.textContent = `Nisab bulanan (${formatter.format(nisabBulanan)}). Penghasilan Anda (${formatter.format(penghasilan)}) SUDAH WAJIB ZAKAT.`;
+                    zakatResultMsg.classList.remove('text-red-600');
+                    zakatResultMsg.classList.add('text-green-600');
+                    zakatLanjutkanInfaq.classList.add('hidden');
+                    step1Nav.classList.remove('hidden'); 
+                } else {
+                    zakatResultMsg.textContent = `Nisab bulanan (${formatter.format(nisabBulanan)}). Penghasilan Anda (${formatter.format(penghasilan)}) BELUM WAJIB ZAKAT.`;
+                    zakatResultMsg.classList.add('text-red-600');
+                    zakatResultMsg.classList.remove('text-green-600');
+                    zakatLanjutkanInfaq.classList.remove('hidden'); 
+                    step1Nav.classList.add('hidden');
+                }
+            });
+
+            zakatLanjutkanInfaq.addEventListener('click', () => {
+                donasiData.type = 'Infaq'; // Ubah tipe donasi
+                document.getElementById('label-nama-donatur').textContent = 'Nama Munfiq (Wajib)';
+                goToStep(2); // Lanjut ke step 2
+            });
+
+            // --- Logika Step 2: Nominal ---
+            const nominalButtons = document.querySelectorAll('.nominal-btn');
+            const nominalCustom = document.getElementById('nominal-custom');
+
+            nominalButtons.forEach(btn => {
+                btn.addEventListener('click', () => {
+                    nominalButtons.forEach(b => b.classList.remove('selected'));
+                    btn.classList.add('selected');
+                    const nominal = btn.getAttribute('data-nominal');
+                    nominalCustom.value = nominal;
+                    donasiData.nominal = parseFloat(nominal);
+                });
+            });
+
+            nominalCustom.addEventListener('input', () => {
+                nominalButtons.forEach(b => b.classList.remove('selected'));
+                donasiData.nominal = parseFloat(nominalCustom.value) || 0;
+            });
+
+            // --- Logika Step 3: Identitas ---
+            const isSantriCheck = document.getElementById('is-santri');
+            isSantriCheck.addEventListener('change', () => {
+                document.getElementById('santri-details').classList.toggle('hidden');
+                donasiData.isSantri = isSantriCheck.checked;
+            });
+
+            const namaRadios = document.querySelectorAll('input[name="nama-choice"]');
+            const namaInput = document.getElementById('nama-muzakki-input');
+            const santriRadio = document.getElementById('nama-santri-radio');
+
+            namaRadios.forEach(radio => {
+                radio.addEventListener('change', (e) => {
+                    const choice = e.target.value;
+                    if (choice === 'sendiri') {
+                        namaInput.disabled = false;
+                        namaInput.required = true;
+                        namaInput.placeholder = 'Nama Anda';
+                    } else if (choice === 'santri') {
+                        if (!isSantriCheck.checked) {
+                            // (PERBAIKAN WAJIB) Mengganti alert() dengan modal kustom
+                            showAppAlert('Harap centang "Donasi melalui Santri" dan isi data santri terlebih dahulu.');
+                            document.getElementById('nama-sendiri-radio').checked = true;
+                            return;
+                        }
+                        namaInput.disabled = true;
+                        namaInput.required = false;
+                        namaInput.value = ''; 
+                    } else if (choice === 'hamba') {
+                        namaInput.disabled = true;
+                        namaInput.required = false;
+                        namaInput.value = ''; 
+                    }
+                });
+            });
+
+
+            // --- Validasi & Navigasi Wizard ---
+            document.querySelectorAll('[data-next-step]').forEach(btn => {
+                btn.addEventListener('click', () => {
+                    const currentStep = btn.closest('.donasi-step-container').id;
+                    
+                    // Validasi Step 2
+                    if (currentStep === 'donasi-step-2') {
+                        if (donasiData.nominal <= 0) {
+                            // (PERBAIKAN WAJIB) Mengganti alert() dengan modal kustom
+                            showAppAlert('Nominal donasi tidak boleh kosong.');
+                            return;
+                        }
+                        document.getElementById('nominal-title-type').textContent = `(${donasiData.type})`;
+                    }
+
+                    // Validasi Step 3
+                    if (currentStep === 'donasi-step-3') {
+                        const form = document.getElementById('donasi-form-identitas');
+                        if (!form.checkValidity()) {
+                            form.reportValidity(); 
+                            return;
+                        }
+                        
+                        const namaChoice = document.querySelector('input[name="nama-choice"]:checked').value;
+                        if (namaChoice === 'sendiri') {
+                            donasiData.nama = document.getElementById('nama-muzakki-input').value;
+                        } else if (namaChoice === 'santri') {
+                            donasiData.nama = `A/n Santri: ${document.getElementById('santri-nama').value}`;
+                        } else {
+                            donasiData.nama = 'Hamba Allah';
+                        }
+
+                        donasiData.hp = document.getElementById('no-hp').value;
+                        donasiData.alamat = document.getElementById('alamat').value;
+                        donasiData.ktp = document.getElementById('no-ktp').value;
+                        donasiData.email = document.getElementById('email').value;
+                        donasiData.doa = document.getElementById('pesan-doa').value;
+                        if (donasiData.isSantri) {
+                            donasiData.santriDetail = `Melalui Santri: Kelas ${document.getElementById('santri-kelas').value} - ${document.getElementById('santri-nama').value}`;
+                        }
+                    }
+
+                    // Validasi Step 4
+                    if (currentStep === 'donasi-step-4') {
+                        const selectedMethod = document.querySelector('.payment-method-radio:checked');
+                        if (!selectedMethod) {
+                            // (PERBAIKAN WAJIB) Mengganti alert() dengan modal kustom
+                            showAppAlert('Silakan pilih metode pembayaran.');
+                            return;
+                        }
+                        donasiData.metode = selectedMethod.value;
+                        updateRingkasan();
+                    }
+
+                    const nextStep = btn.getAttribute('data-next-step');
+                    goToStep(nextStep);
+                });
+            });
+            
+            document.querySelectorAll('[data-prev-step]').forEach(btn => {
+                btn.addEventListener('click', () => {
+                    goToStep(btn.getAttribute('data-prev-step'));
+                });
+            });
+
+            // --- Logika Step 5: Ringkasan & Konfirmasi Final ---
+            function updateRingkasan() {
+                const container = document.getElementById('ringkasan-donasi');
+                container.innerHTML = `
+                    <div class="flex justify-between border-b border-gray-200 pb-2">
+                        <span class="text-gray-600">Tipe Donasi:</span>
+                        <span class="font-bold text-orange-500">${donasiData.type}</span>
+                    </div>
+                    <div class="flex justify-between border-b border-gray-200 pb-2">
+                        <span class="text-gray-600">Nominal:</span>
+                        <span class="font-bold text-lg text-orange-500">${formatter.format(donasiData.nominal)}</span>
+                    </div>
+                    <div class="flex justify-between border-b border-gray-200 pb-2">
+                        <span class="text-gray-600">Nama Donatur:</span>
+                        <span class="font-bold text-right">${donasiData.nama}</span>
+                    </div>
+                    ${donasiData.isSantri ? `
+                    <div class="flex justify-between border-b border-gray-200 pb-2">
+                        <span class="text-gray-600">Melalui Santri:</span>
+                        <span class="font-bold text-right">${donasiData.santriDetail.replace('Melalui Santri: ','')}</span>
+                    </div>` : ''}
+                    <div class="flex justify-between border-b border-gray-200 pb-2">
+                        <span class="text-gray-600">No. HP:</span>
+                        <span class="font-bold text-right">${donasiData.hp}</span>
+                    </div>
+                    <div class="flex justify-between border-b border-gray-200 pb-2">
+                        <span class="text-gray-600">Metode Bayar:</span>
+                        <span class="font-bold text-right">${donasiData.metode}</span>
+                    </div>
+                    ${donasiData.doa ? `
+                    <div class="pt-2">
+                        <span class="text-gray-600">Doa/Pesan:</span>
+                        <p class="font-medium italic">"${donasiData.doa}"</p>
+                    </div>` : ''}
+                `;
+            }
+
+            document.getElementById('final-confirm-btn').addEventListener('click', () => {
+                wizard.classList.add('hidden');
+                instructions.classList.remove('hidden');
+                
+                const transferDetails = document.getElementById('payment-transfer-details');
+                const qrisDetails = document.getElementById('payment-qris-details');
+                const instruksiTitle = document.getElementById('instruksi-title');
+                
+                if (donasiData.metode === 'Transfer') {
+                    transferDetails.classList.remove('hidden');
+                    qrisDetails.classList.add('hidden');
+                    instruksiTitle.textContent = "Segera Selesaikan Pembayaran";
+                } else { // QRIS
+                    transferDetails.classList.add('hidden');
+                    qrisDetails.classList.remove('hidden');
+                    instruksiTitle.textContent = "Segera Selesaikan Pembayaran";
+                }
+
+                const waBase = "https://wa.me/6281196961918";
+                
+                // (EFEKTIF) Pesan WA yang lebih rapi untuk dibaca
+                const waMessage = `
+Assalamu'alaikum, saya ingin konfirmasi donasi:
+--------------------------------
+Tipe Donasi: ${donasiData.type}
+Nominal: ${formatter.format(donasiData.nominal)}
+--------------------------------
+Nama Donatur: ${donasiData.nama}
+No. HP: ${donasiData.hp}
+Alamat: ${donasiData.alamat}
+Metode: ${donasiData.metode}
+${donasiData.isSantri ? `${donasiData.santriDetail}` : ''}
+${donasiData.email ? `Email: ${donasiData.email}` : ''}
+${donasiData.ktp ? `No. KTP: ${donasiData.ktp}` : ''}
+${donasiData.doa ? `\nPesan/Doa: \n"${donasiData.doa}"` : ''}
+--------------------------------
+Mohon doanya. Jazakumullah khairan katsiran.
+(Silakan lampirkan bukti transfer/QRIS di bawah ini)
+                `;
+                
+                const waLink = `${waBase}?text=${encodeURIComponent(waMessage.trim())}`;
+                document.getElementById('final-wa-button').href = waLink;
+
+                document.getElementById('page-donasi').scrollIntoView({ behavior: 'smooth', block: 'start' });
+            });
+
+        }); // Akhir DOMContentLoaded
+    </script>
+
+</body>
+</html>
