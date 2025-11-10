@@ -106,6 +106,29 @@
         input:invalid, textarea:invalid {
             border-left-color: #ef4444; /* red-500 */
         }
+
+        /* (BARU) Styling untuk struk nota */
+        .struk-line {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .struk-line .label {
+            white-space: nowrap;
+        }
+        .struk-line .dots {
+            flex-grow: 1;
+            border-bottom: 2px dashed #9ca3af; /* gray-400 */
+            margin: 0 0.5rem;
+            position: relative;
+            bottom: 4px;
+        }
+        .struk-line .value {
+            white-space: nowrap;
+            font-weight: 600;
+            text-align: right;
+            max-width: 60%; /* Mencegah value terlalu panjang */
+        }
     </style>
 </head>
 <!-- (EFEKTIF) Menambahkan 'font-sans' untuk menerapkan font Lato dari config -->
@@ -165,12 +188,12 @@
                 </svg>
             </button>
             
-            <!-- Link Navigasi (DENGAN HOVER SCALE) -->
+            <!-- (REFACTOR) Link Navigasi (DENGAN HOVER SCALE) - Berita dihapus -->
             <div id="menu-links" class="hidden md:flex md:items-center md:space-x-8 absolute md:relative top-full left-0 w-full md:w-auto bg-white md:bg-transparent shadow-md md:shadow-none p-4 md:p-0 flex-col md:flex-row space-y-4 md:space-y-0">
                 <a href="#home" class="nav-link block md:inline-block text-gray-700 hover:text-orange-500 font-medium px-1 py-2 transition-all duration-200 md:hover:scale-110">Beranda</a>
                 <a href="#tentang" class="nav-link block md:inline-block text-gray-700 hover:text-orange-500 font-medium px-1 py-2 transition-all duration-200 md:hover:scale-110">Tentang Kami</a>
                 <a href="#program" class="nav-link block md:inline-block text-gray-700 hover:text-orange-500 font-medium px-1 py-2 transition-all duration-200 md:hover:scale-110">Program</a>
-                <a href="#berita" class="nav-link block md:inline-block text-gray-700 hover:text-orange-500 font-medium px-1 py-2 transition-all duration-200 md:hover:scale-110">Berita</a>
+                <!-- <a href="#berita" ...> Dihapus -->
                 <!-- Tombol Donasi dengan Gradien -->
                 <a href="#donasi" class="bg-gradient-to-r from-orange-500 to-orange-600 text-white px-6 py-2.5 rounded-full font-semibold shadow-md hover:shadow-lg transform hover:scale-105 transition duration-300 block md:inline-block text-center flex items-center space-x-2 justify-center">
                     <i class="fas fa-donate"></i>
@@ -644,67 +667,10 @@
             </div>
         </section>
 
-        <!-- === HALAMAN BERITA (Layout "Kaya" + Featured) === -->
-        <section id="page-berita" class="page-section bg-gray-50 py-20">
-            <div class="container mx-auto px-4 md:px-6">
-                <h2 class="text-4xl font-bold text-center mb-16 fade-in-up-scroll bg-clip-text text-transparent bg-gradient-to-r from-orange-600 to-orange-500">
-                    Kabar Kebaikan dari Lazismu
-                </h2>
-                
-                <!-- (REFACTOR) Berita 1 (FEATURED) (mengganti .group-hover-scale) -->
-                <a href="#" class="group bg-white rounded-2xl shadow-xl overflow-hidden mb-16 flex flex-col md:flex-row gap-0 md:gap-8 items-center border border-gray-100 fade-in-up-scroll transition-all duration-300 hover:shadow-2xl" style="transition-delay: 100ms;">
-                    <div class="md:w-1/2 overflow-hidden">
-                        <img src="https://placehold.co/600x400/f97316/ffffff?text=Berita+1" alt="Berita 1" class="w-full h-64 md:h-96 object-cover transform transition-transform duration-300 group-hover:scale-110">
-                    </div>
-                    <div class="p-8 md:w-1/2">
-                        <span class="text-xs text-gray-500 block mb-2"><i class="fas fa-calendar-alt mr-1"></i> 10 November 2025 • <span class="text-orange-500 font-semibold">BERITA UTAMA</span></span>
-                        <h3 class="text-3xl font-bold text-gray-800 my-3 leading-tight transition-colors group-hover:text-orange-500">Penyaluran Beasiswa Cerdas Mu'allimin Tahap II</h3>
-                        <p class="text-gray-600 text-lg mb-6">
-                            Lazismu Mu'allimin kembali menyalurkan beasiswa pendidikan untuk 50 siswa berprestasi dhuafa di lingkungan madrasah. Program ini diharapkan dapat memotivasi siswa untuk terus berprestasi...
-                        </p>
-                        <span class="text-orange-500 font-semibold transition duration-200 inline-flex items-center space-x-1">
-                            <span>Baca Selengkapnya</span> <i class="fas fa-long-arrow-alt-right text-sm"></i>
-                        </span>
-                    </div>
-                </a>
+        <!-- === (DIHAPUS) HALAMAN BERITA === -->
+        <!-- <section id="page-berita" ...> -->
 
-                <h3 class="text-3xl font-bold text-gray-800 mb-8 mt-16 fade-in-up-scroll" style="transition-delay: 200ms;">
-                    Berita Lainnya
-                </h3>
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
-                    <!-- Berita 2 -->
-                    <a href="#" class="group bg-white rounded-xl shadow-lg overflow-hidden border border-gray-100 fade-in-up-scroll transition-all duration-300 hover:shadow-2xl" style="transition-delay: 300ms;">
-                        <div class="overflow-hidden">
-                            <img src="https://placehold.co/600x400/1f2937/ffffff?text=Berita+2" alt="Berita 2" class="w-full h-48 object-cover transform transition-transform duration-300 group-hover:scale-110">
-                        </div>
-                        <div class="p-6">
-                            <span class="text-xs text-gray-500 block mb-2"><i class="fas fa-calendar-alt mr-1"></i> 5 November 2025</span>
-                            <h3 class="text-xl font-semibold text-gray-800 my-2 leading-tight transition-colors group-hover:text-orange-500">Bantuan Sembako untuk Warga Terdampak Banjir</h3>
-                            <p class="text-gray-600 text-sm mb-4">Tim Lazismu Mu'allimin bergerak cepat memberikan bantuan paket sembako kepada warga...</p>
-                            <span class="text-orange-500 font-medium transition duration-200 inline-flex items-center space-x-1">
-                                <span>Baca Selengkapnya</span> <i class="fas fa-long-arrow-alt-right text-sm"></i>
-                            </span>
-                        </div>
-                    </a>
-                    <!-- Berita 3 -->
-                    <a href="#" class="group bg-white rounded-xl shadow-lg overflow-hidden border border-gray-100 fade-in-up-scroll transition-all duration-300 hover:shadow-2xl" style="transition-delay: 400ms;">
-                        <div class="overflow-hidden">
-                            <img src="https://placehold.co/600x400/f97316/ffffff?text=Berita+3" alt="Berita 3" class="w-full h-48 object-cover transform transition-transform duration-300 group-hover:scale-110">
-                        </div>
-                        <div class="p-6">
-                            <span class="text-xs text-gray-500 block mb-2"><i class="fas fa-calendar-alt mr-1"></i> 1 November 2025</span>
-                            <h3 class="text-xl font-semibold text-gray-800 my-2 leading-tight transition-colors group-hover:text-orange-500">Program Khitanan Massal Ceria Diikuti 100 Anak</h3>
-                            <p class="text-gray-600 text-sm mb-4">Bekerja sama dengan RS PKU Muhammadiyah, Lazismu Mu'allimin sukses menggelar...</p>
-                            <span class="text-orange-500 font-medium transition duration-200 inline-flex items-center space-x-1">
-                                <span>Baca Selengkapnya</span> <i class="fas fa-long-arrow-alt-right text-sm"></i>
-                            </span>
-                        </div>
-                    </a>
-                </div>
-            </div>
-        </section>
-
-        <!-- === HALAMAN DONASI (WIZARD BARU) === -->
+        <!-- === HALAMAN DONASI (ROMBAK TOTAL: WIZARD BARU) === -->
         <section id="page-donasi" class="page-section bg-gray-50 py-20"> 
             <div class="container mx-auto px-4 md:px-6">
                 
@@ -729,29 +695,54 @@
                         </div>
                     </div>
 
-                    <!-- STEP 1: PILIH TIPE DONASI -->
+                    <!-- (REFACTOR) STEP 1: PILIH TIPE DONASI (Zakat Fitrah & Maal) -->
                     <div id="donasi-step-1" class="donasi-step-container p-6 md:p-10 fade-in-up-scroll">
                         <h3 class="text-2xl font-bold text-gray-800 mb-6">Langkah 1: Pilih Jenis Donasi</h3>
-                        <div class="max-w-md mx-auto grid grid-cols-1 md:grid-cols-2 gap-4">
-                            <button data-type="Zakat" class="choice-button donasi-type-btn text-lg font-semibold border-2 border-gray-200 rounded-lg p-6 text-center hover:border-orange-500">
-                                <i class="fas fa-balance-scale text-3xl mb-3 text-orange-500"></i><br>Zakat
+                        <div class="max-w-md mx-auto grid grid-cols-1 md:grid-cols-3 gap-4">
+                            <button data-type="Zakat Fitrah" class="choice-button donasi-type-btn text-lg font-semibold border-2 border-gray-200 rounded-lg p-6 text-center hover:border-orange-500">
+                                <i class="fas fa-seedling text-3xl mb-3 text-orange-500"></i><br>Zakat Fitrah
+                            </button>
+                            <button data-type="Zakat Maal" class="choice-button donasi-type-btn text-lg font-semibold border-2 border-gray-200 rounded-lg p-6 text-center hover:border-orange-500">
+                                <i class="fas fa-balance-scale text-3xl mb-3 text-orange-500"></i><br>Zakat Maal
                             </button>
                             <button data-type="Infaq" class="choice-button donasi-type-btn text-lg font-semibold border-2 border-gray-200 rounded-lg p-6 text-center hover:border-orange-500">
                                 <i class="fas fa-hand-holding-dollar text-3xl mb-3 text-orange-500"></i><br>Infaq Umum
                             </button>
                         </div>
                         
-                        <!-- Kalkulator Zakat (Muncul saat 'Zakat' dipilih) -->
-                        <div id="zakat-checker" class="hidden mt-6 bg-amber-50 p-6 rounded-lg">
+                        <!-- (BARU) Kalkulator Zakat Fitrah -->
+                        <div id="zakat-fitrah-checker" class="hidden mt-6 bg-amber-50 p-6 rounded-lg">
+                            <h4 class="text-xl font-bold text-gray-800 mb-4">Kalkulator Zakat Fitrah</h4>
+                            <p class="text-gray-600 mb-4">Zakat Fitrah tunai adalah <strong class="text-orange-600">Rp 37.500</strong> per orang. Silakan masukkan jumlah orang yang akan Anda zakati.</p>
+                            
+                            <div>
+                                <label for="fitrah-jumlah-orang" class="block text-sm font-medium text-gray-700 mb-1">Jumlah Orang (Kepala)</label>
+                                <input type="number" id="fitrah-jumlah-orang" placeholder="0" min="1" class="w-full border border-gray-300 rounded-lg p-3 shadow-sm focus:ring-orange-500 focus:border-orange-500 text-lg">
+                            </div>
+                            <div class="mt-4">
+                                <label for="fitrah-total" class="block text-sm font-medium text-gray-700 mb-1">Total Zakat Fitrah Anda</label>
+                                <input type="text" id="fitrah-total" value="Rp 0" readonly class="w-full border border-gray-300 rounded-lg p-3 shadow-sm bg-gray-100 text-2xl font-bold text-gray-800">
+                            </div>
+
+                            <!-- Tombol Navigasi Step 1 (Khusus Fitrah) -->
+                            <div id="step-1-nav-fitrah" class="text-right mt-6">
+                                <button data-next-step="3" id="btn-fitrah-to-step-3" class="wizard-next-btn bg-gradient-to-r from-orange-500 to-orange-600 text-white px-8 py-3 rounded-full font-semibold hover:shadow-lg transition duration-300 shadow-md">
+                                    Lanjut <i class="fas fa-arrow-right ml-2"></i>
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- (REFACTOR) Kalkulator Zakat Maal -->
+                        <div id="zakat-maal-checker" class="hidden mt-6 bg-amber-50 p-6 rounded-lg">
                             <h4 class="text-xl font-bold text-gray-800 mb-4">Kalkulator Zakat Penghasilan</h4>
                             <p class="text-gray-600 mb-4">Mari kita hitung apakah Anda sudah wajib zakat. Masukkan penghasilan bulanan Anda.</p>
                             <div>
                                 <label for="harga-emas" class="block text-sm font-medium text-gray-700 mb-1">Asumsi Harga Emas (per gram)</label>
-                                <input type="number" id="harga-emas" value="1000000" class="w-full border border-gray-300 rounded-lg p-3 shadow-sm focus:ring-orange-500 focus:border-orange-500 text-lg">
+                                <input type="text" id="harga-emas" value="Rp 1.000.000" class="w-full border border-gray-300 rounded-lg p-3 shadow-sm focus:ring-orange-500 focus:border-orange-500 text-lg formatted-number">
                             </div>
                             <div class="mt-4">
                                 <label for="penghasilan-bulanan" class="block text-sm font-medium text-gray-700 mb-1">Penghasilan Bulanan Anda (Rp)</label>
-                                <input type="number" id="penghasilan-bulanan" placeholder="Contoh: 8500000" class="w-full border border-gray-300 rounded-lg p-3 shadow-sm focus:ring-orange-500 focus:border-orange-500 text-lg">
+                                <input type="text" id="penghasilan-bulanan" placeholder="Rp 0" class="w-full border border-gray-300 rounded-lg p-3 shadow-sm focus:ring-orange-500 focus:border-orange-500 text-lg formatted-number">
                             </div>
                             <button id="zakat-check-button" class="mt-4 w-full bg-gradient-to-r from-orange-500 to-orange-600 text-white px-6 py-3 rounded-full font-semibold hover:shadow-lg transition duration-300 shadow-md">
                                 Cek Zakat Saya
@@ -764,15 +755,15 @@
                             </div>
                         </div>
 
-                        <!-- Tombol Navigasi Step 1 (Muncul setelah dipilih) -->
-                        <div id="step-1-nav" class="hidden text-right mt-8">
+                        <!-- Tombol Navigasi Step 1 (Infaq & Zakat Maal) -->
+                        <div id="step-1-nav-default" class="hidden text-right mt-8">
                             <button data-next-step="2" class="wizard-next-btn bg-gradient-to-r from-orange-500 to-orange-600 text-white px-8 py-3 rounded-full font-semibold hover:shadow-lg transition duration-300 shadow-md">
                                 Lanjut <i class="fas fa-arrow-right ml-2"></i>
                             </button>
                         </div>
                     </div>
 
-                    <!-- STEP 2: PILIH NOMINAL -->
+                    <!-- STEP 2: PILIH NOMINAL (Hanya untuk Zakat Maal & Infaq) -->
                     <div id="donasi-step-2" class="donasi-step-container hidden p-6 md:p-10 fade-in-up-scroll">
                         <h3 class="text-2xl font-bold text-gray-800 mb-6">Langkah 2: Masukkan Nominal <span id="nominal-title-type" class="text-orange-500"></span></h3>
                         <div class="grid grid-cols-2 md:grid-cols-3 gap-4">
@@ -785,7 +776,8 @@
                         </div>
                         <div class="mt-6">
                             <label for="nominal-custom" class="block text-sm font-medium text-gray-700 mb-1">Atau masukkan nominal lain (Rp)</label>
-                            <input type="number" id="nominal-custom" placeholder="0" class="w-full border border-gray-300 rounded-lg p-3 shadow-sm focus:ring-orange-500 focus:border-orange-500 text-2xl font-bold">
+                            <!-- (REFACTOR) Input diubah ke type="text" untuk format Rp, ID ditambahkan -->
+                            <input type="text" id="nominal-custom" placeholder="Rp 0" class="w-full border border-gray-300 rounded-lg p-3 shadow-sm focus:ring-orange-500 focus:border-orange-500 text-2xl font-bold formatted-number">
                         </div>
 
                         <!-- Tombol Navigasi Step 2 -->
@@ -799,39 +791,52 @@
                         </div>
                     </div>
                     
-                    <!-- STEP 3: ISI IDENTITAS (Layout Grid 2 Kolom) -->
+                    <!-- (REFACTOR) STEP 3: ISI IDENTITAS (Donatur, Alumni, Santri) -->
                     <div id="donasi-step-3" class="donasi-step-container hidden p-6 md:p-10 fade-in-up-scroll">
                         <h3 class="text-2xl font-bold text-gray-800 mb-6">Langkah 3: Lengkapi Data Diri</h3>
                         <form id="donasi-form-identitas" class="space-y-4">
                             
-                            <!-- Toggle Santri -->
-                            <div class="flex items-center space-x-3 bg-amber-50 p-4 rounded-lg">
-                                <input type="checkbox" id="is-santri" class="h-5 w-5 text-orange-500 focus:ring-orange-500 border-gray-300 rounded">
-                                <label for="is-santri" class="font-semibold text-gray-700">Donasi melalui Santri Mu'allimin?</label>
+                            <!-- (BARU) Tipe Donatur (Radio) -->
+                            <div class="bg-amber-50 p-4 rounded-lg">
+                                <label class="block text-sm font-medium text-gray-700 mb-2">Tipe Donatur</label>
+                                <div class="flex flex-wrap gap-4">
+                                    <div class="flex items-center">
+                                        <input type="radio" id="tipe-donatur-umum" name="donatur-tipe" value="umum" class="h-4 w-4 text-orange-500 focus:ring-orange-500" checked>
+                                        <label for="tipe-donatur-umum" class="ml-2 block text-sm font-medium text-gray-700">Donatur Umum</label>
+                                    </div>
+                                    <div class="flex items-center">
+                                        <input type="radio" id="tipe-donatur-alumni" name="donatur-tipe" value="alumni" class="h-4 w-4 text-orange-500 focus:ring-orange-500">
+                                        <label for="tipe-donatur-alumni" class="ml-2 block text-sm font-medium text-gray-700">Alumni</M_ASSISTANT_THOUGHT_REPLACE_9>
+                                    </div>
+                                    <div class="flex items-center">
+                                        <input type="radio" id="tipe-donatur-santri" name="donatur-tipe" value="santri" class="h-4 w-4 text-orange-500 focus:ring-orange-500">
+                                        <label for="tipe-donatur-santri" class="ml-2 block text-sm font-medium text-gray-700">Atas Nama Santri</M_ASSISTANT_THOUGHT_REPLACE_10>
+                                    </div>
+                                </div>
                             </div>
-                            <!-- Detail Santri (Hidden) -->
+                            
+                            <!-- (BARU) Detail Alumni (Hidden) -->
+                            <div id="alumni-details" class="hidden space-y-4 p-4 border border-orange-500 rounded-lg">
+                                <div>
+                                    <label for="alumni-tahun-lulus" class="block text-sm font-medium text-gray-700 mb-1">Tahun Lulus</label>
+                                    <input type="number" id="alumni-tahun-lulus" placeholder="Contoh: 1998" class="w-full border border-gray-300 rounded-lg p-3 shadow-sm focus:ring-orange-500 focus:border-orange-500">
+                                </div>
+                            </div>
+
+                            <!-- (REFACTOR) Detail Santri (Hidden) - Autocomplete -->
                             <div id="santri-details" class="hidden space-y-4 p-4 border border-orange-500 rounded-lg">
                                 <div>
-                                    <label for="santri-kelas" class="block text-sm font-medium text-gray-700 mb-1">Kelas</label>
-                                    <select id="santri-kelas" class="w-full border border-gray-300 rounded-lg p-3 shadow-sm focus:ring-orange-500 focus:border-orange-500">
-                                        <option value="">Pilih Kelas</option>
-                                        <option value="1">Kelas 1</option>
-                                        <option value="2">Kelas 2</option>
-                                        <option value="3">Kelas 3</option>
-                                        <option value="4">Kelas 4</option>
-                                        <option value="5">Kelas 5</option>
-                                        <option value="6">Kelas 6</option>
-                                    </select>
-                                </div>
-                                <div>
-                                    <label for="santri-nama" class="block text-sm font-medium text-gray-700 mb-1">Nama Santri / Rombel</label>
-                                    <input type="text" id="santri-nama" placeholder="Contoh: Fulan / 2A" class="w-full border border-gray-300 rounded-lg p-3 shadow-sm focus:ring-orange-500 focus:border-orange-500">
+                                    <label for="santri-nama-input" class="block text-sm font-medium text-gray-700 mb-1">Nama Santri (Ketik untuk mencari)</label>
+                                    <input type="text" id="santri-nama-input" list="santri-datalist" placeholder="Ketik nama santri..." class="w-full border border-gray-300 rounded-lg p-3 shadow-sm focus:ring-orange-500 focus:border-orange-500">
+                                    <datalist id="santri-datalist">
+                                        <!-- Opsi dinamis akan ditambahkan di sini oleh JS -->
+                                    </datalist>
                                 </div>
                             </div>
                             
                             <!-- Pilihan Nama Donatur -->
                             <div class="bg-gray-50 p-4 rounded-lg border border-gray-200">
-                                <label id="label-nama-donatur" class="block text-sm font-medium text-gray-700 mb-2">Muzakki (Wajib)</label>
+                                <label id="label-nama-donatur" class="block text-sm font-medium text-gray-700 mb-2">Nama Donatur (Wajib)</label>
                                 <div class="space-y-3">
                                     <div class="flex items-center">
                                         <input type="radio" id="nama-sendiri-radio" name="nama-choice" value="sendiri" class="h-4 w-4 text-orange-500 focus:ring-orange-500" checked>
@@ -839,11 +844,6 @@
                                     </div>
                                     <input type="text" id="nama-muzakki-input" placeholder="Nama Anda" required class="w-full border border-gray-300 rounded-lg p-3 shadow-sm focus:ring-orange-500 focus:border-orange-500">
                                     
-                                    <div class="flex items-center">
-                                        <input type="radio" id="nama-santri-radio" name="nama-choice" value="santri" class="h-4 w-4 text-orange-500 focus:ring-orange-500">
-                                        <label for="nama-santri-radio" class="ml-3 block text-sm font-medium text-gray-700">Atas Nama Santri (dari form di atas)</label>
-                                    </div>
-
                                     <div class="flex items-center">
                                         <input type="radio" id="nama-hamba-radio" name="nama-choice" value="hamba" class="h-4 w-4 text-orange-500 focus:ring-orange-500">
                                         <label for="nama-hamba-radio" class="ml-3 block text-sm font-medium text-gray-700">Hamba Allah</label>
@@ -877,7 +877,8 @@
                         </form>
                         <!-- Tombol Navigasi Step 3 -->
                         <div class="flex justify-between mt-8">
-                            <button data-prev-step="2" class="wizard-prev-btn text-gray-600 px-6 py-3 rounded-full font-semibold hover:bg-gray-100 transition duration-300">
+                            <!-- (REFACTOR) Tombol kembali dinamis -->
+                            <button data-prev-step="1" id="btn-step-3-prev" class="wizard-prev-btn text-gray-600 px-6 py-3 rounded-full font-semibold hover:bg-gray-100 transition duration-300">
                                 <i class="fas fa-arrow-left mr-2"></i> Kembali
                             </button>
                             <button data-next-step="4" id="btn-to-step-4" class="wizard-next-btn bg-gradient-to-r from-orange-500 to-orange-600 text-white px-8 py-3 rounded-full font-semibold hover:shadow-lg transition duration-300 shadow-md">
@@ -926,13 +927,21 @@
                         </div>
                     </div>
 
-                    <!-- STEP 5: RINGKASAN DONASI -->
+                    <!-- (REFACTOR) STEP 5: RINGKASAN DONASI (Desain Struk) -->
                     <div id="donasi-step-5" class="donasi-step-container hidden p-6 md:p-10 fade-in-up-scroll">
                         <h3 class="text-2xl font-bold text-gray-800 mb-6">Langkah 5: Ringkasan Donasi</h3>
                         <p class="text-gray-600 mb-6">Mohon periksa kembali data donasi Anda. Jika sudah benar, silakan lanjutkan.</p>
                         
-                        <div id="ringkasan-donasi" class="bg-amber-50 p-6 rounded-lg space-y-3 text-gray-700">
-                            <!-- Konten ringkasan akan diisi oleh JavaScript -->
+                        <!-- (BARU) Desain Struk Nota -->
+                        <div id="ringkasan-donasi" class="bg-white p-6 rounded-lg border-2 border-dashed border-gray-400 font-mono text-gray-800 space-y-3">
+                            <h4 class="text-center font-bold text-lg">--- KONFIRMASI DONASI ---</h4>
+                            <h5 class="text-center text-sm mb-4">LAZISMU MU'ALLIMIN</h5>
+                            
+                            <!-- Konten dinamis akan diisi oleh JS dengan format struk -->
+
+                            <div class="border-t border-dashed border-gray-400 pt-3 mt-3 text-center">
+                                <p class="font-bold text-lg">TOTAL: <span id="struk-total" class="text-orange-600">Rp 0</span></p>
+                            </div>
                         </div>
                         
                         <!-- Tombol Navigasi Step 5 -->
@@ -1100,7 +1109,8 @@
                     <ul class="space-y-4 text-sm text-gray-300">
                         <li class="flex items-start">
                             <i class="fas fa-map-marker-alt text-orange-500 mt-1 mr-3 flex-shrink-0 w-4"></i>
-                            <a href="https://maps.app.goo.gl/9qYv4g9wXQJ5A9Z9A" target="_blank" class="hover:text-orange-500 transition-colors">
+                            <!-- (REFACTOR) Link Gmaps diperbarui -->
+                            <a href="https://maps.app.goo.gl/A9eDKQrMAABu2owz5" target="_blank" class="hover:text-orange-500 transition-colors">
                                 Jl. S. Parman No. 68, Patangpuluhan, Wirobrajan, Kota Yogyakarta, DIY 55251
                             </a>
                         </li>
@@ -1182,6 +1192,162 @@
                 }
             });
             // --- Akhir Logika Alert Modal ---
+
+            // (BARU) === BAGIAN 1.5: LOGIKA DATA SANTRI ===
+            
+            // Data mentah dari user
+            const rawSantriData = `
+2A	11844	Adelio Daffa Syahrizha
+2A	11853	Ahmad Ahsanur Rizqi
+2A	11855	Ahmad Arkan Sya'bani
+2A	11859	Ahmad Darwis
+2A	11860	Ahmad Ghozi El Muntazhor
+2A	11867	Aldan 'Izzul Islam
+2A	11883	Arkana El Sabilly
+2A	11893	Athaya Auza'i Mubarak
+2A	11915	Dama Arza Evannova
+2A	11916	Danar Nizam Daniswara
+2A	11921	Devgan Jadid Sahlvatico
+2A	11947	Fariq Imtiyas Aufaa Kamil
+2A	11955	Fawwaz Elfareza Zuhri
+2A	11956	Firaas Izzulhaq
+2A	11963	Gilang Omar Fardad
+2A	11976	Jaladri Arif Wirasena
+2A	11985	Kemal Mubarak Siregar
+2A	11986	Khairil Nizam
+2A	11994	M. Fathan Alfarisi Harahap
+2A	12004	Mirza Nasyath Ahza Attaillah
+2A	12013	Muhammad Ahsani Taqwim
+2A	12022	Muhammad Ayyub Al Fatih
+2A	12138	Muhammad Farros Linggar Cahyono
+2A	12028	Muhammad Fathir Alfalah
+2A	12029	Muhammad Gibran Rafassya
+2A	12074	Narendra Gerrardi Kusumah
+2A	12075	Narendra Wibawa
+2A	12077	Naufal Zhafran Purnama
+2A	12108	Rijal Abdul'aziz
+2A	12109	Rizki Chandra Dewantara
+3B	11535	Ahmad Azzam Huluq
+3B	11541	Ahnaf Azizan Sasmito
+3B	11544	Ajnata Haziq Abisatya Hayu Wardana (Tahfidz)
+3B	11555	Arkan Araafi Ardian
+3B	11559	Ashraf 'Ifathurrosydan (Tahfidz)
+3B	11565	Aysar Sahwahita Darwisyi
+3B	11573	Bilal Jibril
+3B	11574	Bintang Revoluna Al Mahdi
+3B	11577	Daffa Adyatama Abdullah
+3B	11582	Devga Aulia
+3B	11585	Dwi Rizky Fausta
+3B	11586	Elka Maulana Iskandar (Tahfidz)
+3B	11587	Fabiansyah Jumany Rizki
+3B	11590	Fahmi Ahnaf Baihaqi (Tahfidz)
+3B	11608	Firaz Tsaqeffano (Tahfidz)
+3B	11647	Kanka Emiliano Al Arafat
+3B	11670	Mirza Ghaisan Ramadhan
+3B	11673	Mohammad Azzam Azinuddin
+3B	11675	Mohammad Ihsan Kamil
+3B	11684	Muhammad Alfan Arrasyid
+3B	11693	Muhammad Atha Elhanani
+3B	11702	Muhammad Dzaki Rian Putra (Tahfidz)
+3B	11716	Muhammad Hafiz Ziyad
+3B	11723	Muhammad Kafi
+3B	11728	Muhammad Naufal Rasyiid Jaya
+3B	11749	Muhammad Zaim Aditya
+3B	11752	Muhammad Zidane Al Barraa
+3B	11755	Narendra Alfarizqi Gayatra
+3B	11763	Noersy Arkana Mahammada
+3B	11769	Raden Hafi Muhadzdzib Hassan
+3B	11810	Syabil Angkasa Putra Solissa
+3B	11815	Thoriq Bil Furqon Lesmana
+4C	11515	Abdilla Rousan Fikri Akbar
+4C	11219	Ahmad Badir Hamam Zadisa
+4C	11226	Ahmad Maududi Faqih
+4C	11231	Ahmad Shiddiq Al Kariem
+4C	11260	Arroyan Ulya Anwar (Tahfidz)
+4C	11285	Chalis Zabadi Putra
+4C	11310	Fahri Mirza Hanafi (Tahfidz)
+4C	11319	Faqih Najwan Madani
+4C	11349	Ibad Naufal Uthman
+4C	11356	Isa Azatta Fadhlan Faiq
+4C	11359	Juanda Pranata Ritonga
+4C	11360	Juhdan Lintang Fahmi Habibi
+4C	11373	M. Muttaqin Ar Rasyiid (Tahfidz)
+4C	11379	Muh. Rifat Zehavi Yasmin
+4C	11440	Muhamad Naufal Farisqi
+4C	11385	Muhammad Al Fatih
+4C	11394	Muhammad Azam Tawakkal
+4C	11401	Muhammad Difa Ahnaf
+4C	11407	Muhammad Fairuz Nafis Azzahir
+4C	11418	Muhammad Fayyadh Irsyad
+4C	11421	Muhammad Hilmi Rabbani Abdullah (Tahfidz)
+4C	11435	Muhammad Kimi As Shidiqi
+4C	11447	Muhammad Noval
+4C	11451	Muhammad Rafha Noorzakki
+4C	11453	Muhammad Rusyda Aiqona
+4C	11455	Muhammad Tsaqib Arsalan Zain
+4C	11465	Nasywa Tifatur Rasyid
+4C	11470	Nico Ghulam Mustaqim
+4C	11486	Raka Haidar Altaf
+4C	11498	Shidiq Dwi Nur Rahman
+4C	11499	Sholih Muhammad Faiq Ali Syahada
+4C	11514	Zhafir Abhinaya Diera Riyadie
+5D	10877	Abdillah Adlan Wicaksana
+5D	10887	Ahmad Ali Daffa
+5D	10891	Ahmad Muflih Satrio (Tahfidz)
+5D	10897	Akhmad Ravi Dhanissworo
+5D	10910	Arib Muhammad Hisyam (Tahfidz)
+5D	10923	Athalla Aryaputra Widodo
+5D	10949	Fachri Bagus Wibowo
+5D	10952	Fairuz Fawwazul Akmal (Tahfidz)
+5D	10956	Fa'iq Abiyyu Zuhri (Tahfidz)
+5D	10959	Faiz Akmal Saifudin
+5D	10963	Fakhri Luqman Affanny
+5D	10984	Fikri Aziz Avrilian
+5D	10991	Gusti Aditya
+5D	11003	Intifadhah Al-Aqsha Anas
+5D	11006	Izzudin Nawaf Hasan
+5D	11016	Lintang Abdullah
+5D	11032	Mirza Rafi Susanto
+5D	11034	Mochammad Hilmy Izzudin Arrasyid
+5D	11046	Muhammad Affan Fahrurrozi
+5D	11061	Muhammad Bintang Al Hafidz (Tahfidz)
+5D	11076	Muhammad Haedar Rizky Anwar
+5D	11081	Muhammad Iqbal Azzahir
+5D	11088	Muhammad Mannan Arrahmi
+5D	11089	Muhammad Mufassyah Dewandaru (Tahfidz)
+5D	11101	Muhammad Razzan Syahid
+5D	11115	Muhammad Zahran Istaz Solichin
+5D	11122	Nabil Abiyu Khairi
+5D	11138	Nehan Kaysan Fikri Susilo (Tahfidz)
+5D	11144	Pandya Aqila Rianto
+5D	11163	Rasyiq Asyrafa Baihaqi
+5D	11185	Yaafi Ramadhan Yugastian
+5D	11186	Yafa Ghani Arrasyid
+`;
+
+            // (REFACTOR) Proses data mentah menjadi flat array & isi datalist
+            const santriDatalist = document.getElementById('santri-datalist');
+            const allSantri = rawSantriData.trim().split('\n').map(line => {
+                const parts = line.split('\t');
+                if (parts.length === 3) {
+                    const [kelas, nis, nama] = parts.map(s => s.trim());
+                    return {
+                        value: `${nama} (NIS: ${nis}) - Kelas: ${kelas}`,
+                        nama: nama,
+                        nis: nis,
+                        kelas: kelas
+                    };
+                }
+                return null;
+            }).filter(Boolean); // Filter data yang null/kosong
+
+            // Isi datalist untuk autocomplete
+            allSantri.forEach(santri => {
+                const option = document.createElement('option');
+                option.value = santri.value;
+                santriDatalist.appendChild(option);
+            });
+            // --- Akhir Logika Data Santri ---
 
 
             function showPage(pageId, scrollUp = true) {
@@ -1360,6 +1526,27 @@
                 minimumFractionDigits: 0,
             });
 
+            // (BARU) Fungsi untuk memformat angka (Rp 1.000.000)
+            function formatCurrency(input) {
+                let value = input.value.replace(/[^0-9]/g, '');
+                if (value) {
+                    const number = parseInt(value, 10);
+                    input.value = "Rp " + number.toLocaleString('id-ID');
+                } else {
+                    input.value = "Rp 0";
+                }
+            }
+            // (BARU) Fungsi untuk mendapatkan angka mentah dari input
+            function getRawNumber(input) {
+                return parseInt(input.value.replace(/[^0-9]/g, '')) || 0;
+            }
+            // (BARU) Terapkan formatting ke semua input yang relevan
+            document.querySelectorAll('.formatted-number').forEach(input => {
+                input.addEventListener('input', () => formatCurrency(input));
+                input.addEventListener('blur', () => formatCurrency(input));
+            });
+
+
             let donasiData = {};
             const wizard = document.getElementById('donasi-wizard');
             const instructions = document.getElementById('donasi-payment-instructions');
@@ -1378,6 +1565,16 @@
                         progressBarEl.style.width = `${stepNumber * 20}%`;
                     }
                     document.getElementById('page-donasi').scrollIntoView({ behavior: 'smooth', block: 'start' });
+
+                    // (BARU) Update tombol "Kembali" di step 3
+                    if (stepNumber === 3) {
+                        const prevBtn = document.getElementById('btn-step-3-prev');
+                        if (donasiData.type === 'Zakat Fitrah') {
+                            prevBtn.setAttribute('data-prev-step', '1');
+                        } else {
+                            prevBtn.setAttribute('data-prev-step', '2');
+                        }
+                    }
                 }
             }
 
@@ -1391,19 +1588,32 @@
                     ktp: '',
                     email: '',
                     doa: '',
-                    isSantri: false,
+                    donaturTipe: 'umum', // (BARU) default tipe donatur
                     santriDetail: '',
+                    alumniDetail: '',
                     metode: null
                 };
                 // Reset tampilan
                 wizard.classList.remove('hidden');
                 instructions.classList.add('hidden');
-                document.getElementById('zakat-checker').classList.add('hidden');
-                document.getElementById('step-1-nav').classList.add('hidden');
+                document.getElementById('zakat-maal-checker').classList.add('hidden');
+                document.getElementById('zakat-fitrah-checker').classList.add('hidden');
+                document.getElementById('step-1-nav-default').classList.add('hidden');
                 document.getElementById('zakat-result').classList.add('hidden');
-                document.getElementById('nominal-custom').value = '';
+                
+                document.getElementById('nominal-custom').value = 'Rp 0';
+                document.getElementById('harga-emas').value = 'Rp 1.000.000';
+                document.getElementById('penghasilan-bulanan').value = 'Rp 0';
+                document.getElementById('fitrah-jumlah-orang').value = '';
+                document.getElementById('fitrah-total').value = 'Rp 0';
+
                 document.getElementById('donasi-form-identitas').reset();
                 document.getElementById('santri-details').classList.add('hidden');
+                document.getElementById('alumni-details').classList.add('hidden');
+                document.getElementById('tipe-donatur-umum').checked = true;
+                
+                document.getElementById('santri-nama-input').value = '';
+
                 document.querySelectorAll('.choice-button').forEach(btn => btn.classList.remove('selected'));
                 document.querySelectorAll('.payment-method-radio').forEach(radio => radio.checked = false);
                 document.getElementById('nama-muzakki-input').disabled = false;
@@ -1411,14 +1621,20 @@
                 goToStep(1);
             }
 
-            // --- Logika Step 1: Tipe Donasi & Zakat Check ---
+            // --- (REFACTOR) Logika Step 1: Tipe Donasi & Zakat Check ---
             const donasiTypeButtons = document.querySelectorAll('.donasi-type-btn');
-            const zakatChecker = document.getElementById('zakat-checker');
+            const zakatMaalChecker = document.getElementById('zakat-maal-checker');
+            const zakatFitrahChecker = document.getElementById('zakat-fitrah-checker');
             const zakatCheckBtn = document.getElementById('zakat-check-button');
             const zakatResult = document.getElementById('zakat-result');
             const zakatResultMsg = document.getElementById('zakat-result-message');
             const zakatLanjutkanInfaq = document.getElementById('zakat-lanjutkan-infaq');
-            const step1Nav = document.getElementById('step-1-nav');
+            const step1NavDefault = document.getElementById('step-1-nav-default');
+            const step1NavFitrah = document.getElementById('step-1-nav-fitrah');
+            
+            const fitrahJumlahInput = document.getElementById('fitrah-jumlah-orang');
+            const fitrahTotalInput = document.getElementById('fitrah-total');
+            const HARGA_FITRAH = 37500;
 
             donasiTypeButtons.forEach(btn => {
                 btn.addEventListener('click', () => {
@@ -1427,21 +1643,41 @@
                     donasiData.type = btn.getAttribute('data-type');
                     
                     const labelNama = document.getElementById('label-nama-donatur');
-                    if (donasiData.type === 'Zakat') {
+                    
+                    // Sembunyikan semua checker dan nav
+                    zakatMaalChecker.classList.add('hidden');
+                    zakatFitrahChecker.classList.add('hidden');
+                    step1NavDefault.classList.add('hidden');
+                    zakatResult.classList.add('hidden');
+
+                    if (donasiData.type === 'Zakat Fitrah') {
+                        labelNama.textContent = 'Nama Kepala Keluarga (Wajib)';
+                        zakatFitrahChecker.classList.remove('hidden');
+                        donasiData.nominal = 0; // Reset nominal
+                        fitrahJumlahInput.value = '';
+                        fitrahTotalInput.value = 'Rp 0';
+                    } else if (donasiData.type === 'Zakat Maal') {
                         labelNama.textContent = 'Nama Muzakki (Wajib)';
-                        zakatChecker.classList.remove('hidden');
-                        step1Nav.classList.add('hidden'); 
+                        zakatMaalChecker.classList.remove('hidden');
                     } else { // Infaq
                         labelNama.textContent = 'Nama Munfiq (Wajib)';
-                        zakatChecker.classList.add('hidden');
-                        step1Nav.classList.remove('hidden'); 
+                        step1NavDefault.classList.remove('hidden'); 
                     }
                 });
             });
 
+            // (BARU) Event listener untuk Zakat Fitrah
+            fitrahJumlahInput.addEventListener('input', () => {
+                const jumlah = parseInt(fitrahJumlahInput.value) || 0;
+                const total = jumlah * HARGA_FITRAH;
+                donasiData.nominal = total;
+                fitrahTotalInput.value = formatter.format(total);
+            });
+
+            // Event listener untuk Zakat Maal
             zakatCheckBtn.addEventListener('click', () => {
-                const hargaEmas = parseFloat(document.getElementById('harga-emas').value) || 0;
-                const penghasilan = parseFloat(document.getElementById('penghasilan-bulanan').value) || 0;
+                const hargaEmas = getRawNumber(document.getElementById('harga-emas'));
+                const penghasilan = getRawNumber(document.getElementById('penghasilan-bulanan'));
                 const nisabBulanan = (hargaEmas * 85) / 12;
 
                 zakatResult.classList.remove('hidden');
@@ -1450,13 +1686,13 @@
                     zakatResultMsg.classList.remove('text-red-600');
                     zakatResultMsg.classList.add('text-green-600');
                     zakatLanjutkanInfaq.classList.add('hidden');
-                    step1Nav.classList.remove('hidden'); 
+                    step1NavDefault.classList.remove('hidden'); 
                 } else {
                     zakatResultMsg.textContent = `Nisab bulanan (${formatter.format(nisabBulanan)}). Penghasilan Anda (${formatter.format(penghasilan)}) BELUM WAJIB ZAKAT.`;
                     zakatResultMsg.classList.add('text-red-600');
                     zakatResultMsg.classList.remove('text-green-600');
                     zakatLanjutkanInfaq.classList.remove('hidden'); 
-                    step1Nav.classList.add('hidden');
+                    step1NavDefault.classList.add('hidden');
                 }
             });
 
@@ -1475,26 +1711,55 @@
                     nominalButtons.forEach(b => b.classList.remove('selected'));
                     btn.classList.add('selected');
                     const nominal = btn.getAttribute('data-nominal');
-                    nominalCustom.value = nominal;
+                    nominalCustom.value = formatter.format(nominal); // (REFACTOR) Format value
                     donasiData.nominal = parseFloat(nominal);
                 });
             });
 
             nominalCustom.addEventListener('input', () => {
                 nominalButtons.forEach(b => b.classList.remove('selected'));
-                donasiData.nominal = parseFloat(nominalCustom.value) || 0;
+                donasiData.nominal = getRawNumber(nominalCustom); // (REFACTOR) Dapatkan angka mentah
             });
 
-            // --- Logika Step 3: Identitas ---
-            const isSantriCheck = document.getElementById('is-santri');
-            isSantriCheck.addEventListener('change', () => {
-                document.getElementById('santri-details').classList.toggle('hidden');
-                donasiData.isSantri = isSantriCheck.checked;
-            });
-
+            // --- (REFACTOR) Logika Step 3: Identitas (Alumni & Santri) ---
+            const donaturTipeRadios = document.querySelectorAll('input[name="donatur-tipe"]');
+            const santriDetails = document.getElementById('santri-details');
+            const alumniDetails = document.getElementById('alumni-details');
             const namaRadios = document.querySelectorAll('input[name="nama-choice"]');
             const namaInput = document.getElementById('nama-muzakki-input');
-            const santriRadio = document.getElementById('nama-santri-radio');
+
+            donaturTipeRadios.forEach(radio => {
+                radio.addEventListener('change', (e) => {
+                    const tipe = e.target.value;
+                    donasiData.donaturTipe = tipe;
+                    
+                    if (tipe === 'santri') {
+                        santriDetails.classList.remove('hidden');
+                        alumniDetails.classList.add('hidden');
+                        // (REFACTOR) Radio "Atas Nama Santri" tidak ada lagi, ganti logikanya
+                        // Otomatis disable nama input jika a/n santri
+                        namaInput.disabled = true;
+                        namaInput.required = false;
+                        namaInput.value = '';
+                        document.getElementById('nama-hamba-radio').checked = true; // Default ke Hamba Allah
+                    } else if (tipe === 'alumni') {
+                        santriDetails.classList.add('hidden');
+                        alumniDetails.classList.remove('hidden');
+                        // Enable nama input
+                        namaInput.disabled = false;
+                        namaInput.required = true;
+                        document.getElementById('nama-sendiri-radio').checked = true;
+                    } else { // umum
+                        santriDetails.classList.add('hidden');
+                        alumniDetails.classList.add('hidden');
+                        // Enable nama input
+                        namaInput.disabled = false;
+                        namaInput.required = true;
+                        document.getElementById('nama-sendiri-radio').checked = true;
+                    }
+                });
+            });
+
 
             namaRadios.forEach(radio => {
                 radio.addEventListener('change', (e) => {
@@ -1503,16 +1768,6 @@
                         namaInput.disabled = false;
                         namaInput.required = true;
                         namaInput.placeholder = 'Nama Anda';
-                    } else if (choice === 'santri') {
-                        if (!isSantriCheck.checked) {
-                            // (PERBAIKAN WAJIB) Mengganti alert() dengan modal kustom
-                            showAppAlert('Harap centang "Donasi melalui Santri" dan isi data santri terlebih dahulu.');
-                            document.getElementById('nama-sendiri-radio').checked = true;
-                            return;
-                        }
-                        namaInput.disabled = true;
-                        namaInput.required = false;
-                        namaInput.value = ''; 
                     } else if (choice === 'hamba') {
                         namaInput.disabled = true;
                         namaInput.required = false;
@@ -1525,12 +1780,21 @@
             // --- Validasi & Navigasi Wizard ---
             document.querySelectorAll('[data-next-step]').forEach(btn => {
                 btn.addEventListener('click', () => {
-                    const currentStep = btn.closest('.donasi-step-container').id;
+                    const currentStepContainer = btn.closest('.donasi-step-container');
+                    if (!currentStepContainer) return;
+                    const currentStep = currentStepContainer.id;
                     
+                    // (BARU) Validasi Step 1 (Zakat Fitrah)
+                    if (currentStep === 'donasi-step-1' && donasiData.type === 'Zakat Fitrah') {
+                        if (donasiData.nominal <= 0 || fitrahJumlahInput.value < 1) {
+                            showAppAlert('Harap masukkan jumlah orang yang valid (minimal 1).');
+                            return;
+                        }
+                    }
+
                     // Validasi Step 2
                     if (currentStep === 'donasi-step-2') {
                         if (donasiData.nominal <= 0) {
-                            // (PERBAIKAN WAJIB) Mengganti alert() dengan modal kustom
                             showAppAlert('Nominal donasi tidak boleh kosong.');
                             return;
                         }
@@ -1545,30 +1809,47 @@
                             return;
                         }
                         
+                        // Handle Tipe Donatur
+                        if (donasiData.donaturTipe === 'santri') {
+                            const santriValue = document.getElementById('santri-nama-input').value;
+                            if (!santriValue || !allSantri.find(s => s.value === santriValue)) {
+                                showAppAlert('Silakan pilih santri yang valid dari daftar.');
+                                return;
+                            }
+                            donasiData.santriDetail = santriValue;
+                        } else if (donasiData.donaturTipe === 'alumni') {
+                            const tahunLulus = document.getElementById('alumni-tahun-lulus').value;
+                            if (!tahunLulus || tahunLulus.length < 4) {
+                                showAppAlert('Harap masukkan tahun lulus yang valid.');
+                                return;
+                            }
+                            donasiData.alumniDetail = `Alumni Tahun ${tahunLulus}`;
+                        }
+
+                        // Handle Nama Donatur
                         const namaChoice = document.querySelector('input[name="nama-choice"]:checked').value;
                         if (namaChoice === 'sendiri') {
                             donasiData.nama = document.getElementById('nama-muzakki-input').value;
-                        } else if (namaChoice === 'santri') {
-                            donasiData.nama = `A/n Santri: ${document.getElementById('santri-nama').value}`;
                         } else {
                             donasiData.nama = 'Hamba Allah';
                         }
+                        // (REFACTOR) Jika a/n santri, timpa nama donatur
+                        if (donasiData.donaturTipe === 'santri') {
+                            donasiData.nama = `A/n Santri: ${donasiData.santriDetail.split(' (')[0]}`;
+                        }
+
 
                         donasiData.hp = document.getElementById('no-hp').value;
                         donasiData.alamat = document.getElementById('alamat').value;
                         donasiData.ktp = document.getElementById('no-ktp').value;
                         donasiData.email = document.getElementById('email').value;
                         donasiData.doa = document.getElementById('pesan-doa').value;
-                        if (donasiData.isSantri) {
-                            donasiData.santriDetail = `Melalui Santri: Kelas ${document.getElementById('santri-kelas').value} - ${document.getElementById('santri-nama').value}`;
-                        }
                     }
 
                     // Validasi Step 4
                     if (currentStep === 'donasi-step-4') {
                         const selectedMethod = document.querySelector('.payment-method-radio:checked');
                         if (!selectedMethod) {
-                            // (PERBAIKAN WAJIB) Mengganti alert() dengan modal kustom
                             showAppAlert('Silakan pilih metode pembayaran.');
                             return;
                         }
@@ -1587,41 +1868,68 @@
                 });
             });
 
-            // --- Logika Step 5: Ringkasan & Konfirmasi Final ---
+            // --- (REFACTOR) Logika Step 5: Ringkasan & Konfirmasi Final (Desain Struk) ---
+            function createStrukLine(label, value) {
+                if (!value) return ''; // Jangan tampilkan baris jika value kosong
+                
+                // Sanitasi value agar tidak inject HTML
+                const valueEl = document.createElement('span');
+                valueEl.className = 'value truncate';
+                valueEl.textContent = value;
+                
+                return `
+                    <div class="struk-line">
+                        <span class="label">${label}</span>
+                        <span class="dots"></span>
+                        ${valueEl.outerHTML}
+                    </div>
+                `;
+            }
+
             function updateRingkasan() {
                 const container = document.getElementById('ringkasan-donasi');
-                container.innerHTML = `
-                    <div class="flex justify-between border-b border-gray-200 pb-2">
-                        <span class="text-gray-600">Tipe Donasi:</span>
-                        <span class="font-bold text-orange-500">${donasiData.type}</span>
-                    </div>
-                    <div class="flex justify-between border-b border-gray-200 pb-2">
-                        <span class="text-gray-600">Nominal:</span>
-                        <span class="font-bold text-lg text-orange-500">${formatter.format(donasiData.nominal)}</span>
-                    </div>
-                    <div class="flex justify-between border-b border-gray-200 pb-2">
-                        <span class="text-gray-600">Nama Donatur:</span>
-                        <span class="font-bold text-right">${donasiData.nama}</span>
-                    </div>
-                    ${donasiData.isSantri ? `
-                    <div class="flex justify-between border-b border-gray-200 pb-2">
-                        <span class="text-gray-600">Melalui Santri:</span>
-                        <span class="font-bold text-right">${donasiData.santriDetail.replace('Melalui Santri: ','')}</span>
-                    </div>` : ''}
-                    <div class="flex justify-between border-b border-gray-200 pb-2">
-                        <span class="text-gray-600">No. HP:</span>
-                        <span class="font-bold text-right">${donasiData.hp}</span>
-                    </div>
-                    <div class="flex justify-between border-b border-gray-200 pb-2">
-                        <span class="text-gray-600">Metode Bayar:</span>
-                        <span class="font-bold text-right">${donasiData.metode}</span>
-                    </div>
-                    ${donasiData.doa ? `
-                    <div class="pt-2">
-                        <span class="text-gray-600">Doa/Pesan:</span>
-                        <p class="font-medium italic">"${donasiData.doa}"</p>
-                    </div>` : ''}
+                let strukHtml = `
+                    <h4 class="text-center font-bold text-lg">--- KONFIRMASI DONASI ---</h4>
+                    <h5 class="text-center text-sm mb-4">LAZISMU MU'ALLIMIN</h5>
                 `;
+
+                strukHtml += createStrukLine('Donasi', donasiData.type);
+                if (donasiData.type === 'Zakat Fitrah') {
+                    const jumlahOrang = donasiData.nominal / HARGA_FITRAH;
+                    strukHtml += createStrukLine('Jumlah', `${jumlahOrang} Orang`);
+                }
+                strukHtml += createStrukLine('Nama', donasiData.nama);
+
+                if (donasiData.donaturTipe === 'alumni') {
+                    strukHtml += createStrukLine('Detail', donasiData.alumniDetail);
+                } else if (donasiData.donaturTipe === 'santri') {
+                    // Tampilkan NIS dan Kelas
+                    const santriInfo = allSantri.find(s => s.value === donasiData.santriDetail);
+                    if(santriInfo) {
+                        strukHtml += createStrukLine('NIS', santriInfo.nis);
+                        strukHtml += createStrukLine('Kelas', santriInfo.kelas);
+                    }
+                }
+                
+                strukHtml += createStrukLine('No. HP', donasiData.hp);
+                strukHtml += createStrukLine('Metode', donasiData.metode);
+                
+                if (donasiData.doa) {
+                    strukHtml += `
+                        <div class="border-t border-dashed border-gray-400 pt-2 mt-2">
+                            <span class="label">Pesan/Doa:</span>
+                            <p class="value italic text-right w-full block">"${donasiData.doa}"</p>
+                        </div>
+                    `;
+                }
+
+                strukHtml += `
+                    <div class="border-t-2 border-dashed border-gray-500 pt-3 mt-3 text-center">
+                        <p class="font-bold text-lg">TOTAL: <span class="text-orange-600">${formatter.format(donasiData.nominal)}</span></p>
+                    </div>
+                `;
+                
+                container.innerHTML = strukHtml;
             }
 
             document.getElementById('final-confirm-btn').addEventListener('click', () => {
@@ -1644,20 +1952,22 @@
 
                 const waBase = "https://wa.me/6281196961918";
                 
-                // (EFEKTIF) Pesan WA yang lebih rapi untuk dibaca
+                // (REFACTOR) Pesan WA diperbarui
                 const waMessage = `
 Assalamu'alaikum, saya ingin konfirmasi donasi:
 --------------------------------
 Tipe Donasi: ${donasiData.type}
 Nominal: ${formatter.format(donasiData.nominal)}
+${donasiData.type === 'Zakat Fitrah' ? `Jumlah Orang: ${donasiData.nominal / HARGA_FITRAH} orang\n` : ''}
 --------------------------------
 Nama Donatur: ${donasiData.nama}
 No. HP: ${donasiData.hp}
 Alamat: ${donasiData.alamat}
 Metode: ${donasiData.metode}
-${donasiData.isSantri ? `${donasiData.santriDetail}` : ''}
-${donasiData.email ? `Email: ${donasiData.email}` : ''}
-${donasiData.ktp ? `No. KTP: ${donasiData.ktp}` : ''}
+${donasiData.donaturTipe === 'alumni' ? `Detail: ${donasiData.alumniDetail}\n` : ''}
+${donasiData.donaturTipe === 'santri' ? `Detail Santri: ${donasiData.santriDetail}\n` : ''}
+${donasiData.email ? `Email: ${donasiData.email}\n` : ''}
+${donasiData.ktp ? `No. KTP: ${donasiData.ktp}\n` : ''}
 ${donasiData.doa ? `\nPesan/Doa: \n"${donasiData.doa}"` : ''}
 --------------------------------
 Mohon doanya. Jazakumullah khairan katsiran.
