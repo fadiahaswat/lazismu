@@ -1,30 +1,20 @@
 <!DOCTYPE html>
-<!-- (EFEKTIF) Menambahkan scroll-smooth ke <html> -->
 <html lang="id" class="scroll-smooth">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Lazismu Mu'allimin Yogyakarta</title>
-    
-    <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
-    
-    <!-- Google Font: Lato -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700;900&display=swap" rel="stylesheet">
-
-    <!-- Font Awesome (untuk ikon) -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-    
     <style>
         body {
             font-family: 'Lato', sans-serif;
             -webkit-font-smoothing: antialiased;
             -moz-osx-font-smoothing: grayscale;
         }
-
-        /* Navigasi SPA (Diperlukan untuk JS) */
         .page-section {
             display: none;
             opacity: 0;
@@ -36,16 +26,12 @@
             opacity: 1;
             transform: translateY(0);
         }
-
-        /* Link Navigasi Aktif (Diperlukan untuk JS) */
         .nav-link.active {
-            color: #f97316; /* orange-500 */
+            color: #f97316;
             font-weight: 700;
             border-bottom-width: 3px;
-            border-color: #f97316; /* orange-500 */
+            border-color: #f97316;
         }
-
-        /* ANIMASI ON-SCROLL (Diperlukan untuk JS) */
         .fade-in-up-scroll {
             opacity: 0;
             transform: translateY(30px);
@@ -55,8 +41,6 @@
             opacity: 1;
             transform: translateY(0);
         }
-        
-        /* Helper class untuk tombol salin (Diperlukan untuk JS) */
         .copy-button {
             transition: all 0.2s ease;
         }
@@ -64,19 +48,16 @@
             cursor: default;
             opacity: 0.8;
         }
-        
-        /* --- DONATION WIZARD STYLES (Diperlukan untuk JS) --- */
         .choice-button {
             transition: all 0.2s ease-in-out;
         }
         .choice-button.selected {
-            background-color: #f97316; /* orange-500 */
+            background-color: #f97316;
             color: white;
-            border-color: #f97316; /* orange-500 */
+            border-color: #f97316;
             transform: scale(1.05);
-            box-shadow: 0 4px 10px rgba(249, 115, 22, 0.3); /* orange-500/30% */
+            box-shadow: 0 4px 10px rgba(249, 115, 22, 0.3);
         }
-        /* Paksa ikon jadi putih saat selected */
         .choice-button.selected i {
             color: white;
         }
@@ -84,32 +65,25 @@
             transition: all 0.2s ease-in-out;
         }
         .sub-choice-button.selected {
-            border-color: #f97316; /* orange-500 */
-            background-color: #fffbeb; /* amber-50 */
-            box-shadow: 0 4px 10px rgba(249, 115, 22, 0.2); /* orange-500/20% */
+            border-color: #f97316;
+            background-color: #fffbeb;
+            box-shadow: 0 4px 10px rgba(249, 115, 22, 0.2);
         }
-        
-        /* Tombol Pilihan Metode Bayar (CSS-Only, Sangat Efisien) */
         .payment-choice input[type="radio"]:checked + label {
-            border-color: #f97316; /* orange-500 */
-            background-color: #fffbeb; /* amber-50 */
-            box-shadow: 0 4px 10px rgba(249, 115, 22, 0.2); /* orange-500/20% */
+            border-color: #f97316;
+            background-color: #fffbeb;
+            box-shadow: 0 4px 10px rgba(249, 115, 22, 0.2);
         }
         .payment-choice input[type="radio"] {
-            display: none; /* Sembunyikan radio button asli */
+            display: none;
         }
-        
-        /* Input Form (Required) Styling (CSS-Only, Efisien) */
         input:required, textarea:required {
             border-left-width: 4px;
-            border-left-color: #f97316; /* orange-500 */
+            border-left-color: #f97316;
         }
-        /* Styling untuk validasi error */
         input:invalid, textarea:invalid {
-            border-left-color: #ef4444; /* red-500 */
+            border-left-color: #ef4444;
         }
-        
-        /* (BARU) Animasi fade-in-up untuk Modal dan Step Wizard */
         @keyframes fadeInUp {
             from {
                 opacity: 0;
@@ -126,8 +100,6 @@
     </style>
 </head>
 <body class="bg-gray-50 text-gray-800 font-sans">
-
-    <!-- MODAL ALERT KUSTOM (Pengganti alert()) -->
     <div id="alert-modal" class="hidden fixed inset-0 bg-black bg-opacity-50 z-[100] flex items-center justify-center p-4">
         <div class="bg-white rounded-2xl shadow-xl w-full max-w-sm p-6 text-center animate-fade-in-up">
             <i class="fas fa-exclamation-triangle text-4xl text-yellow-400 mb-4"></i>
@@ -138,15 +110,24 @@
             </button>
         </div>
     </div>
+    
+    <!-- (PERBAIKAN 3: Modal Sukses) -->
+    <div id="success-modal" class="hidden fixed inset-0 bg-black bg-opacity-50 z-[100] flex items-center justify-center p-4">
+        <div class="bg-white rounded-2xl shadow-xl w-full max-w-sm p-6 text-center animate-fade-in-up">
+            <i class="fas fa-check-circle text-4xl text-green-500 mb-4"></i>
+            <h3 class="text-xl font-bold text-gray-800 mb-2">Donasi Tersimpan!</h3>
+            <p id="success-modal-message" class="text-gray-600 mb-6">Data donasi Anda berhasil disimpan. Silakan lanjutkan ke pembayaran.</p>
+            <button id="success-modal-continue" class="bg-green-500 text-white px-6 py-2 rounded-full font-semibold hover:bg-green-600 transition-colors">
+                Lanjutkan ke Pembayaran
+            </button>
+        </div>
+    </div>
 
-    <!-- MODAL UNTUK "HUBUNGI KAMI" -->
     <div id="hubungi-modal" class="hidden fixed inset-0 bg-black bg-opacity-50 z-[99] flex items-center justify-center p-4">
         <div class="bg-white rounded-2xl shadow-xl w-full max-w-md p-6 relative animate-fade-in-up">
-            <!-- Tombol Tutup Modal -->
             <button id="hubungi-modal-close" class="absolute top-4 right-4 text-gray-400 hover:text-gray-800 transition-colors">
                 <i class="fas fa-times text-2xl"></i>
             </button>
-            
             <h3 class="text-2xl font-bold text-gray-800 mb-5 text-center">Hubungi Kami</h3>
             <p class="text-center text-gray-600 mb-6">Silakan pilih salah satu opsi di bawah ini:</p>
             <div class="space-y-4">
@@ -161,31 +142,20 @@
             </div>
         </div>
     </div>
-
-
-    <!-- HEADER / NAVIGASI -->
     <header class="bg-gradient-to-r from-white to-gray-50 shadow-lg sticky top-0 z-50">
         <nav class="container mx-auto px-4 md:px-6 py-4 flex justify-between items-center">
-            
             <a href="#home" class="text-3xl font-extrabold text-gray-800 flex items-center space-x-2">
                 <i class="fas fa-hand-holding-heart text-orange-500"></i>
                 <span>Lazismu <span class="text-orange-500">Mu'allimin</span></span>
             </a>
-            
-            <!-- Tombol Menu Mobile -->
             <button id="menu-toggle" class="md:hidden text-gray-700 focus:outline-none p-2 rounded-md hover:bg-gray-100 transition-colors duration-200">
                 <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7"></path>
                 </svg>
             </button>
-            
-            <!-- Link Navigasi -->
             <div id="menu-links" class="hidden md:flex md:items-center md:space-x-8 absolute md:relative top-full left-0 w-full md:w-auto bg-white md:bg-transparent shadow-md md:shadow-none p-4 md:p-0 flex-col md:flex-row space-y-4 md:space-y-0">
                 <a href="#home" class="nav-link block md:inline-block text-gray-700 hover:text-orange-500 font-medium px-1 py-2 transition-all duration-200 md:hover:scale-110">Beranda</a>
-                <!-- (BARU) Link Riwayat Donasi -->
                 <a href="#riwayat" class="nav-link block md:inline-block text-gray-700 hover:text-orange-500 font-medium px-1 py-2 transition-all duration-200 md:hover:scale-110">Riwayat Donasi</a>
-                
-                <!-- Tombol Donasi dengan Gradien -->
                 <a href="#donasi" class="bg-gradient-to-r from-orange-500 to-orange-600 text-white px-6 py-2.5 rounded-full font-semibold shadow-md hover:shadow-lg transform hover:scale-105 transition duration-300 block md:inline-block text-center flex items-center space-x-2 justify-center">
                     <i class="fas fa-donate"></i>
                     <span>Donasi Sekarang</span>
@@ -193,29 +163,18 @@
             </div>
         </nav>
     </header>
-
-    <!-- KONTEN UTAMA -->
     <main>
-        
-        <!-- === HALAMAN BERANDA === -->
         <section id="page-home" class="page-section">
-            
-            <!-- Bagian Hero -->
             <div class="relative bg-white text-white overflow-hidden pt-28 pb-32">
                 <div class="absolute inset-0 bg-gradient-to-br from-orange-500 to-orange-600 opacity-90"></div>
-                <!-- LAYER 1: PATTERN TEXTURE -->
                 <div class="absolute inset-0 opacity-10 bg-[url('https://www.transparenttextures.com/patterns/clean-textile.png')] bg-repeat"></div>
-                <!-- LAYER 2: SVG Blob Kiri (Layering) -->
                 <svg class="absolute -left-48 top-1/2 transform -translate-y-1/2 opacity-10" width="800" height="800" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
                     <path fill="#FFFFFF" d="M48.8,-53.6C60.8,-38.7,66.4,-19.3,66.2,-0.2C66,18.9,60.1,37.8,47.4,51.8C34.7,65.7,15.2,74.7,-2.8,75.9C-20.8,77,-37.2,70.3,-50.7,57.5C-64.2,44.7,-74.8,26.8,-76.3,8.3C-77.8,-10.2,-70.2,-29.2,-56.9,-44.5C-43.7,-59.8,-24.8,-71.4,-4.7,-69.6C15.3,-67.7,30.7,-68.4,48.8,-53.6Z" transform="translate(100 100)" />
                 </svg>
-                <!-- LAYER 3: SVG Blob Kanan (Layering) -->
                  <svg class="absolute -right-48 bottom-0 opacity-10" width="600" height="600" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
                     <path fill="#FFFFFF" d="M47,-45.7C59.9,-32.1,68.7,-16,68.8,0.3C68.9,16.7,60.3,33.3,47.8,47.8C35.3,62.2,18.8,74.4,-1,75.3C-20.8,76.2,-41.6,65.8,-55.8,50.1C-70,34.4,-77.6,13.4,-74.9,-6.2C-72.2,-25.7,-59.2,-43.8,-43.7,-56.3C-28.2,-68.8,-10.2,-75.7,7.1,-73.6C24.4,-71.5,47,-59.3,47,-45.7Z" transform="translate(100 100) scale(0.8)" />
                 </svg>
-
                 <div class="container mx-auto px-4 md:px-6 relative z-10 text-center">
-                    <!-- Konten Hero -->
                     <h1 class="text-4xl md:text-6xl font-extrabold mb-5 leading-tight">
                         Menempa Kader, <br class="md:hidden">Memberdaya Umat
                     </h1>
@@ -223,25 +182,19 @@
                         Kantor Layanan LAZISMU Madrasah Mu'allimin Muhammadiyah Yogyakarta
                         hadir sebagai jembatan kebaikan Anda.
                     </p>
-                    
-                    <!-- 4 Tombol Hero -->
                     <div class="grid grid-cols-2 md:grid-cols-4 gap-4 max-w-3xl mx-auto">
-                        <!-- 1. ZIS Ramadhan -->
                         <a href="#donasi" class="inline-flex items-center justify-center space-x-2 bg-white text-orange-500 px-6 py-3 rounded-full font-bold text-base shadow-xl hover:bg-gray-100 hover:shadow-orange-500/20 hover:shadow-2xl transform hover:scale-105 transition duration-300">
                             <i class="fas fa-moon"></i>
                             <span>ZIS Ramadhan</span>
                         </a>
-                        <!-- 2. Hubungi Kami (Modal Trigger) -->
                         <a href="#" id="hubungi-btn" class="inline-flex items-center justify-center space-x-2 bg-transparent border-2 border-white text-white px-6 py-3 rounded-full font-bold text-base shadow-xl hover:bg-white/20 hover:shadow-2xl transform hover:scale-105 transition duration-300">
                             <i class="fas fa-headset"></i>
                             <span>Hubungi Kami</span>
                         </a>
-                        <!-- 3. Tombol ke QRIS -->
                         <a href="#donasi-qris" class="inline-flex items-center justify-center space-x-2 bg-white text-orange-500 px-6 py-3 rounded-full font-bold text-base shadow-xl hover:bg-gray-100 hover:shadow-orange-500/20 hover:shadow-2xl transform hover:scale-105 transition duration-300">
                             <i class="fas fa-qrcode"></i>
                             <span>Bayar via QRIS</span>
                         </a>
-                        <!-- 4. Tombol ke Daftar Rekening -->
                         <a href="#donasi-rekening" class="inline-flex items-center justify-center space-x-2 bg-transparent border-2 border-white text-white px-6 py-3 rounded-full font-bold text-base shadow-xl hover:bg-white/20 hover:shadow-2xl transform hover:scale-105 transition duration-300">
                             <i class="fas fa-university"></i>
                             <span>Daftar Rekening</span>
@@ -250,54 +203,63 @@
                 </div>
             </div>
             
-            <!-- Statistik -->
+            <!-- (PERBAIKAN 1: Statistik 5 Kolom) -->
             <section class="bg-gray-50 py-16 relative z-20">
                 <div class="container mx-auto px-4 md:px-6">
-                    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-                        <!-- Kartu Statistik 1 -->
-                        <div class="bg-white p-6 rounded-2xl shadow-lg flex items-center space-x-5 border-l-4 border-orange-500/30 hover:border-l-8 border-orange-500 transition-all duration-300 fade-in-up-scroll">
-                            <div class="bg-orange-500/10 rounded-full w-16 h-16 flex-shrink-0 flex items-center justify-center text-orange-500">
-                                <i class="fas fa-coins text-3xl"></i>
+                    <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4">
+                        <!-- Kartu Statistik 1: Total Donasi -->
+                        <div class="bg-white p-4 rounded-2xl shadow-lg flex flex-col items-center text-center border-l-4 border-orange-500/30 hover:border-l-8 border-orange-500 transition-all duration-300 fade-in-up-scroll">
+                            <div class="bg-orange-500/10 rounded-full w-14 h-14 flex-shrink-0 flex items-center justify-center text-orange-500 mb-3">
+                                <i class="fas fa-coins text-2xl"></i>
                             </div>
-                            <div>
-                                <h3 class="text-3xl font-bold text-gray-800 mb-1">Rp 0</h3>
-                                <p class="text-gray-600 font-medium text-lg">Donasi Terkumpul</p>
-                            </div>
+                            <h3 id="stat-total-donasi" class="text-2xl font-bold text-gray-800 mb-1">Rp 0</h3>
+                            <p class="text-gray-600 font-medium text-sm">Total Donasi</p>
                         </div>
-                        <!-- Kartu Statistik 2 -->
-                        <div class="bg-white p-6 rounded-2xl shadow-lg flex items-center space-x-5 border-l-4 border-orange-500/30 hover:border-l-8 border-orange-500 transition-all duration-300 fade-in-up-scroll" style="transition-delay: 150ms;">
-                            <div class="bg-orange-500/10 rounded-full w-16 h-16 flex-shrink-0 flex items-center justify-center text-orange-500">
-                                <i class="fas fa-user-check text-3xl"></i>
+                        <!-- Kartu Statistik 2: Total Transaksi -->
+                        <div class="bg-white p-4 rounded-2xl shadow-lg flex flex-col items-center text-center border-l-4 border-orange-500/30 hover:border-l-8 border-orange-500 transition-all duration-300 fade-in-up-scroll" style="transition-delay: 50ms;">
+                            <div class="bg-orange-500/10 rounded-full w-14 h-14 flex-shrink-0 flex items-center justify-center text-orange-500 mb-3">
+                                <i class="fas fa-user-check text-2xl"></i>
                             </div>
-                            <div>
-                                <h3 class="text-3xl font-bold text-gray-800 mb-1">0</h3>
-                                <p class="text-gray-600 font-medium text-lg">Muzakki/Munfiq</p>
-                            </div>
+                            <h3 id="stat-total-transaksi" class="text-2xl font-bold text-gray-800 mb-1">0</h3>
+                            <p class="text-gray-600 font-medium text-sm">Total Transaksi</p>
                         </div>
-                        <!-- Kartu Statistik 3 -->
-                        <div class="bg-white p-6 rounded-2xl shadow-lg flex items-center space-x-5 border-l-4 border-orange-500/30 hover:border-l-8 border-orange-500 transition-all duration-300 fade-in-up-scroll" style="transition-delay: 300ms;">
-                            <div class="bg-orange-500/10 rounded-full w-16 h-16 flex-shrink-0 flex items-center justify-center text-orange-500">
-                                <i class="fas fa-users text-3xl"></i>
+                        <!-- Kartu Statistik 3: Donasi Tertinggi (PERBAIKAN IKON) -->
+                        <div class="bg-white p-4 rounded-2xl shadow-lg flex flex-col items-center text-center border-l-4 border-orange-500/30 hover:border-l-8 border-orange-500 transition-all duration-300 fade-in-up-scroll" style="transition-delay: 100ms;">
+                            <div class="bg-orange-500/10 rounded-full w-14 h-14 flex-shrink-0 flex items-center justify-center text-orange-500 mb-3">
+                                <i class="fas fa-trophy text-2xl"></i>
                             </div>
-                            <div>
-                                <h3 class="text-3xl font-bold text-gray-800 mb-1">0</h3>
-                                <p class="text-gray-600 font-medium text-lg">Penerima Manfaat</p>
+                            <h3 id="stat-donasi-tertinggi" class="text-2xl font-bold text-gray-800 mb-1">Rp 0</h3>
+                            <p class="text-gray-600 font-medium text-sm">Donasi Tertinggi</p>
+                        </div>
+                        <!-- Kartu Statistik 4: Donasi Rata-rata -->
+                        <div class="bg-white p-4 rounded-2xl shadow-lg flex flex-col items-center text-center border-l-4 border-orange-500/30 hover:border-l-8 border-orange-500 transition-all duration-300 fade-in-up-scroll" style="transition-delay: 150ms;">
+                            <div class="bg-orange-500/10 rounded-full w-14 h-14 flex-shrink-0 flex items-center justify-center text-orange-500 mb-3">
+                                <i class="fas fa-chart-pie text-2xl"></i>
                             </div>
+                            <h3 id="stat-donasi-rata" class="text-2xl font-bold text-gray-800 mb-1">Rp 0</h3>
+                            <p class="text-gray-600 font-medium text-sm">Donasi Rata-rata</p>
+                        </div>
+                        <!-- Kartu Statistik 5: Donasi Hari Ini -->
+                        <div class="bg-white p-4 rounded-2xl shadow-lg flex flex-col items-center text-center border-l-4 border-orange-500/30 hover:border-l-8 border-orange-500 transition-all duration-300 fade-in-up-scroll col-span-2 md:col-span-1" style="transition-delay: 200ms;">
+                            <div class="bg-orange-500/10 rounded-full w-14 h-14 flex-shrink-0 flex items-center justify-center text-orange-500 mb-3">
+                                <i class="fas fa-calendar-day text-2xl"></i>
+                            </div>
+                            <h3 id="stat-donasi-hari-ini" class="text-2xl font-bold text-gray-800 mb-1">Rp 0</h3>
+                            <p class="text-gray-600 font-medium text-sm">Donasi Hari Ini</p>
                         </div>
                     </div>
                 </div>
             </section>
-                
-            <!-- SECTION DAFTAR REKENING DI BERANDA -->
+            
+            <!-- (PERBAIKAN 2: Logo Bank h-10 & BPD DIY) -->
             <section id="donasi-rekening" class="bg-amber-50 py-20">
                 <div class="container mx-auto px-4 md:px-6">
                     <h2 class="text-4xl font-bold text-center mb-12 fade-in-up-scroll bg-clip-text text-transparent bg-gradient-to-r from-orange-600 to-orange-500">
                         Rekening Donasi
                     </h2>
                     <div class="max-w-4xl mx-auto space-y-6 fade-in-up-scroll" style="transition-delay: 200ms;">
-                        <!-- Kartu BNI -->
                         <div class="relative bg-white border-b-4 border-orange-500 rounded-lg shadow-xl p-5 transition-all duration-300 ease-in-out hover:-translate-y-1 hover:shadow-lg hover:shadow-orange-500/40">
-                            <img src="https://placehold.co/100x30/f97316/ffffff?text=BNI" alt="Logo BNI" class="h-8 object-contain mb-3">
+                            <img src="https://placehold.co/150x50/f97316/ffffff?text=BNI" alt="Logo BNI" class="h-10 object-contain mb-3">
                             <p class="text-sm text-gray-600">Nomor Rekening:</p>
                             <div class="flex justify-between items-center mb-2">
                                 <span id="rek-bni-beranda" class="text-2xl font-extrabold text-gray-800">3440000348</span>
@@ -307,9 +269,8 @@
                             </div>
                             <p class="text-sm text-gray-600">a.n. LAZISMU MADRASAH MU'ALLIMIN MUHAMMADIYAH</p>
                         </div>
-                        <!-- Kartu BSI -->
                         <div class="relative bg-white border-b-4 border-teal-500 rounded-lg shadow-xl p-5 transition-all duration-300 ease-in-out hover:-translate-y-1 hover:shadow-lg hover:shadow-teal-500/40">
-                            <img src="https://placehold.co/100x30/14b8a6/ffffff?text=BSI" alt="Logo BSI" class="h-8 object-contain mb-3">
+                            <img src="https://placehold.co/150x50/14b8a6/ffffff?text=BSI" alt="Logo BSI" class="h-10 object-contain mb-3">
                             <p class="text-sm text-gray-600">Nomor Rekening:</p>
                             <div class="flex justify-between items-center mb-2">
                                 <span id="rek-bsi-beranda" class="text-2xl font-extrabold text-gray-800">7930030303</span>
@@ -319,9 +280,11 @@
                             </div>
                             <p class="text-sm text-gray-600">a.n. LAZISMU MUALLIMIN YOGYARAKARTA</p>
                         </div>
-                        <!-- Kartu BPD -->
                         <div class="relative bg-white border-b-4 border-blue-800 rounded-lg shadow-xl p-5 transition-all duration-300 ease-in-out hover:-translate-y-1 hover:shadow-lg hover:shadow-blue-800/40">
-                            <img src="https://placehold.co/100x30/1e40af/ffffff?text=BPD+DIY+Syariah" alt="Logo BPD DIY Syariah" class="h-8 object-contain mb-3">
+                            <div class="flex items-center space-x-3 mb-3">
+                                <img src="https://placehold.co/150x50/1e40af/ffffff?text=BPD+DIY" alt="Logo BPD DIY" class="h-10 object-contain">
+                                <span class="text-lg font-bold text-blue-800">Syariah</span>
+                            </div>
                             <p class="text-sm text-gray-600">Nomor Rekening:</p>
                             <div class="flex justify-between items-center mb-2">
                                 <span id="rek-bpd-beranda" class="text-2xl font-extrabold text-gray-800">801241004624</span>
@@ -329,13 +292,12 @@
                                     <i class="fas fa-copy mr-1"></i> Salin
                                 </button>
                             </div>
-                            <p class="text-sm text-gray-600">a.n. KL LAZISMU MADRASAH MUALLIMIN</p>
+                            <p class="text-sm text-gray-600">a.n. KL LAZISMU MADRASAH MUALLIMIN</Lp>
                         </div>
                     </div>
                 </div>
             </section>
             
-            <!-- SECTION QRIS DI BERANDA -->
             <section id="donasi-qris" class="bg-white py-20">
                 <div class="container mx-auto px-4 md:px-6">
                     <h2 class="text-4xl font-bold text-center mb-12 fade-in-up-scroll bg-clip-text text-transparent bg-gradient-to-r from-orange-600 to-orange-500">
@@ -344,7 +306,6 @@
                     <div class="max-w-4xl mx-auto bg-white p-8 rounded-2xl shadow-xl border border-gray-100 fade-in-up-scroll" style="transition-delay: 300ms;">
                         <p class="text-gray-600 text-center mb-6">Scan atau download kode QRIS di bawah ini.</p>
                         <div class="grid grid-cols-1 sm:grid-cols-2 gap-8 w-full">
-                            <!-- QRIS BSI -->
                             <div class="flex flex-col items-center">
                                 <h4 class="text-lg font-semibold text-gray-800 mb-3">QRIS Bank BSI</h4>
                                 <img src="https://drive.google.com/thumbnail?id=1xNHeckecd8Pn_7dSOQ0KfGcl0I_FCY9V" alt="QRIS BSI" class="w-full max-w-[250px] object-contain border-4 border-gray-200 rounded-xl shadow-md" onerror="this.alt='Gagal memuat QRIS BSI'; this.src='https://placehold.co/250x250/fef2f2/ef4444?text=Error:+Gagal+memuat+QRIS';">
@@ -353,7 +314,6 @@
                                     <span>Download QRIS</span>
                                 </a>
                             </div>
-                            <!-- QRIS BPD Nomenklatur -->
                             <div class="flex flex-col items-center">
                                 <h4 class="text-lg font-semibold text-gray-800 mb-3">QRIS BPD DIY Syariah</h4>
                                 <img src="https://drive.google.com/thumbnail?id=1BHYcMAUp3OiVeRx2HwjPPEu2StcYiUpm" alt="QRIS BPD DIY Syariah" class="w-full max-w-[250px] object-contain border-4 border-gray-200 rounded-xl shadow-md" onerror="this.alt='Gagal memuat QRIS BPD'; this.src='https://placehold.co/250x250/fef2f2/ef4444?text=Error:+Gagal+memuat+QRIS';">
@@ -366,10 +326,9 @@
                     </div>
                 </div>
             </section>
-
-        </section> <!-- Penutup untuk #page-home -->
-
-        <!-- === (BARU) HALAMAN RIWAYAT DONASI === -->
+        </section>
+        
+        <!-- (PERBAIKAN 4: Halaman Riwayat Donasi) -->
         <section id="page-riwayat" class="page-section bg-white py-20">
             <div class="container mx-auto px-4 md:px-6">
                 <h2 class="text-4xl font-bold text-center mb-6 fade-in-up-scroll bg-clip-text text-transparent bg-gradient-to-r from-orange-600 to-orange-500">
@@ -378,30 +337,32 @@
                 <p class="text-lg text-gray-600 mb-10 text-center max-w-3xl mx-auto fade-in-up-scroll" style="transition-delay: 100ms;">
                     Donasi terbaru yang masuk melalui formulir kami. Data pribadi donatur dianonimkan untuk menjaga privasi.
                 </p>
+                
+                <!-- Summary Card -->
+                <div class="max-w-4xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-4 mb-8 fade-in-up-scroll" style="transition-delay: 200ms;">
+                    <div class="bg-amber-50 p-6 rounded-xl border border-amber-200">
+                        <p class="text-sm font-medium text-amber-800 mb-1">Total Donasi Terkumpul</p>
+                        <span id="riwayat-summary-total" class="text-3xl font-extrabold text-amber-900">Rp 0</span>
+                    </div>
+                    <div class="bg-amber-50 p-6 rounded-xl border border-amber-200">
+                        <p class="text-sm font-medium text-amber-800 mb-1">Total Transaksi</p>
+                        <span id="riwayat-summary-transaksi" class="text-3xl font-extrabold text-amber-900">0</span>
+                    </div>
+                </div>
 
-                <!-- Kontainer Riwayat -->
                 <div class="max-w-4xl mx-auto">
-                    
-                    <!-- State Loading -->
                     <div id="riwayat-loading" class="p-12 flex flex-col items-center justify-center text-gray-500">
                         <i class="fas fa-spinner fa-spin text-4xl mb-4 text-orange-500"></i>
                         <p class="font-semibold text-lg">Memuat riwayat donasi...</p>
                     </div>
-
-                    <!-- State Error -->
                     <div id="riwayat-error" class="hidden p-12 flex flex-col items-center justify-center text-red-500 bg-red-50 rounded-lg">
                         <i class="fas fa-exclamation-triangle text-4xl mb-4"></i>
-                        <p class="font-semibold text-lg">Gagal memuat data</D>
+                        <p class="font-semibold text-lg">Gagal memuat data</p>
                         <p id="riwayat-error-message" class="text-sm">Silakan coba lagi nanti.</p>
                     </div>
-
-                    <!-- State Konten (Daftar Kartu Donasi) -->
                     <div id="riwayat-content" class="hidden">
                         <div id="riwayat-list-container" class="space-y-4">
-                            <!-- Kartu donasi akan diisi oleh JavaScript -->
                         </div>
-                        
-                        <!-- Paginasi -->
                         <div id="riwayat-pagination" class="flex justify-between items-center mt-8">
                             <button id="riwayat-prev" class="bg-gray-200 text-gray-700 px-6 py-2 rounded-full font-semibold hover:bg-gray-300 transition-colors disabled:opacity-50 disabled:cursor-not-allowed">
                                 <i class="fas fa-arrow-left mr-2"></i> Sebelumnya
@@ -411,35 +372,139 @@
                                 Berikutnya <i class="fas fa-arrow-right ml-2"></i>
                             </button>
                         </div>
-                    </div>
+                        
+                        <!-- CTA Card -->
+                        <div class="mt-12 bg-gradient-to-r from-orange-500 to-orange-600 text-white p-8 rounded-2xl shadow-lg text-center">
+                            <h3 class="text-3xl font-bold mb-3">Lihat Kebaikan Ini?</h3>
+                            <p class="text-lg text-orange-100 mb-6 max-w-xl mx-auto">Jadilah bagian dari gerakan kebaikan ini dan bantu lebih banyak orang.</p>
+                            <a href="#donasi" class="bg-white text-orange-600 px-8 py-3 rounded-full font-bold text-lg hover:shadow-2xl hover:scale-105 transition-all duration-300 shadow-xl">
+                                <i class="fas fa-donate mr-2"></i> Donasi Sekarang
+                            </a>
+                        </div>
 
-                    <!-- State Tidak Ada Data -->
+                    </div>
                     <div id="riwayat-no-data" class="hidden p-12 flex flex-col items-center justify-center text-gray-500 bg-gray-50 rounded-lg">
                         <i class="fas fa-folder-open text-4xl mb-4"></i>
                         <p class="font-semibold text-lg">Belum ada data donasi.</p>
                         <p class="text-sm">Jadilah donatur pertama!</p>
                     </div>
-
                 </div>
             </div>
         </section>
 
-
-        <!-- === HALAMAN DONASI (ROMBAK TOTAL: WIZARD BARU) === -->
-        <section id="page-donasi" class="page-section bg-gray-50 py-20"> 
+        <!-- (PERBAIKAN BARU: Halaman Rekapitulasi ZIS) -->
+        <section id="page-rekapitulasi" class="page-section bg-gray-50 py-20">
             <div class="container mx-auto px-4 md:px-6">
+                <h2 class="text-4xl font-bold text-center mb-6 fade-in-up-scroll bg-clip-text text-transparent bg-gradient-to-r from-blue-600 to-blue-500">
+                    Rekapitulasi ZIS
+                </h2>
+                <p class="text-lg text-gray-600 mb-10 text-center max-w-3xl mx-auto fade-in-up-scroll" style="transition-delay: 100ms;">
+                    Pantau perkembangan dan ekspor laporan donasi santri per kelas.
+                </p>
+
+                <!-- Kontrol Filter -->
+                <div class="max-w-4xl mx-auto bg-white p-6 rounded-2xl shadow-xl border border-gray-100 mb-8">
+                    <h3 class="text-xl font-bold text-gray-800 mb-4">Filter Laporan</h3>
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                        <div>
+                            <label for="rekap-level-select" class="block text-sm font-medium text-gray-700 mb-1">Tingkat (Kelas)</label>
+                            <select id="rekap-level-select" class="w-full border border-gray-300 rounded-lg p-3 shadow-sm focus:ring-orange-500 focus:border-orange-500">
+                                <option value="">Pilih Tingkat</option>
+                                <option value="1">Kelas 1</option>
+                                <option value="2">Kelas 2</option>
+                                <option value="3">Kelas 3</option>
+                                <option value="4">Kelas 4</option>
+                                <option value="5">Kelas 5</option>
+                                <option value="6">Kelas 6</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label for="rekap-rombel-select" class="block text-sm font-medium text-gray-700 mb-1">Rombel</label>
+                            <select id="rekap-rombel-select" class="w-full border border-gray-300 rounded-lg p-3 shadow-sm focus:ring-orange-500 focus:border-orange-500" disabled>
+                                <option value="">Pilih Rombel</option>
+                            </select>
+                        </div>
+                        <div class="md:mt-7">
+                            <button id="rekap-show-btn" class="w-full bg-gradient-to-r from-blue-500 to-blue-600 text-white px-8 py-3 rounded-full font-semibold hover:shadow-lg transition duration-300 shadow-md">
+                                <i class="fas fa-eye mr-2"></i> Tampilkan
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Kontainer Laporan untuk Ekspor -->
+                <div id="rekap-laporan-container" class="max-w-4xl mx-auto hidden">
+                    <!-- Tombol Ekspor -->
+                    <div class="flex justify-end space-x-3 mb-4">
+                        <button id="rekap-export-jpg-btn" class="bg-gray-600 text-white px-5 py-2 rounded-full font-semibold hover:bg-gray-700 transition duration-300 shadow-md text-sm">
+                            <i class="fas fa-file-image mr-2"></i> Ekspor .JPG
+                        </button>
+                        <button id="rekap-export-pdf-btn" class="bg-red-600 text-white px-5 py-2 rounded-full font-semibold hover:bg-red-700 transition duration-300 shadow-md text-sm">
+                            <i class="fas fa-file-pdf mr-2"></i> Ekspor .PDF
+                        </button>
+                    </div>
+
+                    <!-- Area Laporan (yang akan di-print) -->
+                    <div id="rekap-laporan-content" class="bg-white p-8 rounded-2xl shadow-xl border border-gray-200">
+                        <h3 id="rekap-laporan-title" class="text-2xl font-bold text-gray-800 mb-2 text-center">Rekapitulasi Donasi</h3>
+                        <p class="text-center text-gray-500 mb-6">Lazismu Mu'allimin Yogyakarta</p>
+                        
+                        <!-- Ringkasan Laporan -->
+                        <div class="grid grid-cols-2 gap-4 mb-6">
+                            <div class="bg-blue-50 p-4 rounded-lg border border-blue-200">
+                                <p class="text-sm font-medium text-blue-800 mb-1">Total Donasi (Kelas Ini)</p>
+                                <span id="rekap-laporan-total" class="text-2xl font-extrabold text-blue-900">Rp 0</span>
+                            </div>
+                            <div class="bg-blue-50 p-4 rounded-lg border border-blue-200">
+                                <p class="text-sm font-medium text-blue-800 mb-1">Total Transaksi (Kelas Ini)</p>
+                                <span id="rekap-laporan-transaksi" class="text-2xl font-extrabold text-blue-900">0</span>
+                            </div>
+                        </div>
+
+                        <!-- Tabel Detail -->
+                        <div class="overflow-x-auto">
+                            <table class="min-w-full divide-y divide-gray-200">
+                                <thead class="bg-gray-100">
+                                    <tr>
+                                        <th scope="col" class="px-4 py-3 text-left text-xs font-bold text-gray-600 uppercase tracking-wider">Tanggal</th>
+                                        <th scope="col" class="px-4 py-3 text-left text-xs font-bold text-gray-600 uppercase tracking-wider">Nama Donatur</th>
+                                        <th scope="col" class="px-4 py-3 text-left text-xs font-bold text-gray-600 uppercase tracking-wider">Jenis Donasi</th>
+                                        <th scope="col" class="px-4 py-3 text-right text-xs font-bold text-gray-600 uppercase tracking-wider">Nominal</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="rekap-laporan-table" class="bg-white divide-y divide-gray-200">
+                                    <!-- Data diisi oleh JS -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
                 
+                <!-- State Awal/Kosong -->
+                <div id="rekap-no-data" class="p-12 flex flex-col items-center justify-center text-gray-500 bg-white rounded-lg shadow-md">
+                    <i class="fas fa-filter text-4xl mb-4"></i>
+                    <p class="font-semibold text-lg">Silakan pilih kelas</p>
+                    <p class="text-sm">Pilih tingkat dan rombel untuk menampilkan laporan.</p>
+                </div>
+
+                <!-- State Loading -->
+                <div id="rekap-loading" class="hidden p-12 flex flex-col items-center justify-center text-gray-500">
+                    <i class="fas fa-spinner fa-spin text-4xl mb-4 text-blue-500"></i>
+                    <p class="font-semibold text-lg">Memuat laporan...</p>
+                </div>
+
+            </div>
+        </section>
+
+        <section id="page-donasi" class="page-section bg-gray-50 py-20">
+            <div class="container mx-auto px-4 md:px-6">
                 <h2 class="text-4xl font-bold text-center mb-6 fade-in-up-scroll bg-clip-text text-transparent bg-gradient-to-r from-orange-600 to-orange-500">
                     Tunaikan Donasi Anda
                 </h2>
                 <p class="text-lg text-gray-600 mb-10 text-center max-w-3xl mx-auto fade-in-up-scroll" style="transition-delay: 100ms;">
                     Ikuti langkah-langkah mudah di bawah ini untuk menyalurkan donasi Anda.
                 </p>
-
-                <!-- Wrapper untuk Wizard Donasi -->
                 <div id="donasi-wizard" class="max-w-4xl mx-auto bg-white rounded-2xl shadow-xl border border-gray-100 overflow-hidden">
-                    
-                    <!-- PROGRESS BAR WIZARD -->
                     <div class="p-6 border-b border-gray-100">
                         <div class="flex items-center justify-between">
                             <h3 id="wizard-title" class="text-xl font-bold text-gray-800">Formulir ZIS</h3>
@@ -449,8 +514,6 @@
                             <div id="wizard-progress-bar" class="bg-orange-500 h-2.5 rounded-full transition-all duration-500" style="width: 20%"></div>
                         </div>
                     </div>
-
-                    <!-- STEP 1: PILIH TIPE DONASI (Zakat Fitrah & Maal, Infaq) -->
                     <div id="donasi-step-1" class="donasi-step-container p-6 md:p-10 animate-fade-in-up">
                         <h3 id="step-1-title" class="text-2xl font-bold text-gray-800 mb-6">Langkah 1: Pilih Jenis ZIS</h3>
                         <div class="max-w-md mx-auto grid grid-cols-1 md:grid-cols-3 gap-4">
@@ -465,32 +528,42 @@
                             </button>
                         </div>
                         
-                        <!-- Opsi Pilihan Infaq -->
+                        <!-- (PERBAIKAN 2: Desain Pilihan Infaq) -->
                         <div id="infaq-options" class="hidden mt-6 bg-amber-50 p-6 rounded-lg space-y-4">
                             <h4 class="text-xl font-bold text-gray-800 mb-2">Pilih Jenis Infaq</h4>
-                            <!-- Infaq 1 -->
-                            <button data-type-infaq="Infaq Pengembangan Kampus" class="sub-choice-button infaq-type-btn w-full border-2 border-gray-200 rounded-lg p-4 text-left hover:border-orange-500 bg-white">
-                                <h5 class="font-bold text-gray-800 text-lg">Infaq Pengembangan Kampus</h5>
-                                <p class="text-gray-600 text-sm">Donasi untuk pembangunan dan pemeliharaan fasilitas pendidikan.</p>
+                            <!-- (PERBAIKAN IKON) -->
+                            <button data-type-infaq="Infaq Pengembangan Kampus" class="sub-choice-button infaq-type-btn w-full border-2 border-gray-200 rounded-lg p-4 text-left hover:border-orange-500 bg-white flex items-center space-x-4">
+                                <span class="flex-shrink-0 w-12 h-12 rounded-full bg-orange-100 text-orange-500 flex items-center justify-center">
+                                    <i class="fas fa-building text-2xl"></i>
+                                </span>
+                                <div>
+                                    <h5 class="font-bold text-gray-800 text-lg">Pengembangan Kampus</h5>
+                                    <p class="text-gray-600 text-sm">Donasi untuk pembangunan dan fasilitas pendidikan.</p>
+                                </div>
                             </button>
-                            <!-- Infaq 2 -->
-                            <button data-type-infaq="Infaq Beasiswa Pendidikan" class="sub-choice-button infaq-type-btn w-full border-2 border-gray-200 rounded-lg p-4 text-left hover:border-orange-500 bg-white">
-                                <h5 class="font-bold text-gray-800 text-lg">Infaq Beasiswa Pendidikan</h5>
-                                <p class="text-gray-600 text-sm">Membantu biaya pendidikan bagi santri berprestasi dan dhuafa.</p>
+                            <button data-type-infaq="Infaq Beasiswa Pendidikan" class="sub-choice-button infaq-type-btn w-full border-2 border-gray-200 rounded-lg p-4 text-left hover:border-orange-500 bg-white flex items-center space-x-4">
+                                <span class="flex-shrink-0 w-12 h-12 rounded-full bg-green-100 text-green-600 flex items-center justify-center">
+                                    <i class="fas fa-user-graduate text-2xl"></i>
+                                </span>
+                                <div>
+                                    <h5 class="font-bold text-gray-800 text-lg">Beasiswa Pendidikan</h5>
+                                    <p class="text-gray-600 text-sm">Membantu biaya pendidikan santri berprestasi/dhuafa.</p>
+                                </div>
                             </button>
-                            <!-- Infaq 3 -->
-                            <button data-type-infaq="Infaq Umum" class="sub-choice-button infaq-type-btn w-full border-2 border-gray-200 rounded-lg p-4 text-left hover:border-orange-500 bg-white">
-                                <h5 class="font-bold text-gray-800 text-lg">Infaq Umum</h5>
-                                <p class="text-gray-600 text-sm">Akan dialokasikan untuk program yang paling membutuhkan.</p>
+                            <button data-type-infaq="Infaq Umum" class="sub-choice-button infaq-type-btn w-full border-2 border-gray-200 rounded-lg p-4 text-left hover:border-orange-500 bg-white flex items-center space-x-4">
+                                <span class="flex-shrink-0 w-12 h-12 rounded-full bg-blue-100 text-blue-600 flex items-center justify-center">
+                                    <i class="fas fa-globe text-2xl"></i>
+                                </span>
+                                <div>
+                                    <h5 class="font-bold text-gray-800 text-lg">Infaq Umum</h5>
+                                    <p class="text-gray-600 text-sm">Dialokasikan untuk program yang paling membutuhkan.</p>
+                                </div>
                             </button>
                         </div>
 
-
-                        <!-- Kalkulator Zakat Fitrah -->
                         <div id="zakat-fitrah-checker" class="hidden mt-6 bg-amber-50 p-6 rounded-lg">
                             <h4 class="text-xl font-bold text-gray-800 mb-4">Formulir Zakat Fitrah</h4>
                             <p class="text-gray-600 mb-4">Zakat Fitrah tunai adalah <strong class="text-orange-600">Rp 37.500</strong> per orang. Silakan masukkan jumlah orang yang akan Anda zakati.</p>
-                            
                             <div>
                                 <label for="fitrah-jumlah-orang" class="block text-sm font-medium text-gray-700 mb-1">Jumlah Orang (Kepala)</label>
                                 <input type="number" id="fitrah-jumlah-orang" placeholder="0" min="1" class="w-full border border-gray-300 rounded-lg p-3 shadow-sm focus:ring-orange-500 focus:border-orange-500 text-lg">
@@ -499,16 +572,12 @@
                                 <label for="fitrah-total" class="block text-sm font-medium text-gray-700 mb-1">Total Zakat Fitrah Anda</label>
                                 <input type="text" id="fitrah-total" value="Rp 0" readonly class="w-full border border-gray-300 rounded-lg p-3 shadow-sm bg-gray-100 text-2xl font-bold text-gray-800">
                             </div>
-
-                            <!-- Tombol Navigasi Step 1 (Khusus Fitrah) -->
                             <div id="step-1-nav-fitrah" class="text-right mt-6">
                                 <button data-next-step="3" id="btn-fitrah-to-step-3" class="wizard-next-btn bg-gradient-to-r from-orange-500 to-orange-600 text-white px-8 py-3 rounded-full font-semibold hover:shadow-lg transition duration-300 shadow-md">
                                     Lanjut <i class="fas fa-arrow-right ml-2"></i>
                                 </button>
                             </div>
                         </div>
-
-                        <!-- Kalkulator Zakat Maal -->
                         <div id="zakat-maal-checker" class="hidden mt-6 bg-amber-50 p-6 rounded-lg">
                             <h4 class="text-xl font-bold text-gray-800 mb-4">Formulir Zakat Maal</h4>
                             <p class="text-gray-600 mb-4">Mari kita hitung apakah Anda sudah wajib zakat. Masukkan penghasilan bulanan Anda.</p>
@@ -524,22 +593,20 @@
                                 Cek Zakat Saya
                             </button>
                             
-                            <!-- Hasil Cek Zakat -->
-                            <div id="zakat-result" class="hidden mt-4 text-center">
+                            <!-- (PERBAIKAN 2: Tombol Lanjutkan Infaq) -->
+                            <div id="zakat-result" class="hidden mt-4 text-center p-4 rounded-lg">
                                 <p id="zakat-result-message" class="text-lg font-semibold"></p>
-                                <button id="zakat-lanjutkan-infaq" class="hidden mt-2 text-orange-500 font-bold hover:underline">Lanjutkan sebagai Infaq</button>
+                                <button id="zakat-lanjutkan-infaq" class="hidden mt-4 text-orange-600 font-bold border-2 border-orange-500 rounded-full px-6 py-2 hover:bg-orange-500 hover:text-white transition-all duration-300">
+                                    <i class="fas fa-hand-holding-dollar mr-2"></i> Lanjutkan sebagai Infaq
+                                </button>
                             </div>
                         </div>
-
-                        <!-- Tombol Navigasi Step 1 (Infaq & Zakat Maal) -->
                         <div id="step-1-nav-default" class="hidden text-right mt-8">
                             <button data-next-step="2" class="wizard-next-btn bg-gradient-to-r from-orange-500 to-orange-600 text-white px-8 py-3 rounded-full font-semibold hover:shadow-lg transition duration-300 shadow-md">
                                 Lanjut <i class="fas fa-arrow-right ml-2"></i>
                             </button>
                         </div>
                     </div>
-
-                    <!-- STEP 2: PILIH NOMINAL (Hanya Zakat Maal & Infaq) -->
                     <div id="donasi-step-2" class="donasi-step-container hidden p-6 md:p-10 animate-fade-in-up">
                         <h3 id="step-2-title" class="text-2xl font-bold text-gray-800 mb-6">Langkah 2: Masukkan Nominal <span id="nominal-title-type" class="text-orange-500"></span></h3>
                         <div class="grid grid-cols-2 md:grid-cols-3 gap-4">
@@ -554,8 +621,6 @@
                             <label for="nominal-custom" class="block text-sm font-medium text-gray-700 mb-1">Atau masukkan nominal lain (Rp)</label>
                             <input type="text" id="nominal-custom" placeholder="Rp 0" class="w-full border border-gray-300 rounded-lg p-3 shadow-sm focus:ring-orange-500 focus:border-orange-500 text-2xl font-bold formatted-number">
                         </div>
-
-                        <!-- Tombol Navigasi Step 2 -->
                         <div class="flex justify-between mt-8">
                             <button data-prev-step="1" class="wizard-prev-btn text-gray-600 px-6 py-3 rounded-full font-semibold hover:bg-gray-100 transition duration-300">
                                 <i class="fas fa-arrow-left mr-2"></i> Kembali
@@ -565,13 +630,9 @@
                             </button>
                         </div>
                     </div>
-                    
-                    <!-- STEP 3: ISI IDENTITAS (Dropdown Santri) -->
                     <div id="donasi-step-3" class="donasi-step-container hidden p-6 md:p-10 animate-fade-in-up">
                         <h3 class="text-2xl font-bold text-gray-800 mb-6">Langkah 3: Lengkapi Data Diri</h3>
                         <form id="donasi-form-identitas" class="space-y-4">
-                            
-                            <!-- Tipe Donatur (Radio) - Santri default -->
                             <div class="bg-amber-50 p-4 rounded-lg">
                                 <label class="block text-sm font-medium text-gray-700 mb-2">Tipe Donatur</label>
                                 <div class="flex flex-wrap gap-4">
@@ -589,16 +650,12 @@
                                     </div>
                                 </div>
                             </div>
-                            
-                            <!-- Detail Alumni (Hidden) -->
                             <div id="alumni-details" class="hidden space-y-4 p-4 border border-orange-500 rounded-lg">
                                 <div>
                                     <label for="alumni-tahun-lulus" class="block text-sm font-medium text-gray-700 mb-1">Tahun Lulus</label>
                                     <input type="number" id="alumni-tahun-lulus" placeholder="Contoh: 1998" class="w-full border border-gray-300 rounded-lg p-3 shadow-sm focus:ring-orange-500 focus:border-orange-500">
                                 </div>
                             </div>
-
-                            <!-- Detail Santri (3 Dropdown) - Default visible -->
                             <div id="santri-details" class="space-y-4 p-4 border border-orange-500 rounded-lg">
                                 <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                                     <div>
@@ -627,8 +684,6 @@
                                     </select>
                                 </div>
                             </div>
-                            
-                            <!-- Pilihan Nama Donatur (Menambahkan 'a/n Santri') -->
                             <div class="bg-gray-50 p-4 rounded-lg border border-gray-200">
                                 <label id="label-nama-donatur" class="block text-sm font-medium text-gray-700 mb-2">Nama Donatur (Wajib)</label>
                                 <div class="space-y-3">
@@ -637,20 +692,16 @@
                                         <label for="nama-sendiri-radio" class="ml-3 block text-sm font-medium text-gray-700">Tulis Nama Sendiri</label>
                                     </div>
                                     <input type="text" id="nama-muzakki-input" placeholder="Nama Anda" required class="w-full border border-gray-300 rounded-lg p-3 shadow-sm focus:ring-orange-500 focus:border-orange-500">
-                                    
                                     <div class="flex items-center">
                                         <input type="radio" id="nama-santri-radio" name="nama-choice" value="santri" class="h-4 w-4 text-orange-500 focus:ring-orange-500">
                                         <label for="nama-santri-radio" class="ml-3 block text-sm font-medium text-gray-700">Atas Nama Santri (dari form di atas)</label>
                                     </div>
-
                                     <div class="flex items-center">
                                         <input type="radio" id="nama-hamba-radio" name="nama-choice" value="hamba" class="h-4 w-4 text-orange-500 focus:ring-orange-500">
                                         <label for="nama-hamba-radio" class="ml-3 block text-sm font-medium text-gray-700">Hamba Allah</label>
                                     </div>
                                 </div>
                             </div>
-                            
-                            <!-- Grid 2 Kolom -->
                             <div class="grid grid-cols-1 md:grid-cols-2 gap-4 pt-4">
                                 <div>
                                     <label for="no-hp" class="block text-sm font-medium text-gray-700 mb-1">No. WhatsApp (Wajib)</label>
@@ -664,9 +715,10 @@
                                     <label for="alamat" class="block text-sm font-medium text-gray-700 mb-1">Alamat (Wajib)</label>
                                     <textarea id="alamat" rows="3" placeholder="Alamat lengkap Anda" required class="w-full border border-gray-300 rounded-lg p-3 shadow-sm focus:ring-orange-500 focus:border-orange-500"></textarea>
                                 </div>
-                                 <div class="md:col-span-2">
+                                <div class="md:col-span-2">
+                                    <!-- (PERBAIKAN 3: Input KTP) -->
                                     <label for="no-ktp" class="block text-sm font-medium text-gray-700 mb-1">No. KTP (Opsional)</label>
-                                    <input type="number" id="no-ktp" class="w-full border border-gray-300 rounded-lg p-3 shadow-sm focus:ring-orange-500 focus:border-orange-500">
+                                    <input type="text" inputmode="numeric" id="no-ktp" class="w-full border border-gray-300 rounded-lg p-3 shadow-sm focus:ring-orange-500 focus:border-orange-500">
                                 </div>
                                 <div class="md:col-span-2">
                                     <label for="pesan-doa" class="block text-sm font-medium text-gray-700 mb-1">Pesan / Doa (Opsional)</label>
@@ -674,7 +726,6 @@
                                 </div>
                             </div>
                         </form>
-                        <!-- Tombol Navigasi Step 3 -->
                         <div class="flex justify-between mt-8">
                             <button data-prev-step="1" id="btn-step-3-prev" class="wizard-prev-btn text-gray-600 px-6 py-3 rounded-full font-semibold hover:bg-gray-100 transition duration-300">
                                 <i class="fas fa-arrow-left mr-2"></i> Kembali
@@ -684,12 +735,9 @@
                             </button>
                         </div>
                     </div>
-                    
-                    <!-- STEP 4: PILIH METODE PEMBAYARAN (Menambahkan Tunai) -->
                     <div id="donasi-step-4" class="donasi-step-container hidden p-6 md:p-10 animate-fade-in-up">
                         <h3 class="text-2xl font-bold text-gray-800 mb-6">Langkah 4: Pilih Metode Pembayaran</h3>
                         <div class="space-y-4 payment-choice">
-                            <!-- Pilihan Transfer -->
                             <input type="radio" name="payment-method" id="payment-transfer" value="Transfer" class="payment-method-radio">
                             <label for="payment-transfer" class="block border-2 border-gray-200 rounded-lg p-5 cursor-pointer hover:border-orange-500">
                                 <div class="flex items-center">
@@ -700,8 +748,6 @@
                                     </div>
                                 </div>
                             </label>
-                            
-                            <!-- Pilihan QRIS -->
                             <input type="radio" name="payment-method" id="payment-qris" value="QRIS" class="payment-method-radio">
                             <label for="payment-qris" class="block border-2 border-gray-200 rounded-lg p-5 cursor-pointer hover:border-orange-500">
                                 <div class="flex items-center">
@@ -712,8 +758,6 @@
                                     </div>
                                 </div>
                             </label>
-
-                            <!-- Pilihan Tunai/Cash -->
                             <input type="radio" name="payment-method" id="payment-cash" value="Tunai" class="payment-method-radio">
                             <label for="payment-cash" class="block border-2 border-gray-200 rounded-lg p-5 cursor-pointer hover:border-orange-500">
                                 <div class="flex items-center">
@@ -725,8 +769,6 @@
                                 </div>
                             </label>
                         </div>
-                        
-                        <!-- Tombol Navigasi Step 4 -->
                         <div class="flex justify-between mt-8">
                             <button data-prev-step="3" class="wizard-prev-btn text-gray-600 px-6 py-3 rounded-full font-semibold hover:bg-gray-100 transition duration-300">
                                 <i class="fas fa-arrow-left mr-2"></i> Kembali
@@ -736,16 +778,10 @@
                             </button>
                         </div>
                     </div>
-
-                    <!-- STEP 5: RINGKASAN DONASI (Desain Kartu Fresh) -->
                     <div id="donasi-step-5" class="donasi-step-container hidden p-6 md:p-10 animate-fade-in-up">
                         <h3 class="text-2xl font-bold text-gray-800 mb-6">Langkah 5: Ringkasan Donasi</h3>
                         <p class="text-gray-600 mb-6">Mohon periksa kembali data donasi Anda. Jika sudah benar, silakan lanjutkan.</p>
-                        
-                        <!-- Desain Kartu Ringkasan -->
                         <div id="ringkasan-donasi" class="bg-amber-50 p-6 rounded-2xl shadow-inner space-y-6">
-                            
-                            <!-- Detail Donasi -->
                             <div class="pb-4 border-b border-orange-200">
                                 <h4 class="text-lg font-bold text-orange-600 mb-3 flex items-center"><i class="fas fa-donate w-6 mr-2"></i>Detail Donasi</h4>
                                 <div class="space-y-2 text-sm">
@@ -763,8 +799,6 @@
                                     </div>
                                 </div>
                             </div>
-
-                            <!-- Data Donatur -->
                             <div class="pb-4 border-b border-orange-200">
                                 <h4 class="text-lg font-bold text-orange-600 mb-3 flex items-center"><i class="fas fa-user w-6 mr-2"></i>Data Donatur</h4>
                                 <div class="space-y-2 text-sm">
@@ -782,23 +816,29 @@
                                     </div>
                                 </div>
                             </div>
-
-                            <!-- Total -->
                             <div class="pt-2">
                                 <div class="flex justify-between items-center">
                                     <span class="text-lg font-bold text-gray-800">TOTAL DONASI:</span>
                                     <span id="summary-total" class="text-3xl font-extrabold text-orange-600">Rp 0</span>
                                 </div>
                             </div>
-
                         </div>
                         
-                        <!-- Tombol Navigasi Step 5 -->
+                        <!-- (PERBAIKAN 5: Checkbox Konfirmasi) -->
+                        <div class="mt-6 p-4 bg-yellow-50 border border-yellow-200 rounded-lg">
+                            <label for="data-confirmation-checkbox" class="flex items-start space-x-3 cursor-pointer">
+                                <input type="checkbox" id="data-confirmation-checkbox" class="h-5 w-5 mt-0.5 text-orange-500 focus:ring-orange-500 border-gray-300 rounded">
+                                <div class="flex-1">
+                                    <span class="font-semibold text-gray-800">Saya menyatakan data di atas benar.</span>
+                                    <p class="text-sm text-gray-600">Saya mengisi formulir ini dengan sungguh-sungguh dan tidak main-main.</p>
+                                </div>
+                            </label>
+                        </div>
+
                         <div class="flex justify-between mt-8">
                             <button data-prev-step="4" class="wizard-prev-btn text-gray-600 px-6 py-3 rounded-full font-semibold hover:bg-gray-100 transition duration-300">
                                 <i class="fas fa-arrow-left mr-2"></i> Kembali
                             </button>
-                            <!-- (BARU) Tombol Konfirmasi dengan state loading -->
                             <button id="final-confirm-btn" class="bg-gradient-to-r from-green-500 to-green-600 text-white px-8 py-3 rounded-full font-semibold hover:shadow-lg transition duration-300 shadow-md flex items-center justify-center disabled:opacity-75 disabled:cursor-not-allowed">
                                 <span id="confirm-btn-text">
                                     <i class="fas fa-check mr-2"></i> Konfirmasi & Bayar
@@ -809,24 +849,18 @@
                             </button>
                         </div>
                     </div>
-
-                </div> <!-- Penutup #donasi-wizard -->
-
-                <!-- STEP 6: HALAMAN INSTRUKSI PEMBAYARAN (Hidden) -->
+                </div>
                 <div id="donasi-payment-instructions" class="hidden max-w-4xl mx-auto space-y-12 animate-fade-in-up">
-                    
                     <h2 id="instruksi-title" class="text-4xl font-bold text-center mb-6 bg-clip-text text-transparent bg-gradient-to-r from-green-500 to-green-600">
-                        <!-- Judul diisi JS -->
                     </h2>
                     
-                    <!-- Bagian Transfer (Disembunyikan) -->
+                    <!-- (PERBAIKAN 2: Logo Bank h-10 & BPD DIY) -->
                     <div id="payment-transfer-details" class="hidden space-y-6">
                         <h3 class="text-3xl font-bold text-gray-800 flex items-center space-x-3">
                             <i class="fas fa-university text-orange-500"></i> <span>1. Transfer Donasi</span>
                         </h3>
-                        <!-- Kartu BNI -->
                         <div class="relative bg-white border-b-4 border-orange-500 rounded-lg shadow-xl p-5 transition-all duration-300 ease-in-out hover:-translate-y-1 hover:shadow-lg hover:shadow-orange-500/40">
-                            <img src="https://placehold.co/100x30/f97316/ffffff?text=BNI" alt="Logo BNI" class="h-8 object-contain mb-3">
+                            <img src="https://placehold.co/150x50/f97316/ffffff?text=BNI" alt="Logo BNI" class="h-10 object-contain mb-3">
                             <p class="text-sm text-gray-600">Nomor Rekening:</p>
                             <div class="flex justify-between items-center mb-2">
                                 <span id="rek-bni-final" class="text-2xl font-extrabold text-gray-800">3440000348</span>
@@ -836,9 +870,8 @@
                             </div>
                             <p class="text-sm text-gray-600">a.n. LAZISMU MADRASAH MU'ALLIMIN MUHAMMADIYAH</p>
                         </div>
-                        <!-- Kartu BSI -->
                         <div class="relative bg-white border-b-4 border-teal-500 rounded-lg shadow-xl p-5 transition-all duration-300 ease-in-out hover:-translate-y-1 hover:shadow-lg hover:shadow-teal-500/40">
-                            <img src="https://placehold.co/100x30/14b8a6/ffffff?text=BSI" alt="Logo BSI" class="h-8 object-contain mb-3">
+                            <img src="https://placehold.co/150x50/14b8a6/ffffff?text=BSI" alt="Logo BSI" class="h-10 object-contain mb-3">
                             <p class="text-sm text-gray-600">Nomor Rekening:</p>
                             <div class="flex justify-between items-center mb-2">
                                 <span id="rek-bsi-final" class="text-2xl font-extrabold text-gray-800">7930030303</span>
@@ -848,9 +881,11 @@
                             </div>
                             <p class="text-sm text-gray-600">a.n. LAZISMU MUALLIMIN YOGYARAKARTA</p>
                         </div>
-                        <!-- Kartu BPD -->
                         <div class="relative bg-white border-b-4 border-blue-800 rounded-lg shadow-xl p-5 transition-all duration-300 ease-in-out hover:-translate-y-1 hover:shadow-lg hover:shadow-blue-800/40">
-                            <img src="https://placehold.co/100x30/1e40af/ffffff?text=BPD+DIY+Syariah" alt="Logo BPD DIY Syariah" class="h-8 object-contain mb-3">
+                            <div class="flex items-center space-x-3 mb-3">
+                                <img src="https://placehold.co/150x50/1e40af/ffffff?text=BPD+DIY" alt="Logo BPD DIY" class="h-10 object-contain">
+                                <span class="text-lg font-bold text-blue-800">Syariah</span>
+                            </div>
                             <p class="text-sm text-gray-600">Nomor Rekening:</p>
                             <div class="flex justify-between items-center mb-2">
                                 <span id="rek-bpd-final" class="text-2xl font-extrabold text-gray-800">801241004624</span>
@@ -862,14 +897,12 @@
                         </div>
                     </div>
                     
-                    <!-- Bagian QRIS (Disembunyikan) -->
                     <div id="payment-qris-details" class="hidden bg-white p-8 rounded-2xl shadow-xl border border-gray-100">
                         <h3 class="text-3xl font-bold text-gray-800 mb-4 flex items-center space-x-3">
                             <i class="fas fa-qrcode text-orange-500"></i> <span>1. Bayar via QRIS</span>
                         </h3>
                         <p class="text-gray-600 text-center mb-6">Scan atau download kode QRIS di bawah ini.</p>
                         <div class="grid grid-cols-1 sm:grid-cols-2 gap-8 w-full">
-                            <!-- QRIS BSI -->
                             <div class="flex flex-col items-center">
                                 <h4 class="text-lg font-semibold text-gray-800 mb-3">QRIS Bank BSI</h4>
                                 <img src="https://drive.google.com/thumbnail?id=1xNHeckecd8Pn_7dSOQ0KfGcl0I_FCY9V" alt="QRIS BSI" class="w-full max-w-[250px] object-contain border-4 border-gray-200 rounded-xl shadow-md" onerror="this.alt='Gagal memuat QRIS BSI'; this.src='https://placehold.co/250x250/fef2f2/ef4444?text=Error:+Gagal+memuat+QRIS';">
@@ -878,7 +911,6 @@
                                     <span>Download QRIS</span>
                                 </a>
                             </div>
-                            <!-- QRIS BPD Nomenklatur -->
                             <div class="flex flex-col items-center">
                                 <h4 class="text-lg font-semibold text-gray-800 mb-3">QRIS BPD DIY Syariah</h4>
                                 <img src="https://drive.google.com/thumbnail?id=1BHYcMAUp3OiVeRx2HwjPPEu2StcYiUpm" alt="QRIS BPD DIY Syariah" class="w-full max-w-[250px] object-contain border-4 border-gray-200 rounded-xl shadow-md" onerror="this.alt='Gagal memuat QRIS BPD'; this.src='https://placehold.co/250x250/fef2f2/ef4444?text=Error:+Gagal+memuat+QRIS';">
@@ -889,17 +921,12 @@
                             </div>
                         </div>
                     </div>
-                    
-                    <!-- Bagian Konfirmasi -->
                     <div class="bg-white p-8 rounded-2xl shadow-xl border border-gray-100">
                         <h3 class="text-3xl font-bold text-gray-800 mb-6 flex items-center space-x-3">
                             <i class="fab fa-whatsapp text-green-500"></i> <span id="konfirmasi-title">2. Konfirmasi Donasi</span>
                         </h3>
                         <p id="konfirmasi-desc" class="text-gray-600 mb-8">Ikuti 3 langkah mudah ini untuk konfirmasi donasi Anda:</p>
-                        
-                        <!-- Langkah-langkah konfirmasi disederhanakan untuk 'Tunai' -->
                         <div id="konfirmasi-langkah-transfer" class="space-y-6">
-                            <!-- Step 1 -->
                             <div class="flex items-start space-x-4">
                                 <span class="flex-shrink-0 w-10 h-10 rounded-full bg-orange-500 text-white flex items-center justify-center font-bold text-xl">1</span>
                                 <div>
@@ -907,7 +934,6 @@
                                     <p class="text-gray-600">Pastikan Anda sudah transfer atau scan QRIS.</p>
                                 </div>
                             </div>
-                            <!-- Step 2 -->
                             <div class="flex items-start space-x-4">
                                 <span class="flex-shrink-0 w-10 h-10 rounded-full bg-orange-500 text-white flex items-center justify-center font-bold text-xl">2</span>
                                 <div>
@@ -915,7 +941,6 @@
                                     <p class="text-gray-600">Ambil screenshot atau foto bukti pembayaran Anda.</p>
                                 </div>
                             </div>
-                            <!-- Step 3 -->
                             <div class="flex items-start space-x-4">
                                 <span class="flex-shrink-0 w-10 h-10 rounded-full bg-orange-500 text-white flex items-center justify-center font-bold text-xl">3</span>
                                 <div>
@@ -924,8 +949,6 @@
                                 </div>
                             </div>
                         </div>
-
-                        <!-- Langkah-langkah konfirmasi untuk 'Tunai' -->
                         <div id="konfirmasi-langkah-tunai" class="hidden space-y-4">
                              <div class="flex items-start space-x-4">
                                 <span class="flex-shrink-0 w-10 h-10 rounded-full bg-orange-500 text-white flex items-center justify-center font-bold text-xl">1</span>
@@ -942,28 +965,19 @@
                                 </div>
                             </div>
                         </div>
-
-                        <!-- Tombol WA (href akan diisi JS) -->
                         <a id="final-wa-button" href="#" target="_blank" class="w-full text-center bg-gradient-to-r from-green-500 to-green-600 text-white px-8 py-4 rounded-full font-bold text-lg hover:shadow-lg transition duration-300 shadow-md flex items-center justify-center space-x-3 mt-8">
                             <i class="fab fa-whatsapp-square text-2xl text-white"></i>
                             <span id="konfirmasi-wa-text">Konfirmasi via WhatsApp</span>
                         </a>
                     </div>
-                </div> <!-- Penutup #donasi-payment-instructions -->
-
+                </div>
             </div>
         </section>
-
     </main>
-
-    <!-- FOOTER (INTERAKTIF) -->
     <footer class="bg-gray-800 text-gray-300 relative overflow-hidden border-t-4 border-orange-500">
         <div class="absolute inset-0 opacity-[3%]" style="background-image: url('https://www.transparenttextures.com/patterns/clean-textile.png'); filter: invert(1);"></div>
-
         <div class="container mx-auto px-4 md:px-6 py-16 relative z-10">
             <div class="grid grid-cols-1 md:grid-cols-3 gap-10">
-                
-                <!-- Footer Kiri: Logo & Deskripsi -->
                 <div>
                     <h4 class="text-2xl font-bold text-white mb-5 flex items-center space-x-2">
                         <i class="fas fa-hand-holding-heart text-orange-500"></i>
@@ -975,8 +989,6 @@
                     </p>
                     <p class="text-sm text-gray-400">Didukung oleh Persyarikatan Muhammadiyah.</p>
                 </div>
-                
-                <!-- Footer Tengah: Hubungi Kami (INTERAKTIF) -->
                 <div>
                     <h4 class="text-2xl font-bold text-white mb-5 flex items-center space-x-2">
                         <i class="fas fa-address-card text-orange-500"></i>
@@ -1003,8 +1015,6 @@
                         </li>
                     </ul>
                 </div>
-                
-                <!-- Footer Kanan: Ikuti Kami -->
                 <div>
                     <h4 class="text-2xl font-bold text-white mb-5 flex items-center space-x-2">
                         <i class="fas fa-share-alt text-orange-500"></i>
@@ -1025,8 +1035,6 @@
                 </div>
             </div>
         </div>
-
-        <!-- Peringatan Footer -->
         <div class="bg-black bg-opacity-30 py-6 relative z-10 border-t border-gray-700">
             <div class="container mx-auto px-6 text-center text-gray-400">
                 <i class="fas fa-exclamation-triangle text-yellow-400 text-xl mb-3"></i>
@@ -1035,44 +1043,47 @@
                 </p>
             </div>
         </div>
-
-        <!-- Bagian Copyright (Sub-Footer) -->
         <div class="bg-black bg-opacity-20 py-6 relative z-10">
             <div class="container mx-auto px-4 md:px-6 text-center text-sm text-gray-400">
                 <p>&copy; 2025 Kantor Layanan LAZISMU Madrasah Mu'allimin Muhammadiyah Yogyakarta. All rights reserved.</p>
             </div>
         </div>
     </footer>
-
     <script>
         document.addEventListener('DOMContentLoaded', function() {
-            // === BAGIAN 0: KONFIGURASI ===
-            // (BARU) URL Google Apps Script
             const GAS_API_URL = "https://script.google.com/macros/s/AKfycbydrhNmtJEk-lHLfrAzI8dG_uOZEKk72edPAEeL9pzVCna6br_hY2dAqDr-t8V5ost4/exec";
-            
-            // === BAGIAN 1: LOGIKA NAVIGASI SPA & MODAL ===
-            
             const pages = document.querySelectorAll('.page-section');
             const navLinks = document.querySelectorAll('.nav-link');
             const menuToggle = document.getElementById('menu-toggle');
             const menuLinks = document.getElementById('menu-links');
             const allLinks = document.querySelectorAll('a[href^="#"]');
-            
-            // Modal Elements
             const hubungiModal = document.getElementById('hubungi-modal');
             const hubungiBtn = document.getElementById('hubungi-btn');
             const hubungiModalClose = document.getElementById('hubungi-modal-close');
             const hubungiModalKonfirmasi = document.getElementById('hubungi-modal-konfirmasi');
-
-            // Logika Alert Modal Kustom (Pengganti alert())
             const alertModal = document.getElementById('alert-modal');
             const alertModalMessage = document.getElementById('alert-modal-message');
             const alertModalClose = document.getElementById('alert-modal-close');
-
+            
+            /* (PERBAIKAN 3: Modal Sukses) */
+            const successModal = document.getElementById('success-modal');
+            const successModalContinue = document.getElementById('success-modal-continue');
+            
             function showAppAlert(message) {
                 alertModalMessage.textContent = message;
                 alertModal.classList.remove('hidden');
             }
+            
+            /* (PERBAIKAN 3: Logika Modal Sukses) */
+            function showSuccessModal() {
+                successModal.classList.remove('hidden');
+            }
+            
+            /* (PERBAIKAN 3: Logika Tombol Lanjutkan di Modal Sukses) */
+            successModalContinue.addEventListener('click', () => {
+                successModal.classList.add('hidden');
+                displayPaymentInstructions(); // Panggil fungsi untuk tampilkan instruksi
+            });
 
             alertModalClose.addEventListener('click', () => alertModal.classList.add('hidden'));
             alertModal.addEventListener('click', (e) => {
@@ -1080,11 +1091,6 @@
                     alertModal.classList.add('hidden');
                 }
             });
-            // --- Akhir Logika Alert Modal ---
-
-            // (BARU) === BAGIAN 1.5: LOGIKA DATA SANTRI ===
-            
-            // Data mentah dari user
             const rawSantriData = `
 2A	11844	Adelio Daffa Syahrizha
 2A	11853	Ahmad Ahsanur Rizqi
@@ -1213,15 +1219,11 @@
 5D	11185	Yaafi Ramadhan Yugastian
 5D	11186	Yafa Ghani Arrasyid
 `;
-
-            // Proses data mentah menjadi objek bertingkat (Level > Rombel > Santri)
             const santriData = rawSantriData.trim().split('\n').reduce((acc, line) => {
                 const parts = line.split('\t');
                 if (parts.length === 3) {
                     const [rombel, nis, nama] = parts.map(s => s.trim());
-                    // Ekstrak level (angka pertama)
                     const level = rombel.charAt(0);
-
                     if (level >= '1' && level <= '6') {
                         if (!acc[level]) {
                             acc[level] = {};
@@ -1229,33 +1231,24 @@
                         if (!acc[level][rombel]) {
                             acc[level][rombel] = [];
                         }
-                        // (REFACTOR) Simpan data terpisah
                         acc[level][rombel].push({ nis: nis, nama: nama, rombel: rombel });
                     }
                 }
                 return acc;
             }, {});
-
             const santriLevelSelect = document.getElementById('santri-level-select');
             const santriRombelSelect = document.getElementById('santri-rombel-select');
             const santriNamaSelect = document.getElementById('santri-nama-select');
-
-            // 1. Event listener untuk Level
             santriLevelSelect.addEventListener('change', () => {
                 const selectedLevel = santriLevelSelect.value;
-                
-                // Reset Rombel & Nama
                 santriRombelSelect.innerHTML = '<option value="">Pilih Rombel</option>';
                 santriNamaSelect.innerHTML = '<option value="">Pilih Nama Santri</option>';
                 santriRombelSelect.disabled = true;
                 santriNamaSelect.disabled = true;
-                // (REFACTOR) Reset data santri
                 donasiData.namaSantri = '';
                 donasiData.nisSantri = '';
                 donasiData.rombelSantri = '';
-
                 if (selectedLevel && santriData[selectedLevel]) {
-                    // Isi dropdown Rombel
                     Object.keys(santriData[selectedLevel]).forEach(rombel => {
                         const option = document.createElement('option');
                         option.value = rombel;
@@ -1265,52 +1258,46 @@
                     santriRombelSelect.disabled = false;
                 }
             });
-
-            // 2. Event listener untuk Rombel
             santriRombelSelect.addEventListener('change', () => {
                 const selectedLevel = santriLevelSelect.value;
                 const selectedRombel = santriRombelSelect.value;
-                
-                // Reset Nama
                 santriNamaSelect.innerHTML = '<option value="">Pilih Nama Santri</option>';
                 santriNamaSelect.disabled = true;
-                // (REFACTOR) Reset data santri
                 donasiData.namaSantri = '';
                 donasiData.nisSantri = '';
                 donasiData.rombelSantri = '';
-
-
                 if (selectedLevel && selectedRombel && santriData[selectedLevel][selectedRombel]) {
-                    // Isi dropdown Nama
                     santriData[selectedLevel][selectedRombel].forEach(santri => {
                         const option = document.createElement('option');
-                        // (REFACTOR) Simpan data lengkap di value, dipisah KOMA
-                        option.value = `${santri.nama},${santri.nis},${santri.rombel}`;
-                        option.textContent = santri.nama; // Hanya tampilkan nama
+                        /* (PERBAIKAN: Ganti delimiter ke '::') */
+                        option.value = `${santri.nama}::${santri.nis}::${santri.rombel}`;
+                        option.textContent = santri.nama;
                         santriNamaSelect.appendChild(option);
                     });
                     santriNamaSelect.disabled = false;
                 }
             });
-
-            // 3. Event listener untuk Nama
             santriNamaSelect.addEventListener('change', () => {
                 const selectedValue = santriNamaSelect.value;
                 if (selectedValue) {
-                    // (REFACTOR) Ambil data dari value
-                    const [nama, nis, rombel] = selectedValue.split(',');
+                    /* (PERBAIKAN: Ganti delimiter ke '::') */
+                    const [nama, nis, rombel] = selectedValue.split('::');
                     donasiData.namaSantri = nama;
                     donasiData.nisSantri = nis;
                     donasiData.rombelSantri = rombel;
+                    
+                    /* (PERBAIKAN 4: Auto-fill nama donatur) */
+                    const namaSantriRadio = document.getElementById('nama-santri-radio');
+                    if (namaSantriRadio.checked) {
+                         document.getElementById('nama-muzakki-input').value = `A/n Santri: ${nama}`;
+                    }
+                    
                 } else {
                     donasiData.namaSantri = '';
                     donasiData.nisSantri = '';
                     donasiData.rombelSantri = '';
                 }
             });
-            // --- Akhir Logika Data Santri ---
-
-
             function showPage(pageId, scrollUp = true) {
                 pages.forEach(page => page.classList.remove('active'));
                 const newPage = document.getElementById(`page-${pageId}`);
@@ -1336,95 +1323,73 @@
                 if(pageId === 'donasi') {
                     resetDonationWizard();
                 }
-                // (BARU) Load data riwayat jika halaman riwayat dibuka
-                if (pageId === 'riwayat') {
+                
+                /* (PERBAIKAN: Panggil loadRiwayatDonasi di 'home' dan 'riwayat') */
+                if (pageId === 'riwayat' || pageId === 'home') {
                     loadRiwayatDonasi();
                 }
             }
-            
             function getCurrentPageId() {
                 const activePage = document.querySelector('.page-section.active');
                 return activePage ? activePage.id.replace('page-', '') : 'home';
             }
-
-            // Logika Navigasi: Membedakan 'page' vs 'anchor' vs 'modal'
             document.body.addEventListener('click', function(e) {
                 const link = e.target.closest('a[href^="#"]');
                 if (!link) return;
-                
-                // Cek jika tombol modal
                 if (link.id === 'hubungi-btn') {
                     e.preventDefault();
                     hubungiModal.classList.remove('hidden');
                     return;
                 }
-                
-                // Cek jika link eksternal (WA, Maps, mailto, tel)
                 if (link.target === '_blank' || link.href.startsWith('mailto:') || link.href.startsWith('tel:')) {
-                    return; // Biarkan default
+                    return;
                 }
-                
-                // Cek jika tombol download QRIS
                 if(link.hasAttribute('href') && (link.href.includes('uc?export=download'))) {
-                    return; // Biarkan default
+                    return;
                 }
-                
                 e.preventDefault();
-                
-                // Tutup modal jika link konfirmasi di modal diklik
                 if (link.id === 'hubungi-modal-konfirmasi') {
                     hubungiModal.classList.add('hidden');
                 }
-                
                 const href = link.getAttribute('href');
-                const hash = href.substring(1); 
-
+                const hash = href.substring(1);
                 const isPage = document.getElementById(`page-${hash}`);
                 const isAnchor = document.getElementById(hash) && !isPage;
-
                 if (isPage || hash === 'home' || (hash === 'donasi' && !isAnchor) || hash === 'riwayat' ) {
                     showPage(hash || 'home');
                 } else if (isAnchor) {
-                    // Logika anchor yang robust
                     const anchorElement = document.getElementById(hash);
                     const targetPage = anchorElement.closest('.page-section');
                     const targetPageId = targetPage ? targetPage.id.replace('page-', '') : 'home';
                     const currentPageId = getCurrentPageId();
-
                     if (currentPageId === targetPageId) {
                         anchorElement.scrollIntoView({ behavior: 'smooth', block: 'start' });
                     } else {
-                        showPage(targetPageId, false); 
+                        showPage(targetPageId, false);
                         history.replaceState(null, '', href);
                         setTimeout(() => {
                             anchorElement.scrollIntoView({ behavior: 'smooth', block: 'start' });
-                        }, 100); 
+                        }, 100);
                     }
                 }
-                
                 if (window.innerWidth < 768 && !menuLinks.classList.contains('hidden')) {
                     menuLinks.classList.add('hidden');
                 }
             });
-            
-            // Logika Tutup Modal
             hubungiModalClose.addEventListener('click', () => hubungiModal.classList.add('hidden'));
             hubungiModal.addEventListener('click', (e) => {
                 if (e.target.id === 'hubungi-modal') {
                     hubungiModal.classList.add('hidden');
                 }
             });
-
-
             function handleInitialLoad() {
                 let initialHash = window.location.hash.substring(1);
                 const initialAnchor = document.getElementById(initialHash);
                 const initialPage = document.getElementById(`page-${initialHash}`);
-
                 if (initialAnchor && !initialPage) {
                     const targetPage = initialAnchor.closest('.page-section');
                     const targetPageId = targetPage ? targetPage.id.replace('page-', '') : 'home';
-                    showPage(targetPageId, false); 
+                    showPage(targetPageId, false);
                     setTimeout(() => {
                         initialAnchor.scrollIntoView({ behavior: 'smooth', block: 'start' });
                     }, 100);
@@ -1434,13 +1399,9 @@
                     showPage('home');
                 }
             }
-            handleInitialLoad();
-
             menuToggle.addEventListener('click', function() {
                 menuLinks.classList.toggle('hidden');
             });
-            
-            // === BAGIAN 2: LOGIKA ANIMASI ON-SCROLL ===
             const animatedElements = document.querySelectorAll('.fade-in-up-scroll');
             const observer = new IntersectionObserver((entries) => {
                 entries.forEach(entry => {
@@ -1451,18 +1412,16 @@
                 });
             }, { threshold: 0.1 });
             animatedElements.forEach(el => { observer.observe(el); });
-            
-            // === BAGIAN 3: LOGIKA TOMBOL SALIN (Gunakan execCommand) ===
             function copyToClipboard(elementId, button) {
                 const el = document.getElementById(elementId);
-                const text = el.innerText.replace(/[^0-9]/g, ''); // Ambil angkanya saja
+                const text = el.innerText.replace(/[^0-9]/g, '');
                 const textarea = document.createElement('textarea');
                 textarea.value = text;
-                textarea.style.position = 'fixed'; 
+                textarea.style.position = 'fixed';
                 textarea.style.opacity = '0';
                 document.body.appendChild(textarea);
                 textarea.select();
-                textarea.setSelectionRange(0, 99999); 
+                textarea.setSelectionRange(0, 99999);
                 try {
                     document.execCommand('copy');
                     const originalText = button.innerHTML;
@@ -1471,7 +1430,7 @@
                     setTimeout(() => {
                         button.innerHTML = originalText;
                         button.disabled = false;
-                    }, 2000); 
+                    }, 2000);
                 } catch (err) {
                     console.error('Gagal menyalin: ', err);
                 }
@@ -1483,8 +1442,8 @@
                     copyToClipboard(targetId, this);
                 });
             });
-
-            // (BARU) === BAGIAN 3.5: LOGIKA RIWAYAT DONASI ===
+            
+            /* (PERBAIKAN: Pindahkan deklarasi riwayat ke atas) */
             const riwayat = {
                 loading: document.getElementById('riwayat-loading'),
                 error: document.getElementById('riwayat-error'),
@@ -1496,11 +1455,12 @@
                 prevBtn: document.getElementById('riwayat-prev'),
                 nextBtn: document.getElementById('riwayat-next'),
                 pageInfo: document.getElementById('riwayat-page-info'),
-                
+                summaryTotal: document.getElementById('riwayat-summary-total'),
+                summaryTransaksi: document.getElementById('riwayat-summary-transaksi'),
                 allData: [],
                 currentPage: 1,
-                itemsPerPage: 50, // Maksimal 50 donasi per halaman
-                isDataLoaded: false // Flag untuk mencegah load berulang
+                itemsPerPage: 50,
+                isDataLoaded: false
             };
             
             const riwayatFormatter = new Intl.NumberFormat('id-ID', {
@@ -1508,40 +1468,68 @@
                 currency: 'IDR',
                 minimumFractionDigits: 0,
             });
-
+            
+            /* (PERBAIKAN 1: Logika Kalkulasi Statistik) */
             async function loadRiwayatDonasi() {
-                // Hanya fetch data sekali saja
                 if (riwayat.isDataLoaded) {
                     renderRiwayatPage();
                     return;
                 }
-
                 riwayat.loading.classList.remove('hidden');
                 riwayat.error.classList.add('hidden');
                 riwayat.content.classList.add('hidden');
                 riwayat.noData.classList.add('hidden');
-
                 try {
                     const response = await fetch(GAS_API_URL, {
                         method: 'GET',
                         redirect: 'follow'
                     });
-                    
                     if (!response.ok) {
                         throw new Error(`Gagal mengambil data: ${response.statusText}`);
                     }
-                    
                     const result = await response.json();
-                    
                     if (result.status === "success") {
-                        riwayat.allData = result.data.sort((a, b) => b.row - a.row); // Urutkan terbaru di atas
+                        riwayat.allData = result.data.sort((a, b) => b.row - a.row);
                         riwayat.isDataLoaded = true;
                         riwayat.currentPage = 1;
+                        
+                        /* Kalkulasi Statistik */
+                        let totalDonasi = 0;
+                        let totalTransaksi = riwayat.allData.length;
+                        let donasiTertinggi = 0;
+                        let totalDonasiHariIni = 0;
+                        
+                        const today = new Date().toDateString();
+
+                        riwayat.allData.forEach(item => {
+                            const nominal = parseFloat(item.Nominal) || 0;
+                            totalDonasi += nominal;
+                            if (nominal > donasiTertinggi) {
+                                donasiTertinggi = nominal;
+                            }
+                            const itemDate = new Date(item.Timestamp).toDateString();
+                            if (itemDate === today) {
+                                totalDonasiHariIni += nominal;
+                            }
+                        });
+                        
+                        const donasiRataRata = totalTransaksi > 0 ? (totalDonasi / totalTransaksi) : 0;
+
+                        /* Tampilkan Statistik di Beranda */
+                        document.getElementById('stat-total-donasi').textContent = riwayatFormatter.format(totalDonasi);
+                        document.getElementById('stat-total-transaksi').textContent = totalTransaksi;
+                        document.getElementById('stat-donasi-tertinggi').textContent = riwayatFormatter.format(donasiTertinggi);
+                        document.getElementById('stat-donasi-rata').textContent = riwayatFormatter.format(donasiRataRata);
+                        document.getElementById('stat-donasi-hari-ini').textContent = riwayatFormatter.format(totalDonasiHariIni);
+                        
+                        /* Tampilkan Statistik di Halaman Riwayat */
+                        riwayat.summaryTotal.textContent = riwayatFormatter.format(totalDonasi);
+                        riwayat.summaryTransaksi.textContent = totalTransaksi;
+                        
                         renderRiwayatPage();
                     } else {
                         throw new Error(result.message || "Script mengembalikan status error.");
                     }
-
                 } catch (error) {
                     console.error("Gagal memuat riwayat:", error);
                     riwayat.errorMessage.textContent = error.message;
@@ -1550,43 +1538,53 @@
                 }
             }
             
+            /* (PERBAIKAN 4: Render Riwayat dengan Ikon Sinkron) */
             function renderRiwayatPage() {
                 riwayat.loading.classList.add('hidden');
-                
                 if (riwayat.allData.length === 0) {
                     riwayat.noData.classList.remove('hidden');
                     riwayat.content.classList.add('hidden');
                     return;
                 }
-                
                 riwayat.noData.classList.add('hidden');
                 riwayat.content.classList.remove('hidden');
-                
                 const startIndex = (riwayat.currentPage - 1) * riwayat.itemsPerPage;
                 const endIndex = startIndex + riwayat.itemsPerPage;
                 const pageData = riwayat.allData.slice(startIndex, endIndex);
-                
-                riwayat.listContainer.innerHTML = ''; // Bersihkan daftar
-                
+                riwayat.listContainer.innerHTML = '';
                 pageData.forEach(item => {
                     const card = document.createElement('div');
-                    card.className = "bg-white p-5 rounded-xl shadow-lg border border-gray-100 flex items-center space-x-4";
                     
-                    // Ikon berdasarkan tipe donasi
-                    let iconHtml = '<i class="fas fa-donate text-orange-500"></i>';
+                    let borderColorClass = 'border-l-gray-300';
+                    let iconHtml = '<i class="fas fa-donate text-gray-500"></i>';
+                    
                     if (item.JenisDonasi.includes('Fitrah')) {
+                        borderColorClass = 'border-l-green-500';
                         iconHtml = '<i class="fas fa-seedling text-green-500"></i>';
                     } else if (item.JenisDonasi.includes('Maal')) {
+                        borderColorClass = 'border-l-blue-500';
                         iconHtml = '<i class="fas fa-balance-scale text-blue-500"></i>';
+                    } else if (item.JenisDonasi.includes('Pengembangan Kampus')) {
+                        borderColorClass = 'border-l-orange-500';
+                        iconHtml = '<i class="fas fa-building text-orange-500"></i>';
+                    } else if (item.JenisDonasi.includes('Beasiswa Pendidikan')) {
+                        borderColorClass = 'border-l-green-600';
+                        iconHtml = '<i class="fas fa-user-graduate text-green-600"></i>';
+                    } else if (item.JenisDonasi.includes('Infaq Umum')) {
+                        borderColorClass = 'border-l-blue-600';
+                        iconHtml = '<i class="fas fa-globe text-blue-600"></i>';
+                    } else if (item.JenisDonasi.includes('Infaq')) {
+                        borderColorClass = 'border-l-orange-500';
+                        iconHtml = '<i class="fas fa-hand-holding-dollar text-orange-500"></i>';
                     }
 
-                    // Anonimkan Nama
+                    card.className = `bg-white p-5 rounded-xl shadow-lg border border-gray-100 border-l-4 ${borderColorClass} flex items-center space-x-4 transition-all duration-300 hover:shadow-xl hover:scale-[1.02]`;
+                    
                     let namaAnonim = "Hamba Allah";
                     if (item.NamaDonatur && item.NamaDonatur !== "Hamba Allah") {
                         const namaParts = item.NamaDonatur.split(' ');
                         namaAnonim = `${namaParts[0]} ${namaParts.length > 1 ? namaParts[1].charAt(0) + '.' : ''}`;
                     }
-
                     card.innerHTML = `
                         <div class="flex-shrink-0 w-14 h-14 rounded-full bg-gray-100 flex items-center justify-center text-2xl">
                             ${iconHtml}
@@ -1604,21 +1602,17 @@
                     `;
                     riwayat.listContainer.appendChild(card);
                 });
-                
-                // Update Paginasi
                 const totalPages = Math.ceil(riwayat.allData.length / riwayat.itemsPerPage);
                 riwayat.pageInfo.textContent = `Halaman ${riwayat.currentPage} dari ${totalPages}`;
                 riwayat.prevBtn.disabled = riwayat.currentPage === 1;
                 riwayat.nextBtn.disabled = riwayat.currentPage === totalPages;
             }
-            
             riwayat.prevBtn.addEventListener('click', () => {
                 if (riwayat.currentPage > 1) {
                     riwayat.currentPage--;
                     renderRiwayatPage();
                 }
             });
-            
             riwayat.nextBtn.addEventListener('click', () => {
                 const totalPages = Math.ceil(riwayat.allData.length / riwayat.itemsPerPage);
                 if (riwayat.currentPage < totalPages) {
@@ -1626,15 +1620,11 @@
                     renderRiwayatPage();
                 }
             });
-
-            // === BAGIAN 4: LOGIKA WIZARD DONASI ===
             const formatter = new Intl.NumberFormat('id-ID', {
                 style: 'currency',
                 currency: 'IDR',
                 minimumFractionDigits: 0,
             });
-
-            // Fungsi untuk memformat angka (Rp 1.000.000)
             function formatCurrency(input) {
                 let value = input.value.replace(/[^0-9]/g, '');
                 if (value) {
@@ -1644,40 +1634,30 @@
                     input.value = "Rp 0";
                 }
             }
-            // Fungsi untuk mendapatkan angka mentah dari input
             function getRawNumber(input) {
                 return parseInt(input.value.replace(/[^0-9]/g, '')) || 0;
             }
-            // Terapkan formatting ke semua input yang relevan
             document.querySelectorAll('.formatted-number').forEach(input => {
                 input.addEventListener('input', () => formatCurrency(input));
                 input.addEventListener('blur', () => formatCurrency(input));
             });
-
-
             let donasiData = {};
             const wizard = document.getElementById('donasi-wizard');
             const wizardTitle = document.getElementById('wizard-title');
             const instructions = document.getElementById('donasi-payment-instructions');
             const allSteps = document.querySelectorAll('.donasi-step-container');
-
             function goToStep(stepNumber) {
                 allSteps.forEach(step => step.classList.add('hidden'));
                 const nextStep = document.getElementById(`donasi-step-${stepNumber}`);
                 if (nextStep) {
                     nextStep.classList.remove('hidden');
-                    // Update Progress Bar
                     const progressEl = document.getElementById('wizard-progress');
                     const progressBarEl = document.getElementById('wizard-progress-bar');
                     if (progressEl) {
                         progressEl.textContent = `Langkah ${stepNumber} dari 5`;
                         progressBarEl.style.width = `${stepNumber * 20}%`;
                     }
-                    
-                    // Scroll ke atas wizard, bukan ke atas halaman
                     wizard.scrollIntoView({ behavior: 'smooth', block: 'start' });
-
-                    // Update tombol "Kembali" di step 3
                     if (stepNumber === 3) {
                         const prevBtn = document.getElementById('btn-step-3-prev');
                         if (donasiData.type === 'Zakat Fitrah') {
@@ -1688,7 +1668,6 @@
                     }
                 }
             }
-
             function resetDonationWizard() {
                 donasiData = {
                     type: null,
@@ -1701,14 +1680,12 @@
                     email: '',
                     doa: '',
                     donaturTipe: 'santri',
-                    // (REFACTOR) Reset data santri
                     namaSantri: '',
                     nisSantri: '',
                     rombelSantri: '',
                     alumniDetail: '',
                     metode: null
                 };
-                // Reset tampilan
                 wizard.classList.remove('hidden');
                 instructions.classList.add('hidden');
                 document.getElementById('zakat-maal-checker').classList.add('hidden');
@@ -1716,77 +1693,64 @@
                 document.getElementById('infaq-options').classList.add('hidden');
                 document.getElementById('step-1-nav-default').classList.add('hidden');
                 document.getElementById('zakat-result').classList.add('hidden');
-                
                 wizardTitle.textContent = "Formulir ZIS";
                 document.getElementById('step-1-title').textContent = "Langkah 1: Pilih Jenis ZIS";
-
                 document.getElementById('nominal-custom').value = 'Rp 0';
                 document.getElementById('harga-emas').value = 'Rp 1.000.000';
                 document.getElementById('penghasilan-bulanan').value = 'Rp 0';
                 document.getElementById('fitrah-jumlah-orang').value = '';
                 document.getElementById('fitrah-total').value = 'Rp 0';
-
                 document.getElementById('donasi-form-identitas').reset();
-                // Tampilkan santri-details by default, sembunyikan alumni
                 document.getElementById('santri-details').classList.remove('hidden');
                 document.getElementById('alumni-details').classList.add('hidden');
                 document.getElementById('tipe-donatur-santri').checked = true;
-                
-                // Reset 3 dropdown santri
                 santriLevelSelect.value = '';
                 santriRombelSelect.innerHTML = '<option value="">Pilih Rombel</option>';
                 santriNamaSelect.innerHTML = '<option value="">Pilih Nama Santri</option>';
                 santriRombelSelect.disabled = true;
                 santriNamaSelect.disabled = true;
-
-
                 document.querySelectorAll('.choice-button').forEach(btn => btn.classList.remove('selected'));
                 document.querySelectorAll('.sub-choice-button').forEach(btn => btn.classList.remove('selected'));
                 document.querySelectorAll('.payment-method-radio').forEach(radio => radio.checked = false);
                 document.getElementById('nama-muzakki-input').disabled = false;
                 document.getElementById('nama-muzakki-input').required = true;
                 document.getElementById('nama-sendiri-radio').checked = true;
+                
+                /* (PERBAIKAN 5: Reset checkbox) */
+                document.getElementById('data-confirmation-checkbox').checked = false;
+                
                 goToStep(1);
             }
-
-            // --- Logika Step 1: Tipe Donasi & Zakat Check ---
             const donasiTypeButtons = document.querySelectorAll('.donasi-type-btn');
             const zakatMaalChecker = document.getElementById('zakat-maal-checker');
             const zakatFitrahChecker = document.getElementById('zakat-fitrah-checker');
             const infaqOptions = document.getElementById('infaq-options');
             const infaqTypeButtons = document.querySelectorAll('.infaq-type-btn');
-
             const zakatCheckBtn = document.getElementById('zakat-check-button');
             const zakatResult = document.getElementById('zakat-result');
             const zakatResultMsg = document.getElementById('zakat-result-message');
             const zakatLanjutkanInfaq = document.getElementById('zakat-lanjutkan-infaq');
             const step1NavDefault = document.getElementById('step-1-nav-default');
             const step1NavFitrah = document.getElementById('step-1-nav-fitrah');
-            
             const fitrahJumlahInput = document.getElementById('fitrah-jumlah-orang');
             const fitrahTotalInput = document.getElementById('fitrah-total');
             const HARGA_FITRAH = 37500;
-
             donasiTypeButtons.forEach(btn => {
                 btn.addEventListener('click', () => {
                     donasiTypeButtons.forEach(b => b.classList.remove('selected'));
                     btn.classList.add('selected');
                     donasiData.type = btn.getAttribute('data-type');
-                    donasiData.subType = null; // Reset sub-tipe
-                    
+                    donasiData.subType = null;
                     const labelNama = document.getElementById('label-nama-donatur');
-                    
-                    // Sembunyikan semua checker dan nav
                     zakatMaalChecker.classList.add('hidden');
                     zakatFitrahChecker.classList.add('hidden');
                     infaqOptions.classList.add('hidden');
                     step1NavDefault.classList.add('hidden');
                     zakatResult.classList.add('hidden');
-
                     if (donasiData.type === 'Zakat Fitrah') {
                         labelNama.textContent = 'Nama Kepala Keluarga (Wajib)';
                         zakatFitrahChecker.classList.remove('hidden');
-                        donasiData.nominal = 0; // Reset nominal
+                        donasiData.nominal = 0;
                         fitrahJumlahInput.value = '';
                         fitrahTotalInput.value = 'Rp 0';
                         wizardTitle.textContent = "Formulir Zakat Fitrah";
@@ -1796,84 +1760,86 @@
                         zakatMaalChecker.classList.remove('hidden');
                         wizardTitle.textContent = "Formulir Zakat Maal";
                         zakatMaalChecker.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
-                    } else { // Infaq
+                    } else {
                         labelNama.textContent = 'Nama Munfiq (Wajib)';
-                        infaqOptions.classList.remove('hidden'); 
+                        infaqOptions.classList.remove('hidden');
                         wizardTitle.textContent = "Formulir Infaq";
                         infaqOptions.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
                     }
                 });
             });
-
-            // Event listener untuk sub-tipe Infaq
             infaqTypeButtons.forEach(btn => {
                 btn.addEventListener('click', () => {
                     infaqTypeButtons.forEach(b => b.classList.remove('selected'));
                     btn.classList.add('selected');
                     donasiData.subType = btn.getAttribute('data-type-infaq');
-                    donasiData.type = donasiData.subType; // Set tipe utama ke subtipe infaq
+                    donasiData.type = donasiData.subType;
                     step1NavDefault.classList.remove('hidden');
                 });
             });
-
-
-            // Event listener untuk Zakat Fitrah
             fitrahJumlahInput.addEventListener('input', () => {
                 const jumlah = parseInt(fitrahJumlahInput.value) || 0;
                 const total = jumlah * HARGA_FITRAH;
                 donasiData.nominal = total;
                 fitrahTotalInput.value = formatter.format(total);
             });
-
-            // Event listener untuk Zakat Maal
             zakatCheckBtn.addEventListener('click', () => {
                 const hargaEmas = getRawNumber(document.getElementById('harga-emas'));
                 const penghasilan = getRawNumber(document.getElementById('penghasilan-bulanan'));
                 const nisabBulanan = (hargaEmas * 85) / 12;
-
                 zakatResult.classList.remove('hidden');
                 if (penghasilan >= nisabBulanan) {
+                    zakatResult.classList.remove('bg-red-50', 'border-red-200');
+                    zakatResult.classList.add('bg-green-50', 'border-green-200');
                     zakatResultMsg.textContent = `Nisab bulanan (${formatter.format(nisabBulanan)}). Penghasilan Anda (${formatter.format(penghasilan)}) SUDAH WAJIB ZAKAT.`;
                     zakatResultMsg.classList.remove('text-red-600');
                     zakatResultMsg.classList.add('text-green-600');
                     zakatLanjutkanInfaq.classList.add('hidden');
-                    step1NavDefault.classList.remove('hidden'); 
+                    step1NavDefault.classList.remove('hidden');
                 } else {
+                    zakatResult.classList.add('bg-red-50', 'border-red-200');
+                    zakatResult.classList.remove('bg-green-50', 'border-green-200');
                     zakatResultMsg.textContent = `Nisab bulanan (${formatter.format(nisabBulanan)}). Penghasilan Anda (${formatter.format(penghasilan)}) BELUM WAJIB ZAKAT.`;
                     zakatResultMsg.classList.add('text-red-600');
                     zakatResultMsg.classList.remove('text-green-600');
-                    zakatLanjutkanInfaq.classList.remove('hidden'); 
+                    zakatLanjutkanInfaq.classList.remove('hidden');
                     step1NavDefault.classList.add('hidden');
                 }
             });
-
+            
+            /* (PERBAIKAN 2: Logika Lanjutkan Infaq) */
             zakatLanjutkanInfaq.addEventListener('click', () => {
-                donasiData.type = 'Infaq'; // Ubah tipe donasi
-                donasiData.subType = 'Infaq Umum'; // Default ke Infaq Umum
+                donasiData.type = 'Infaq';
+                donasiData.subType = 'Infaq Umum';
                 document.getElementById('label-nama-donatur').textContent = 'Nama Munfiq (Wajib)';
-                goToStep(2); // Lanjut ke step 2
+                
+                // Set UI ke Infaq
+                donasiTypeButtons.forEach(b => b.classList.remove('selected'));
+                document.querySelector('button[data-type="Infaq"]').classList.add('selected');
+                zakatMaalChecker.classList.add('hidden');
+                infaqOptions.classList.remove('hidden');
+                infaqTypeButtons.forEach(b => b.classList.remove('selected'));
+                document.querySelector('button[data-type-infaq="Infaq Umum"]').classList.add('selected');
+                
+                // Langsung lanjut ke step 2
+                goToStep(2);
             });
 
-            // --- Logika Step 2: Nominal ---
             const nominalButtons = document.querySelectorAll('.nominal-btn');
             const nominalCustom = document.getElementById('nominal-custom');
-
             nominalButtons.forEach(btn => {
                 btn.addEventListener('click', () => {
                     nominalButtons.forEach(b => b.classList.remove('selected'));
                     btn.classList.add('selected');
                     const nominal = btn.getAttribute('data-nominal');
-                    nominalCustom.value = formatter.format(nominal); // Format value
+                    nominalCustom.value = formatter.format(nominal);
                     donasiData.nominal = parseFloat(nominal);
                 });
             });
-
             nominalCustom.addEventListener('input', () => {
                 nominalButtons.forEach(b => b.classList.remove('selected'));
-                donasiData.nominal = getRawNumber(nominalCustom); // Dapatkan angka mentah
+                donasiData.nominal = getRawNumber(nominalCustom);
             });
-
-            // --- Logika Step 3: Identitas (Alumni & Santri) ---
             const donaturTipeRadios = document.querySelectorAll('input[name="donatur-tipe"]');
             const santriDetails = document.getElementById('santri-details');
             const alumniDetails = document.getElementById('alumni-details');
@@ -1881,37 +1847,34 @@
             const namaInput = document.getElementById('nama-muzakki-input');
             const namaSantriRadio = document.getElementById('nama-santri-radio');
             const namaSendiriRadio = document.getElementById('nama-sendiri-radio');
-
             donaturTipeRadios.forEach(radio => {
                 radio.addEventListener('change', (e) => {
                     const tipe = e.target.value;
                     donasiData.donaturTipe = tipe;
-                    
                     if (tipe === 'santri') {
                         santriDetails.classList.remove('hidden');
                         alumniDetails.classList.add('hidden');
-                        namaSantriRadio.disabled = false; // Aktifkan opsi 'a/n santri'
+                        namaSantriRadio.disabled = false;
                     } else if (tipe === 'alumni') {
                         santriDetails.classList.add('hidden');
                         alumniDetails.classList.remove('hidden');
-                        namaSantriRadio.disabled = true; // Nonaktifkan 'a/n santri'
+                        namaSantriRadio.disabled = true;
                         if (namaSantriRadio.checked) {
-                             namaSendiriRadio.checked = true; // Reset ke 'nama sendiri'
+                            namaSendiriRadio.checked = true;
                         }
-                    } else { // umum
+                    } else {
                         santriDetails.classList.add('hidden');
                         alumniDetails.classList.add('hidden');
-                        namaSantriRadio.disabled = true; // Nonaktifkan 'a/n santri'
+                        namaSantriRadio.disabled = true;
                         if (namaSantriRadio.checked) {
-                             namaSendiriRadio.checked = true; // Reset ke 'nama sendiri'
+                            namaSendiriRadio.checked = true;
                         }
                     }
-                    // Trigger change event on namaRadios to update input disabled status
                     document.querySelector('input[name="nama-choice"]:checked').dispatchEvent(new Event('change'));
                 });
             });
-
-
+            
+            /* (PERBAIKAN 4: Logika Auto-fill) */
             namaRadios.forEach(radio => {
                 radio.addEventListener('change', (e) => {
                     const choice = e.target.value;
@@ -1919,71 +1882,59 @@
                         namaInput.disabled = false;
                         namaInput.required = true;
                         namaInput.placeholder = 'Nama Anda';
+                        namaInput.value = ''; // Hapus auto-fill jika ada
                     } else if (choice === 'hamba') {
                         namaInput.disabled = true;
                         namaInput.required = false;
-                        namaInput.value = ''; 
+                        namaInput.value = 'Hamba Allah'; // Set Hamba Allah
                     } else if (choice === 'santri') {
-                        // (PERBAIKAN BUG) Ganti !donasiData.santriDetail menjadi !donasiData.namaSantri
                         if (donasiData.donaturTipe !== 'santri' || !donasiData.namaSantri) {
                             showAppAlert('Pilih "Tipe Donatur: Santri" dan pilih nama santri yang valid dari daftar terlebih dahulu.');
                             namaSendiriRadio.checked = true;
                             namaInput.disabled = false;
                             namaInput.required = true;
+                            namaInput.value = '';
                         } else {
                             namaInput.disabled = true;
                             namaInput.required = false;
-                            namaInput.value = ''; 
+                            namaInput.value = `A/n Santri: ${donasiData.namaSantri}`; // Auto-fill
                         }
                     }
                 });
             });
 
-
-            // --- Validasi & Navigasi Wizard ---
             document.querySelectorAll('[data-next-step]').forEach(btn => {
                 btn.addEventListener('click', () => {
                     const currentStepContainer = btn.closest('.donasi-step-container');
                     if (!currentStepContainer) return;
                     const currentStep = currentStepContainer.id;
-                    
-                    // Validasi Step 1 (Zakat Fitrah)
                     if (currentStep === 'donasi-step-1' && donasiData.type === 'Zakat Fitrah') {
                         if (donasiData.nominal <= 0 || fitrahJumlahInput.value < 1) {
                             showAppAlert('Harap masukkan jumlah orang yang valid (minimal 1).');
                             return;
                         }
                     }
-                    // Validasi Step 1 (Infaq)
                     if (currentStep === 'donasi-step-1' && donasiData.type.startsWith('Infaq')) {
                         if (!donasiData.subType) {
                             showAppAlert('Harap pilih salah satu jenis infaq.');
                             return;
                         }
                     }
-
-                    // Validasi Step 2
                     if (currentStep === 'donasi-step-2') {
                         if (donasiData.nominal <= 0) {
                             showAppAlert('Nominal donasi tidak boleh kosong.');
                             return;
                         }
-                        // Set judul step 2
                         document.getElementById('nominal-title-type').textContent = `(${donasiData.type})`;
                         document.getElementById('step-2-title').textContent = `Langkah 2: Masukkan Nominal ${donasiData.type}`;
                     }
-
-                    // Validasi Step 3
                     if (currentStep === 'donasi-step-3') {
                         const form = document.getElementById('donasi-form-identitas');
                         if (!form.checkValidity()) {
-                            form.reportValidity(); 
+                            form.reportValidity();
                             return;
                         }
-                        
-                        // Handle Tipe Donatur
                         if (donasiData.donaturTipe === 'santri') {
-                            // (REFACTOR) Validasi dropdown
                             if (!donasiData.namaSantri) {
                                 showAppAlert('Silakan pilih santri yang valid dari daftar.');
                                 return;
@@ -1996,25 +1947,20 @@
                             }
                             donasiData.alumniDetail = `Alumni Tahun ${tahunLulus}`;
                         }
-
-                        // Handle Nama Donatur
                         const namaChoice = document.querySelector('input[name="nama-choice"]:checked').value;
+                        
+                        /* (PERBAIKAN 4: Ambil nilai dari input) */
                         if (namaChoice === 'sendiri') {
-                            // (PERBAIKAN BUG) Tambahkan baris ini untuk mengambil nama dari input
                             donasiData.nama = document.getElementById('nama-muzakki-input').value;
-                        // (PERBAIKAN BUG) Ganti 'choice' menjadi 'namaChoice'
                         } else if (namaChoice === 'hamba') {
                             donasiData.nama = 'Hamba Allah';
-                        } else { // 'santri'
-                            // Validasi ulang jika 'a/n santri' dipilih
+                        } else {
                             if (donasiData.donaturTipe !== 'santri' || !donasiData.namaSantri) {
                                  showAppAlert('Untuk memilih "Atas Nama Santri", Anda harus memilih Tipe Donatur "Santri" dan memilih santri dari daftar.');
                                  return;
                             }
-                            // (REFACTOR) Ambil nama santri
                             donasiData.nama = `A/n Santri: ${donasiData.namaSantri}`;
                         }
-
 
                         donasiData.hp = document.getElementById('no-hp').value;
                         donasiData.alamat = document.getElementById('alamat').value;
@@ -2022,8 +1968,6 @@
                         donasiData.email = document.getElementById('email').value;
                         donasiData.doa = document.getElementById('pesan-doa').value;
                     }
-
-                    // Validasi Step 4
                     if (currentStep === 'donasi-step-4') {
                         const selectedMethod = document.querySelector('.payment-method-radio:checked');
                         if (!selectedMethod) {
@@ -2033,27 +1977,21 @@
                         donasiData.metode = selectedMethod.value;
                         updateRingkasan();
                     }
-
                     const nextStep = btn.getAttribute('data-next-step');
                     goToStep(nextStep);
                 });
             });
-            
             document.querySelectorAll('[data-prev-step]').forEach(btn => {
                 btn.addEventListener('click', () => {
                     goToStep(btn.getAttribute('data-prev-step'));
                 });
             });
-
-            // --- Logika Step 5: Ringkasan & Konfirmasi Final (Desain Kartu) ---
             function updateRingkasan() {
-                // Mengisi data ke elemen-elemen di desain kartu
                 document.getElementById('summary-type').textContent = donasiData.type;
                 document.getElementById('summary-metode').textContent = donasiData.metode;
                 document.getElementById('summary-nama').textContent = donasiData.nama;
                 document.getElementById('summary-hp').textContent = donasiData.hp;
                 document.getElementById('summary-total').textContent = formatter.format(donasiData.nominal);
-
                 const fitrahDetails = document.getElementById('summary-fitrah-details');
                 if (donasiData.type === 'Zakat Fitrah') {
                     const jumlahOrang = donasiData.nominal / HARGA_FITRAH;
@@ -2062,110 +2000,64 @@
                 } else {
                     fitrahDetails.classList.add('hidden');
                 }
-
                 const detailContainer = document.getElementById('summary-donatur-detail-container');
                 const detailLabel = document.getElementById('summary-donatur-detail-label');
                 const detailValue = document.getElementById('summary-donatur-detail');
-
                 if (donasiData.donaturTipe === 'alumni') {
                     detailLabel.textContent = 'Detail:';
                     detailValue.textContent = donasiData.alumniDetail;
                     detailContainer.classList.remove('hidden');
                 } else if (donasiData.donaturTipe === 'santri') {
                     detailLabel.textContent = 'Santri:';
-                    // (REFACTOR) Tampilkan data dari 3 dropdown
-                    detailValue.textContent = `${donasiData.namaSantri} (NIS: ${donasiData.nisSantri}, Kelas: ${donasiData.rombelSantri})`; 
+                    detailValue.textContent = `${donasiData.namaSantri} (NIS: ${donasiData.nisSantri}, Kelas: ${donasiData.rombelSantri})`;
                     detailContainer.classList.remove('hidden');
                 } else {
                     detailContainer.classList.add('hidden');
                 }
             }
-
-            // (BARU) Logika Pengiriman Data ke Google Sheet
-            const confirmBtn = document.getElementById('final-confirm-btn');
-            const confirmBtnText = document.getElementById('confirm-btn-text');
-            const confirmBtnLoading = document.getElementById('confirm-btn-loading');
-
-            confirmBtn.addEventListener('click', async () => {
-                // 1. Tampilkan status loading
-                confirmBtn.disabled = true;
-                confirmBtnText.classList.add('hidden');
-                confirmBtnLoading.classList.remove('hidden');
-
-                try {
-                    // 2. Siapkan data untuk dikirim (hanya data donasi)
-                    const postData = {
-                        action: "create",
-                        payload: donasiData 
-                    };
-
-                    // 3. Kirim data ke API
-                    const response = await fetch(GAS_API_URL, {
-                        method: "POST",
-                        headers: { "Content-Type": "text/plain;charset=utf-8" }, // Sesuai rekomendasi GAS
-                        body: JSON.stringify(postData),
-                        redirect: "follow"
-                    });
-                    
-                    const result = await response.json();
-                    
-                    if (result.status !== "success") {
-                        // Jika gagal, tampilkan error
-                        throw new Error(result.message || "Gagal menyimpan data ke server.");
-                    }
-                    
-                    // 4. Jika BERHASIL, baru lanjut ke halaman instruksi
-                    wizard.classList.add('hidden');
-                    instructions.classList.remove('hidden');
-                    
-                    const transferDetails = document.getElementById('payment-transfer-details');
-                    const qrisDetails = document.getElementById('payment-qris-details');
-                    const instruksiTitle = document.getElementById('instruksi-title');
-                    
-                    // Logika untuk Tunai
-                    const konfirmasiTitle = document.getElementById('konfirmasi-title');
-                    const konfirmasiDesc = document.getElementById('konfirmasi-desc');
-                    const konfirmasiLangkahTransfer = document.getElementById('konfirmasi-langkah-transfer');
-                    const konfirmasiLangkahTunai = document.getElementById('konfirmasi-langkah-tunai');
-                    const konfirmasiWaText = document.getElementById('konfirmasi-wa-text');
-
-                    if (donasiData.metode === 'Transfer') {
-                        transferDetails.classList.remove('hidden');
-                        qrisDetails.classList.add('hidden');
-                        instruksiTitle.textContent = "Segera Selesaikan Pembayaran";
-                        
-                        konfirmasiTitle.textContent = "2. Konfirmasi Donasi";
-                        konfirmasiDesc.textContent = "Ikuti 3 langkah mudah ini untuk konfirmasi donasi Anda:";
-                        konfirmasiLangkahTransfer.classList.remove('hidden');
-                        konfirmasiLangkahTunai.classList.add('hidden');
-                        konfirmasiWaText.textContent = "Konfirmasi via WhatsApp";
-
-                    } else if (donasiData.metode === 'QRIS') {
-                        transferDetails.classList.add('hidden');
-                        qrisDetails.classList.remove('hidden');
-                        instruksiTitle.textContent = "Segera Selesaikan Pembayaran";
-                        
-                        konfirmasiTitle.textContent = "2. Konfirmasi Donasi";
-                        konfirmasiDesc.textContent = "Ikuti 3 langkah mudah ini untuk konfirmasi donasi Anda:";
-                        konfirmasiLangkahTransfer.classList.remove('hidden');
-                        konfirmasiLangkahTunai.classList.add('hidden');
-                        konfirmasiWaText.textContent = "Konfirmasi via WhatsApp";
-                    } else { // Tunai
-                        transferDetails.classList.add('hidden');
-                        qrisDetails.classList.add('hidden');
-                        instruksiTitle.textContent = "Segera Lakukan Pembayaran Tunai";
-
-                        konfirmasiTitle.textContent = "Konfirmasi Pembayaran Tunai";
-                        konfirmasiDesc.textContent = "Silakan kirim notifikasi ini ke Admin/Musyrif dan serahkan uang tunai:";
-                        konfirmasiLangkahTransfer.classList.add('hidden');
-                        konfirmasiLangkahTunai.classList.remove('hidden');
-                        konfirmasiWaText.textContent = "Kirim Notifikasi Tunai via WhatsApp";
-                    }
-
-                    const waBase = "https://wa.me/6281196961918";
-                    
-                    // Pesan WA diperbarui
-                    const waMessage = `
+            
+            /* (PERBAIKAN 3: Fungsi terpisah untuk tampilkan instruksi) */
+            function displayPaymentInstructions() {
+                wizard.classList.add('hidden');
+                instructions.classList.remove('hidden');
+                const transferDetails = document.getElementById('payment-transfer-details');
+                const qrisDetails = document.getElementById('payment-qris-details');
+                const instruksiTitle = document.getElementById('instruksi-title');
+                const konfirmasiTitle = document.getElementById('konfirmasi-title');
+                const konfirmasiDesc = document.getElementById('konfirmasi-desc');
+                const konfirmasiLangkahTransfer = document.getElementById('konfirmasi-langkah-transfer');
+                const konfirmasiLangkahTunai = document.getElementById('konfirmasi-langkah-tunai');
+                const konfirmasiWaText = document.getElementById('konfirmasi-wa-text');
+                if (donasiData.metode === 'Transfer') {
+                    transferDetails.classList.remove('hidden');
+                    qrisDetails.classList.add('hidden');
+                    instruksiTitle.textContent = "Segera Selesaikan Pembayaran";
+                    konfirmasiTitle.textContent = "2. Konfirmasi Donasi";
+                    konfirmasiDesc.textContent = "Ikuti 3 langkah mudah ini untuk konfirmasi donasi Anda:";
+                    konfirmasiLangkahTransfer.classList.remove('hidden');
+                    konfirmasiLangkahTunai.classList.add('hidden');
+                    konfirmasiWaText.textContent = "Konfirmasi via WhatsApp";
+                } else if (donasiData.metode === 'QRIS') {
+                    transferDetails.classList.add('hidden');
+                    qrisDetails.classList.remove('hidden');
+                    instruksiTitle.textContent = "Segera Selesaikan Pembayaran";
+                    konfirmasiTitle.textContent = "2. Konfirmasi Donasi";
+                    konfirmasiDesc.textContent = "Ikuti 3 langkah mudah ini untuk konfirmasi donasi Anda:";
+                    konfirmasiLangkahTransfer.classList.remove('hidden');
+                    konfirmasiLangkahTunai.classList.add('hidden');
+                    konfirmasiWaText.textContent = "Konfirmasi via WhatsApp";
+                } else {
+                    transferDetails.classList.add('hidden');
+                    qrisDetails.classList.add('hidden');
+                    instruksiTitle.textContent = "Segera Lakukan Pembayaran Tunai";
+                    konfirmasiTitle.textContent = "Konfirmasi Pembayaran Tunai";
+                    konfirmasiDesc.textContent = "Silakan kirim notifikasi ini ke Admin/Musyrif dan serahkan uang tunai:";
+                    konfirmasiLangkahTransfer.classList.add('hidden');
+                    konfirmasiLangkahTunai.classList.remove('hidden');
+                    konfirmasiWaText.textContent = "Kirim Notifikasi Tunai via WhatsApp";
+                }
+                const waBase = "https://wa.me/6281196961918";
+                const waMessage = `
 Assalamu'alaikum, saya ingin konfirmasi donasi:
 --------------------------------
 Tipe Donasi: ${donasiData.type}
@@ -2183,31 +2075,61 @@ ${donasiData.ktp ? `No. KTP: ${donasiData.ktp}\n` : ''}
 ${donasiData.doa ? `\nPesan/Doa: \n"${donasiData.doa}"` : ''}
 --------------------------------
 ${donasiData.metode === 'Tunai' ? 'Saya akan menyerahkan donasi ini secara tunai.' : 'Mohon doanya. Jazakumullah khairan katsiran.\n(Silakan lampirkan bukti transfer/QRIS di bawah ini)'}
-                    `;
+                `;
+                const waLink = `${waBase}?text=${encodeURIComponent(waMessage.trim())}`;
+                document.getElementById('final-wa-button').href = waLink;
+                document.getElementById('page-donasi').scrollIntoView({ behavior: 'smooth', block: 'start' });
+                riwayat.isDataLoaded = false;
+            }
+            
+            const confirmBtn = document.getElementById('final-confirm-btn');
+            const confirmBtnText = document.getElementById('confirm-btn-text');
+            const confirmBtnLoading = document.getElementById('confirm-btn-loading');
+            confirmBtn.addEventListener('click', async () => {
+                
+                /* (PERBAIKAN 5: Validasi Checkbox) */
+                const dataConfirmationCheckbox = document.getElementById('data-confirmation-checkbox');
+                if (!dataConfirmationCheckbox.checked) {
+                    showAppAlert('Anda harus mencentang kotak konfirmasi bahwa data Anda sudah benar dan diisi dengan sungguh-sungguh.');
+                    return;
+                }
+
+                confirmBtn.disabled = true;
+                confirmBtnText.classList.add('hidden');
+                confirmBtnLoading.classList.remove('hidden');
+                try {
+                    const postData = {
+                        action: "create",
+                        payload: donasiData
+                    };
+                    const response = await fetch(GAS_API_URL, {
+                        method: "POST",
+                        headers: { "Content-Type": "text/plain;charset=utf-8" },
+                        body: JSON.stringify(postData),
+                        redirect: "follow"
+                    });
+                    const result = await response.json();
+                    if (result.status !== "success") {
+                        throw new Error(result.message || "Gagal menyimpan data ke server.");
+                    }
                     
-                    const waLink = `${waBase}?text=${encodeURIComponent(waMessage.trim())}`;
-                    document.getElementById('final-wa-button').href = waLink;
-
-                    document.getElementById('page-donasi').scrollIntoView({ behavior: 'smooth', block: 'start' });
-
-                    // (BARU) Tandai data riwayat sebagai 'kotor' agar di-reload
-                    riwayat.isDataLoaded = false;
+                    /* (PERBAIKAN 3: Panggil modal sukses) */
+                    showSuccessModal();
 
                 } catch (error) {
-                    // 5. Jika GAGAL, tampilkan error di modal
                     console.error('Gagal mengirim donasi:', error);
                     showAppAlert(`Terjadi kesalahan saat menyimpan donasi: ${error.message}. Silakan coba lagi.`);
                 } finally {
-                    // 6. Kembalikan tombol ke keadaan normal
                     confirmBtn.disabled = false;
                     confirmBtnText.classList.remove('hidden');
                     confirmBtnLoading.classList.add('hidden');
                 }
             });
+            
+            /* (PERBAIKAN: Pindahkan dari baris 1813 ke sini) */
+            handleInitialLoad();
 
-
-        }); // Akhir DOMContentLoaded
+        });
     </script>
-
 </body>
 </html>
